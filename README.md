@@ -7,6 +7,6 @@ Miao-Yunzai V4 插件开发示例
 - 安装源码
 
 ```sh
-git clone --depth=1 -b dev https://github.com/yoimiya-kokomi/Miao-Yunzai.git
+git clone --depth=1 -b system https://github.com/yoimiya-kokomi/Miao-Yunzai.git ./plugins/system-plugin
 ```
 
