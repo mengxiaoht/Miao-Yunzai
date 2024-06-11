@@ -1,5 +1,5 @@
-import { plugin } from '#miao/core'
-import {makeForwardMsg} from '#miao/core'
+import { plugin } from 'yunzai/core'
+import {makeForwardMsg} from 'yunzai/core'
 import fs from "node:fs"
 import lodash from "lodash"
 import moment from "moment"

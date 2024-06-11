@@ -1,4 +1,4 @@
-import { plugin, segment } from '#miao/core'
+import { plugin, segment } from 'yunzai/core'
 /**
  * 
  */

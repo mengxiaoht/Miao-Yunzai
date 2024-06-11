@@ -1,5 +1,5 @@
-import { ConfigController as cfg } from '#miao/config'
-import { plugin } from '#miao/core'
+import { ConfigController as cfg } from 'yunzai/config'
+import { plugin } from 'yunzai/core'
 /**
  * 
  */

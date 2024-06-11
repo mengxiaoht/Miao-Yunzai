@@ -1,4 +1,4 @@
-import { plugin } from '#miao/core'
+import { plugin } from 'yunzai/core'
 /**
  * 
  */

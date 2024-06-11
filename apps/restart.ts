@@ -1,4 +1,4 @@
-import { plugin } from '#miao/core'
+import { plugin } from 'yunzai/core'
 import fetch from 'node-fetch'
 import net from 'net'
 import fs from 'fs'

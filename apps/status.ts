@@ -1,7 +1,7 @@
 
-import { ConfigController as cfg } from '#miao/config'
+import { ConfigController as cfg } from 'yunzai/config'
 import moment from 'moment'
-import { plugin } from '#miao/core'
+import { plugin } from 'yunzai/core'
 /**
  * 
  */

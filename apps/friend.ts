@@ -1,7 +1,7 @@
 
-import { ConfigController as cfg } from '#miao/config'
-import { sleep } from '#miao/utils'
-import { plugin } from '#miao/core'
+import { ConfigController as cfg } from 'yunzai/config'
+import { sleep } from 'yunzai/utils'
+import { plugin } from 'yunzai/core'
 /**
  * 
  */

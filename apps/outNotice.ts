@@ -1,4 +1,4 @@
-import { plugin } from '#miao/core'
+import { plugin } from 'yunzai/core'
 export class outNotice extends plugin {
     tips = '退群了'
     constructor() {

@@ -1,11 +1,11 @@
-import { makeForwardMsg, plugin } from '#miao/core'
+import { makeForwardMsg, plugin } from 'yunzai/core'
 import lodash from 'lodash'
 import fs from 'node:fs'
 import { Restart } from './restart.js'
-import  {} from '#miao/core'
-import { sleep } from '#miao/utils'
+import  {} from 'yunzai/core'
+import { sleep } from 'yunzai/utils'
 import { exec, execSync } from 'child_process'
-import { BOT_NAME } from '#miao/config'
+import { BOT_NAME } from 'yunzai/config'
 
 let uping = false
 

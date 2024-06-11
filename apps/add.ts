@@ -5,9 +5,9 @@ import { pipeline } from 'stream'
 import { promisify } from 'util'
 import fetch from 'node-fetch'
 import moment from 'moment'
-import { ConfigController as cfg } from '#miao/config'
-import { plugin } from '#miao/core'
-import * as common from '#miao/core'
+import { ConfigController as cfg } from 'yunzai/config'
+import { plugin } from 'yunzai/core'
+import { makeForwardMsg } from 'yunzai/core'
 
 const textArr = {}
 
@@ -846,7 +846,7 @@ export class add extends plugin {
       title = `表情${search}，${count}条`
     }
 
-    let forwardMsg = await common.makeForwardMsg(this.e, [title, ...result], title)
+    let forwardMsg = await makeForwardMsg(this.e, [title, ...result], title)
 
     this.e.reply(forwardMsg)
   }
@@ -922,7 +922,7 @@ export class add extends plugin {
     let faces = textArr[this.group_id].get(keyWord) || []
     let globalfaces = textArr[this.e.bot.uin].get(keyWord) || []
     faces = [...faces, ...globalfaces]
-   
+
     if (lodash.isEmpty(faces)) {
       await this.e.reply(`表情${keyWord}不存在`)
       return
@@ -959,7 +959,7 @@ export class add extends plugin {
       return
     }
 
-    let forwardMsg = await common.makeForwardMsg(this.e, replyArr, `表情${keyWord}详情`)
+    let forwardMsg = await makeForwardMsg(this.e, replyArr, `表情${keyWord}详情`)
 
     this.e.reply(forwardMsg)
   }
