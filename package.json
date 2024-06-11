@@ -1,0 +1,12 @@
+{
+  "name": "system-plugin",
+  "version": "1.0.0-rc.0",
+  "author": "Yoimiya-Kokomi, Le-niao",
+  "description": "QQ Group Bot",
+  "main": "./index.js",
+  "private":true,
+  "type": "module",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}
