@@ -1,8 +1,8 @@
-import { plugin } from 'yunzai/core'
+import { Plugin } from 'yunzai/core'
 /**
  * 
  */
-export class example2 extends plugin {
+export class example2 extends Plugin {
   constructor () {
     /**
       name: '复读',

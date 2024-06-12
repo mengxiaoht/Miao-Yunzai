@@ -1,10 +1,10 @@
 
 import { ConfigController as cfg } from 'yunzai/config'
-import { plugin } from 'yunzai/core'
+import { Plugin } from 'yunzai/core'
 /**
  * 
  */
-export class disPri extends plugin {
+export class disPri extends Plugin {
   /**
    * 
    */

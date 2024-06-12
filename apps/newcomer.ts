@@ -1,8 +1,8 @@
-import { plugin, segment } from 'yunzai/core'
+import { Plugin, segment } from 'yunzai/core'
 /**
  * 
  */
-export class newcomer extends plugin {
+export class newcomer extends Plugin {
   /**
    * 
    */
@@ -13,7 +13,7 @@ export class newcomer extends plugin {
      */
     super({
       event: 'notice.group.increase',
-      priority: 5000
+      priority: 5000,
     })
   }
 

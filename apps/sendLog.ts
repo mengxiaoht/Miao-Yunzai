@@ -1,4 +1,4 @@
-import { plugin } from 'yunzai/core'
+import { Plugin } from 'yunzai/core'
 import {makeForwardMsg} from 'yunzai/core'
 import fs from "node:fs"
 import lodash from "lodash"
@@ -7,7 +7,7 @@ import moment from "moment"
 /**
  * 
  */
-export class sendLog extends plugin {
+export class sendLog extends Plugin {
   lineNum = 100
   maxNum = 1000
   errFile = "logs/error.log"

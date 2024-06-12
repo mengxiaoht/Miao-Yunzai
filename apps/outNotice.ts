@@ -1,5 +1,5 @@
-import { plugin } from 'yunzai/core'
-export class outNotice extends plugin {
+import { Plugin } from 'yunzai/core'
+export class outNotice extends Plugin {
     tips = '退群了'
     constructor() {
         /**

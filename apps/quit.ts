@@ -1,9 +1,9 @@
 import { ConfigController as cfg } from 'yunzai/config'
-import { plugin } from 'yunzai/core'
+import { Plugin } from 'yunzai/core'
 /**
  * 
  */
-export class quit extends plugin {
+export class quit extends Plugin {
   /**
    * 
    */

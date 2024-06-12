@@ -6,12 +6,12 @@ import { promisify } from 'util'
 import fetch from 'node-fetch'
 import moment from 'moment'
 import { ConfigController as cfg } from 'yunzai/config'
-import { plugin } from 'yunzai/core'
+import { Plugin } from 'yunzai/core'
 import { makeForwardMsg } from 'yunzai/core'
 
 const textArr = {}
 
-export class add extends plugin {
+export class add extends Plugin {
 
   /**
    * 

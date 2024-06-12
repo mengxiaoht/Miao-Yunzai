@@ -1,11 +1,11 @@
 
 import { ConfigController as cfg } from 'yunzai/config'
 import { sleep } from 'yunzai/utils'
-import { plugin } from 'yunzai/core'
+import { Plugin } from 'yunzai/core'
 /**
  * 
  */
-export class friend extends plugin {
+export class friend extends Plugin {
   /**
    * 
    */

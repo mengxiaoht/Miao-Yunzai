@@ -1,14 +1,16 @@
 
 import { ConfigController as cfg } from 'yunzai/config'
-import { plugin } from 'yunzai/core'
+import { Plugin } from 'yunzai/core'
 /**
  * 
  */
-export class disFriPoke extends plugin {
+export class disFriPoke extends Plugin {
     constructor() {
-        super({
+        /**
             name: '禁止私聊',
             dsc: '对私聊禁用做处理当开启私聊禁用时只接收cookie以及抽卡链接',
+         */
+        super({
             event: 'notice.friend.poke'
         })
         this.priority = 0

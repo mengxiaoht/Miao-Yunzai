@@ -1,4 +1,4 @@
-import { makeForwardMsg, plugin } from 'yunzai/core'
+import { makeForwardMsg, Plugin } from 'yunzai/core'
 import lodash from 'lodash'
 import fs from 'node:fs'
 import { Restart } from './restart.js'
@@ -9,7 +9,7 @@ import { BOT_NAME } from 'yunzai/config'
 
 let uping = false
 
-export class update extends plugin {
+export class update extends Plugin {
   typeName = BOT_NAME
   messages = []
 
@@ -47,17 +47,17 @@ export class update extends plugin {
     if (/详细|详情|面板|面版/.test(this.e.msg)) return false
 
     /** 获取插件 */
-    let plugin = this.getPlugin()
-    if (plugin === false) return false
+    let Plugin = this.getPlugin()
+    if (Plugin === false) return false
 
     /** 执行更新 */
-    if (plugin === '') {
+    if (Plugin === '') {
       await this.runUpdate('')
       await sleep(1000)
-      plugin = this.getPlugin('miao-plugin')
-      await this.runUpdate(plugin)
+      Plugin = this.getPlugin('miao-Plugin')
+      await this.runUpdate(Plugin)
     } else {
-      await this.runUpdate(plugin)
+      await this.runUpdate(Plugin)
     }
 
     /** 是否需要重启 */
@@ -67,16 +67,16 @@ export class update extends plugin {
     }
   }
 
-  getPlugin(plugin = '') {
-    if (!plugin) {
-      plugin = this.e.msg.replace(/#(强制)?更新(日志)?/, '')
-      if (!plugin) return ''
+  getPlugin(Plugin = '') {
+    if (!Plugin) {
+      Plugin = this.e.msg.replace(/#(强制)?更新(日志)?/, '')
+      if (!Plugin) return ''
     }
 
-    if (!fs.existsSync(`plugins/${plugin}/.git`)) return false
+    if (!fs.existsSync(`Plugins/${Plugin}/.git`)) return false
 
-    this.typeName = plugin
-    return plugin
+    this.typeName = Plugin
+    return Plugin
   }
 
   async execSync(cmd) {
@@ -87,7 +87,7 @@ export class update extends plugin {
     })
   }
 
-  async runUpdate(plugin = '') {
+  async runUpdate(Plugin = '') {
     this.isNowUp = false
 
     let cm = 'git pull --no-rebase'
@@ -97,9 +97,9 @@ export class update extends plugin {
       type = '强制更新'
       cm = `git reset --hard && git pull --rebase --allow-unrelated-histories`
     }
-    if (plugin) cm = `cd "plugins/${plugin}" && ${cm}`
+    if (Plugin) cm = `cd "Plugins/${Plugin}" && ${cm}`
 
-    this.oldCommitId = await this.getcommitId(plugin)
+    this.oldCommitId = await this.getcommitId(Plugin)
 
     logger.mark(`${this.e.logFnc} 开始${type}：${this.typeName}`)
 
@@ -114,31 +114,31 @@ export class update extends plugin {
       return false
     }
 
-    const time = await this.getTime(plugin)
+    const time = await this.getTime(Plugin)
 
     if (/Already up|已经是最新/g.test(ret.stdout)) {
       await this.reply(`${this.typeName} 已是最新\n最后更新时间：${time}`)
     } else {
       await this.reply(`${this.typeName} 更新成功\n更新时间：${time}`)
       this.isUp = true
-      await this.reply(await this.getLog(plugin))
+      await this.reply(await this.getLog(Plugin))
     }
 
     logger.mark(`${this.e.logFnc} 最后更新时间：${time}`)
     return true
   }
 
-  async getcommitId(plugin = '') {
+  async getcommitId(Plugin = '') {
     let cm = 'git rev-parse --short HEAD'
-    if (plugin) cm = `cd "plugins/${plugin}" && ${cm}`
+    if (Plugin) cm = `cd "Plugins/${Plugin}" && ${cm}`
 
     const commitId = await execSync(cm, { encoding: 'utf-8' })
     return lodash.trim(commitId)
   }
 
-  async getTime(plugin = '') {
+  async getTime(Plugin = '') {
     let cm = 'git log -1 --pretty=%cd --date=format:"%F %T"'
-    if (plugin) cm = `cd "plugins/${plugin}" && ${cm}`
+    if (Plugin) cm = `cd "Plugins/${Plugin}" && ${cm}`
 
     let time = ''
     try {
@@ -179,7 +179,7 @@ export class update extends plugin {
   }
 
   async updateAll() {
-    const dirs = fs.readdirSync('./plugins/')
+    const dirs = fs.readdirSync('./Plugins/')
 
     const originalReply = this.reply
 
@@ -216,9 +216,9 @@ export class update extends plugin {
     new Restart(this.e).restart()
   }
 
-  async getLog(plugin = '') {
+  async getLog(Plugin = '') {
     let cm = 'git log -100 --pretty="%h||[%cd] %s" --date=format:"%F %T"'
-    if (plugin) cm = `cd "plugins/${plugin}" && ${cm}`
+    if (Plugin) cm = `cd "Plugins/${Plugin}" && ${cm}`
 
     let logAll
     try {
@@ -247,7 +247,7 @@ export class update extends plugin {
     let end = ''
     try {
       cm = 'git config -l'
-      if (plugin) cm = `cd "plugins/${plugin}" && ${cm}`
+      if (Plugin) cm = `cd "Plugins/${Plugin}" && ${cm}`
       end = await execSync(cm, { encoding: 'utf-8' })
       end = end.match(/remote\..*\.url=.+/g).join('\n\n').replace(/remote\..*\.url=/g, '').replace(/\/\/([^@]+)@/, '//')
     } catch (error) {
@@ -255,12 +255,12 @@ export class update extends plugin {
       await this.reply(error.toString())
     }
 
-    return makeForwardMsg(this.e, [log, end], `${plugin || 'Miao-Yunzai'} 更新日志，共${line}条`)
+    return makeForwardMsg(this.e, [log, end], `${Plugin || 'Miao-Yunzai'} 更新日志，共${line}条`)
   }
 
   async updateLog() {
-    const plugin = this.getPlugin()
-    if (plugin === false) return false
-    return this.reply(await this.getLog(plugin))
+    const Plugin = this.getPlugin()
+    if (Plugin === false) return false
+    return this.reply(await this.getLog(Plugin))
   }
 }

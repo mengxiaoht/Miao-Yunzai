@@ -1,4 +1,4 @@
-import { plugin } from 'yunzai/core'
+import { Plugin } from 'yunzai/core'
 import fetch from 'node-fetch'
 import net from 'net'
 import fs from 'fs'
@@ -22,7 +22,7 @@ const isPortTaken = async (port) => {
 /**
  * 
  */
-export class Restart extends plugin {
+export class Restart extends Plugin {
   key = 'Yz:restart'
 
   /**
