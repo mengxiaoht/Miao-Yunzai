@@ -8,16 +8,14 @@ export class example2 extends Plugin {
       name: '复读',
       dsc: '复读用户发送的内容，然后撤回',
      */
-    super({
-      event: 'message',
-      priority: 5000,
-      rule: [
-        {
-          reg: '^#复读$',
-          fnc: 'repeat'
-        }
-      ]
-    })
+    super()
+    this.priority = 5000
+    this.rule = [
+      {
+        reg: '^#复读$',
+        fnc: this.repeat.name
+      }
+    ]
   }
   /**
    * 

@@ -34,21 +34,20 @@ export class Restart extends Plugin {
       name: '重启',
       dsc: '#重启',
      */
-    super({
-      event: 'message',
-      priority: 10,
-      rule: [{
+    super()
+    this.priority = 10
+    this.rule = [
+      {
         reg: '^#重启$',
-        fnc: 'restart',
+        fnc: this.restart.name,
         permission: 'master'
-      }, {
+      },
+      {
         reg: '^#(停机|关机)$',
-        fnc: 'stop',
+        fnc: this.stop.name,
         permission: 'master'
-      }]
-    })
-
-
+      }
+    ]
   }
 
   async init() {

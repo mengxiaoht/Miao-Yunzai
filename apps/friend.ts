@@ -15,9 +15,8 @@ export class friend extends Plugin {
       name: 'autoFriend',
       dsc: '自动同意好友',
      */
-    super({
-      event: 'request.friend'
-    })
+    super()
+    this.event  = 'request.friend'
   }
   /**
    * 

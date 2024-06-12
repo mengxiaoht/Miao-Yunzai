@@ -11,10 +11,9 @@ export class newcomer extends Plugin {
       name: '欢迎新人',
       dsc: '新人入群欢迎',
      */
-    super({
-      event: 'notice.group.increase',
-      priority: 5000,
-    })
+    super()
+    this.event  = 'notice.group.increase'
+    this.priority = 5000
   }
 
   /**

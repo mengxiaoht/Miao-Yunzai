@@ -6,9 +6,8 @@ export class outNotice extends Plugin {
             name: '退群通知',
             dsc: 'xx退群了',
          */
-        super({
-            event: 'notice.group.decrease'
-        })
+        super()
+        this.event  = 'notice.group.decrease'
     }
     /**
      * 

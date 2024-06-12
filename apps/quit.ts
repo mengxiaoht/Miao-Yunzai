@@ -12,9 +12,8 @@ export class quit extends Plugin {
       name: 'notice',
       dsc: '自动退群',
      */
-    super({
-      event: 'notice.group.increase'
-    })
+    super()
+    this.event = 'notice.group.increase'
   }
   /**
    * 

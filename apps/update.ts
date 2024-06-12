@@ -12,32 +12,28 @@ let uping = false
 export class update extends Plugin {
   typeName = BOT_NAME
   messages = []
-
   constructor() {
     /**
       name: '更新',
       dsc: '#更新 #强制更新',
      */
-    super({
-      event: 'message',
-      priority: 4000,
-      rule: [
-        {
-          reg: '^#更新日志',
-          fnc: 'updateLog'
-        },
-        {
-          reg: '^#(强制)?更新',
-          fnc: 'update'
-        },
-        {
-          reg: '^#(静默)?全部(强制)?更新$',
-          fnc: 'updateAll',
-          permission: 'master'
-        }
-      ]
-    })
-
+    super()
+    this.priority  = 4000
+    this.rule =  [
+      {
+        reg: '^#更新日志',
+        fnc: this.updateLog.name
+      },
+      {
+        reg: '^#(强制)?更新',
+        fnc: this.update.name
+      },
+      {
+        reg: '^#(静默)?全部(强制)?更新$',
+        fnc: this.updateAll.name,
+        permission: 'master'
+      }
+    ]
   }
 
   async update() {

@@ -12,22 +12,9 @@ import { makeForwardMsg } from 'yunzai/core'
 const textArr = {}
 
 export class add extends Plugin {
-
-  /**
-   * 
-   */
   path = './data/textJson/'
-
-  /**
-   * 
-   */
   facePath = './data/face/'
-
-  /**
-   * 
-   */
   isGlobal = false
-
   /**
    * 
    */
@@ -36,14 +23,8 @@ export class add extends Plugin {
       name: '添加表情',
       dsc: '添加表情，文字等',
      */
-    super({
-      event: 'message',
-      priority: 50000,
-    });
-
-    /**
-     * rule
-     */
+    super();
+    this.priority = 50000
     this.rule = [
       {
         reg: '^#(全局)?添加(.*)',
@@ -73,22 +54,23 @@ export class add extends Plugin {
   /**
    * 
    */
+  async accept() {
+    /** 处理消息 */
+    if (this.e.atBot && this.e.msg && this.e?.msg.includes('添加') && !this.e?.msg.includes('#')) {
+      this.e.msg = '#' + this.e.msg
+    }
+  }
+
+  
+  /**
+   * 
+   */
   async init() {
     if (!fs.existsSync(this.path)) {
       fs.mkdirSync(this.path)
     }
     if (!fs.existsSync(this.facePath)) {
       fs.mkdirSync(this.facePath)
-    }
-  }
-
-  /**
-   * 
-   */
-  async accept() {
-    /** 处理消息 */
-    if (this.e.atBot && this.e.msg && this.e?.msg.includes('添加') && !this.e?.msg.includes('#')) {
-      this.e.msg = '#' + this.e.msg
     }
   }
 

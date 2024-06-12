@@ -14,9 +14,8 @@ export class invite extends Plugin {
       name: 'invite',
       dsc: '主人邀请自动进群',
      */
-    super({
-      event: 'request.group.invite'
-    })
+    super()
+    this.event  = 'request.group.invite'
   }
   /**
    * 

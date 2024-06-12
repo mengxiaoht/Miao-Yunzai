@@ -11,15 +11,13 @@ export class status extends Plugin {
       dsc: '#状态',
    */
   constructor() {
-    super({
-      event: 'message',
-      rule: [
-        {
-          reg: '^#状态$',
-          fnc: 'status'
-        }
-      ]
-    })
+    super()
+    this.rule = [
+      {
+        reg: '^#状态$',
+        fnc: this.status.name
+      }
+    ]
   }
 
   /**
@@ -69,7 +67,7 @@ export class status extends Plugin {
     await this.reply(msg)
   }
 
-  async getCount(groupId = '') {
+  async getCount(groupId:number | string = '') {
     this.date = moment().format('MMDD')
     this.month = Number(moment().month()) + 1
 

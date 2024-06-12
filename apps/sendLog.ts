@@ -16,18 +16,15 @@ export class sendLog extends Plugin {
     /**
       name: "发送日志",
       dsc: "发送最近100条运行日志",
-     * 
      */
-    super({
-      event: "message",
-      rule: [
-        {
-          reg: "^#(运行|错误)*日志[0-9]*(.*)",
-          fnc: "sendLog",
-          permission: "master"
-        }
-      ]
-    })
+    super()
+    this.rule = [
+      {
+        reg: "^#(运行|错误)*日志[0-9]*(.*)",
+        fnc: this.sendLog.name,
+        permission: "master"
+      }
+    ]
   }
 
   /**

@@ -13,12 +13,8 @@ export class disPri extends Plugin {
       name: '禁止私聊',
       dsc: '对私聊禁用做处理当开启私聊禁用时只接收cookie以及抽卡链接',
      */
-    super({
-      event: 'message.private'
-    })
-    /**
-     * 
-     */
+    super()
+    this.event = 'message.private'
     this.priority = 0
   }
 
