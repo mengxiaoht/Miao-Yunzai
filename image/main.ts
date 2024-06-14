@@ -39,10 +39,11 @@ for (const flie of flies) {
         for (const item of routes) {
           const url = `/${flie.name}${item.url}`
           console.log(`http://127.0.0.1:${Port}${url}`)
+          const options = item?.options ?? {}
           router.get(url, ctx => {
             ctx.body = Com.create(item.element, {
-              ...item.options,
-              html_head: `${item?.options?.html_head ?? ''}<link rel="stylesheet" href="/output.css">`,
+              ...options,
+              html_head: `${options?.html_head ?? ''}<link rel="stylesheet" href="/output.css">`,
               file_create: false
             })
           })
