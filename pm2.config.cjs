@@ -25,4 +25,3 @@ module.exports = {
     }
   ]
 }
-console.log('module.exports', module.exports)

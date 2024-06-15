@@ -5,10 +5,11 @@ import schedule from 'node-schedule'
 import { segment } from 'icqq'
 import chokidar from 'chokidar'
 import moment from 'moment'
-import path from 'node:path'
+import path, { join } from 'node:path'
 import Runtime from './plugins/runtime.js'
 import Handler from './plugins/handler.js'
 import { EventType } from './plugins/types.js'
+import { existsSync } from 'node:fs'
 
 /**
  * 加载插件
@@ -79,43 +80,30 @@ class PluginsLoader {
   }
 
   /**
-   *
+   * 得到插件地址
    * @returns
    */
-  async getPlugins() {
+  #getPlugins = async () => {
+    // 便利得到目录和文件
     const files = await fs.readdir(this.dir, { withFileTypes: true })
     const ret = []
     for (const val of files) {
+      // 是文件
       if (val.isFile()) continue
-      const tmp = {
-        name: val.name,
-        path: `../../${this.dir}/${val.name}`
-      }
-
       try {
-        const dir = `${this.dir}/${val.name}/index.js`
+        let dir = `${this.dir}/${val.name}/index.ts`
+        if (!existsSync(dir)) {
+          dir = `${this.dir}/${val.name}/index.js`
+        }
         if (await fs.stat(dir)) {
-          tmp.path = `${tmp.path}/index.js`
-          ret.push(tmp)
+          ret.push({
+            name: val.name,
+            path: dir
+          })
           continue
         }
       } catch (err) {
-        //
-      }
-
-      const apps = await fs.readdir(`${this.dir}/${val.name}`, {
-        withFileTypes: true
-      })
-      for (const app of apps) {
-        if (!app.isFile()) continue
-        // 解析js和ts
-        if (!/(.js|.ts)$/.test(app.name)) continue
-        ret.push({
-          name: `${tmp.name}/${app.name}`,
-          path: `${tmp.path}/${app.name}`
-        })
-        /** 监听热更新 */
-        this.watch(val.name, app.name)
+        logger.error(err)
       }
     }
     return ret
@@ -126,11 +114,15 @@ class PluginsLoader {
    * @param isRefresh 是否刷新
    */
   async load(isRefresh = false) {
+    // 重置
     this.delCount()
+    // 累计
     if (isRefresh) this.priority = []
+    // 如果
     if (this.priority.length) return
 
-    const files = await this.getPlugins()
+    // 得到插件地址
+    const files = await this.#getPlugins()
 
     logger.info('-----------')
     logger.info('加载插件中...')
@@ -138,8 +130,9 @@ class PluginsLoader {
     this.pluginCount = 0
     const packageErr = []
 
+    // 返回成功的
     await Promise.allSettled(
-      files.map(file => this.importPlugin(file, packageErr))
+      files.map(file => this.#importPlugin(file, packageErr))
     )
 
     this.packageTips(packageErr)
@@ -157,18 +150,18 @@ class PluginsLoader {
    * @param file
    * @param packageErr
    */
-  async importPlugin(file, packageErr?: any) {
+  #importPlugin = async (file, packageErr?: any) => {
     try {
-      let app = await import(file.path)
-      if (app.apps) app = { ...app.apps }
+      const app = await import(`file://${join(process.cwd(), file.path)}`)
       const pluginArray = []
-      lodash.forEach(app, p => pluginArray.push(this.loadPlugin(file, p)))
+      lodash.forEach(app.apps, p => pluginArray.push(this.loadPlugin(file, p)))
       for (const i of await Promise.allSettled(pluginArray))
         if (i?.status && i.status != 'fulfilled') {
           logger.error(`加载插件错误：${logger.red(file.name)}`)
           logger.error(decodeURI(i.reason))
         }
     } catch (error) {
+      console.error(error)
       if (packageErr && error.stack.includes('Cannot find package')) {
         packageErr.push({ error, file })
       } else {
@@ -185,6 +178,7 @@ class PluginsLoader {
    * @returns
    */
   async loadPlugin(file, p) {
+    // 不存在原型链
     if (!p?.prototype) return
 
     /**
@@ -390,23 +384,19 @@ class PluginsLoader {
 
     for (const plugin of priority) {
       if (!Array.isArray(plugin?.rule) || plugin.rule.length < 1) continue
-
       for (const v of plugin.rule) {
         /**
          * 判断事件
          */
         if (v.event && !this.filtEvent(e, v)) continue
-
         /**
          *
          */
         if (!new RegExp(v.reg).test(e.msg)) continue
-
         /**
          *
          */
         e.logFnc = `[${plugin.name}][${v.fnc}]`
-
         /**
          *
          */
@@ -415,27 +405,21 @@ class PluginsLoader {
             `${e.logFnc}${e.logText} ${lodash.truncate(e.msg, { length: 100 })}`
           )
         }
-
         /**
          * 判断权限
          */
         if (!this.filtPermission(e, v)) break
-
         /**
          *
          */
         try {
           const start = Date.now()
-
           // 不是函数。
           if (typeof plugin[v.fnv] !== 'function') {
             continue
           }
-
           const res = await plugin[v.fnc](e)
-
           // 非常规返回，不是true，直接结束。
-
           if (typeof res != 'boolean' && res !== true) {
             /**
              * 设置冷却cd
@@ -448,7 +432,6 @@ class PluginsLoader {
             }
             break
           }
-
           //
         } catch (error) {
           logger.error(`${e.logFnc}`)
@@ -485,7 +468,6 @@ class PluginsLoader {
    */
   filtPermission(e, v) {
     if (v.permission == 'all' || !v.permission) return true
-
     if (v.permission == 'master') {
       if (e.isMaster) {
         return true
@@ -494,7 +476,6 @@ class PluginsLoader {
         return false
       }
     }
-
     if (e.isGroup) {
       if (!e.member?._info) {
         e.reply('数据加载中，请稍后再试')
@@ -513,7 +494,6 @@ class PluginsLoader {
         }
       }
     }
-
     return true
   }
 
@@ -1199,7 +1179,7 @@ class PluginsLoader {
         /**
          *
          */
-        await this.importPlugin({
+        await this.#importPlugin({
           name: key,
           path: `../../${this.dir}/${key}?${moment().format('X')}`
         })
