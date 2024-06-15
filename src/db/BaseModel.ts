@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Model } from 'sequelize'
-import { Data } from '#miao'
+import { Data } from '../miao.js'
 
 Data.createDir('/data/db', 'root')
 

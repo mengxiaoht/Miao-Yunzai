@@ -1,4 +1,4 @@
-import { exec, spawn } from 'child_process'
+import { execSync, spawn } from 'child_process'
 const argv = [...process.argv].splice(2)
 const argvs = argv.join(' ').replace(/(\S+\.js|\S+\.ts)/g, '')
 
@@ -7,14 +7,7 @@ const argvs = argv.join(' ').replace(/(\S+\.js|\S+\.ts)/g, '')
  * 生成css文件
  * **********
  */
-exec(
-  'tailwindcss -i ./src/input.css -o ./public/output.css',
-  (error, _, __) => {
-    if (error) {
-      //
-    }
-  }
-)
+execSync('tailwindcss -i ./src/input.css -o ./public/output.css')
 
 /**
  * ***************

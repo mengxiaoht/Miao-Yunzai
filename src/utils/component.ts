@@ -2,7 +2,8 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { mkdirSync, writeFileSync } from 'fs'
 import { join } from 'path'
-
+import { createRequire } from './module.js'
+const require = createRequire(import.meta.url)
 /**
  *
  */
@@ -41,8 +42,9 @@ export class Component {
     const dir = join(this.#dir, options?.join_dir ?? '')
     mkdirSync(dir, { recursive: true })
     const address = join(dir, options?.html_name ?? 'hello.html')
+    const href = require('../../public/output.css')
     const DOCTYPE = '<!DOCTYPE html>'
-    const Link = `<link rel="stylesheet" href="../public/output.css"></link>`
+    const Link = `<link rel="stylesheet" href="${href}"></link>`
     const head = `<head>${options?.html_head ?? Link}</head>`
     const body = `<body> ${str} ${options?.html_body ?? ''}</body>`
     const html = `${DOCTYPE}<html>${head}${body}</html>`

@@ -5,14 +5,17 @@ import './tailwindcss.js'
 import Koa from 'koa'
 import KoaStatic from 'koa-static'
 import Router from 'koa-router'
-import { Component } from 'yunzai/utils'
+import { Component, createRequire } from 'yunzai/utils'
 import { readdirSync } from 'fs'
 import { join } from 'path'
+import mount from 'koa-mount'
+const require = createRequire(import.meta.url)
 
 const Com = new Component()
 const app = new Koa()
 const router = new Router()
 const Port = 8080
+const PATH = process.cwd()
 
 // 得到plugins目录
 const flies = readdirSync(join(process.cwd(), 'plugins'), {
@@ -40,11 +43,17 @@ for (const flie of flies) {
           console.log(`http://127.0.0.1:${Port}${url}`)
           const options = item?.options ?? {}
           router.get(url, ctx => {
-            ctx.body = Com.create(item.element, {
+            const href = require('../public/output.css')
+            const HTML = Com.create(item.element, {
               ...options,
-              html_head: `${options?.html_head ?? ''}<link rel="stylesheet" href="/output.css">`,
+              html_head: `${options?.html_head ?? ''}<link rel="stylesheet" href="${href}">`,
               file_create: false
             })
+            // 转义路径中的所有反斜杠
+            const escapedPath = PATH.replace(/\\/g, '\\\\')
+            // 创建一个正则表达式，'g' 表示全局匹配
+            const regex = new RegExp(escapedPath, 'g')
+            ctx.body = HTML.replace(regex, '/file')
           })
         }
       }
@@ -53,7 +62,7 @@ for (const flie of flies) {
 }
 
 // static
-app.use(KoaStatic('public'))
+app.use(mount('/file', KoaStatic(PATH)))
 
 // routes
 app.use(router.routes())
