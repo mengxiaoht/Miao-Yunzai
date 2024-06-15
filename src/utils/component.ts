@@ -8,11 +8,27 @@ const require = createRequire(import.meta.url)
  *
  */
 export type ComponentCreateOpsionType = {
-  html_head?: string
-  html_name?: string
+  /**
+   * 扩展路径
+   */
   join_dir?: string
-  html_body?: string
+  /**
+   *生成的文件名
+   */
+  html_name?: string
+  /***
+   * 是否保存并返回地址
+   * 默认 true
+   */
   file_create?: boolean
+  /**
+   * 插入头部的内容
+   */
+  html_head?: string
+  /**
+   * 底部插入的内容
+   */
+  html_body?: string
 }
 
 /**
@@ -45,8 +61,8 @@ export class Component {
     const href = require('../../public/output.css')
     const DOCTYPE = '<!DOCTYPE html>'
     const Link = `<link rel="stylesheet" href="${href}"></link>`
-    const head = `<head>${Link}${options?.html_head}</head>`
-    const body = `<body> ${str} ${options?.html_body ?? ''}</body>`
+    const head = `<head>${Link}${options?.html_head ?? ''}</head>`
+    const body = `<body>${str}${options?.html_body ?? ''}</body>`
     const html = `${DOCTYPE}<html>${head}${body}</html>`
     if (
       typeof options?.file_create == 'boolean' &&
