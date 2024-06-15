@@ -73,4 +73,16 @@ export class Component {
     writeFileSync(address, html)
     return address
   }
+
+  /**
+   * 将 React 元素渲染为其初始 HTML。这
+   * 应该只在服务器上使用。
+   * React 将返回一个 HTML 字符串。
+   * 您可以使用此方法在服务器上生成 HTML 并在初始请求上发送标记，
+   * 以加快页面加载速度并允许搜索 出
+   * 于 SEO 目的而抓取您的页面的引擎。
+   * 如果你打电话ReactDOMClient.hydrateRoot()在已经具有此服务器渲染标记的节点上，
+   * React 将保留它并仅附加事件处理程序，允许您 获得非常高性能的首次加载体验。
+   */
+  render = renderToString
 }
