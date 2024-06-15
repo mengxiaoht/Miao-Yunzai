@@ -21,12 +21,7 @@ export const PuppeteerLunchConfig = new BaseConfig<PuppeteerLaunchOptions>({
     '--no-zygote',
     '--single-process'
   ]
-  // 设置浏览器默认尺寸
-  // defaultViewport: {
-  //   width: 1280,
-  //   height: 853,
-  //   isMobile: true
-  // }
+  // BOT浏览器默认尺寸 753 X 1180
 })
 
 /**

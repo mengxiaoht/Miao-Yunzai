@@ -257,11 +257,10 @@ export class Plugin {
    * @param cfg
    * @returns
    */
-  async renderImg(plugin, tpl, data, cfg) {
+  async renderImg(plugin, tpl, data, cfg = {}) {
     return Common.render(plugin, tpl, data, { ...cfg, e: this.e })
   }
 }
-
 
 /**
  * @deprecated 已废弃
