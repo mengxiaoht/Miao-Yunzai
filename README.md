@@ -1,8 +1,6 @@
 # System-Plugin
 
-Miao-Yunzai V4 插件开发示例
-
-该插件并不会频繁更新，只是开发用例，功能可自行选择
+提供一些必要的，对机器人进行管理的功能。
 
 ## 使用教程
 
@@ -12,3 +10,21 @@ Miao-Yunzai V4 插件开发示例
 git clone --depth=1 -b system https://github.com/yoimiya-kokomi/Miao-Yunzai.git ./plugins/system-plugin
 ```
 
+## 功能列表
+
+
+| 功能  |  指令  | 说明  |
+|-------| ----- |------ |
+| 日志 | #更新日志 #运行日志 | 嘎嘎 |
+| 更新| #更新 #全部更新 | 嘎嘎 |
+| 状态 | #状态 | 嘎嘎 |
+| 运行 | #重启 #关机 | 嘎嘎 |
+| 娱乐 | #复读 | 嘎嘎|
+| 表情 | #添加xxx | 嘎嘎|
+
+
+## 图片开发
+
+```sh
+npm run image
+```

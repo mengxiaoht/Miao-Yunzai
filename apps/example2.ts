@@ -12,7 +12,7 @@ export class example2 extends Plugin {
     this.priority = 5000
     this.rule = [
       {
-        reg: '^#复读$',
+        reg: /^#复读$/,
         fnc: this.repeat.name
       }
     ]

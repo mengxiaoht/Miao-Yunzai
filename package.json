@@ -1,13 +1,7 @@
 {
   "name": "system-plugin",
   "type": "module",
-  "scripts": {
-  },
-  "dependencies": {
-    "image-size": "^1.0.2"
-  },
-  "devDependencies": {
-    "cheerio": "1.0.0-rc.12",
-    "request": "^2.88.2"
-  }
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
 }

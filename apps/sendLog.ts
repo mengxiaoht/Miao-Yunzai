@@ -24,7 +24,7 @@ export class sendLog extends Plugin {
     super()
     this.rule = [
       {
-        reg: "^#(运行|错误)*日志[0-9]*(.*)",
+        reg: /^#(运行|错误)*日志[0-9]*(.*)/,
         fnc: this.sendLog.name,
         permission: "master"
       }

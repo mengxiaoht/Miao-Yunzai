@@ -42,12 +42,12 @@ export class Restart extends Plugin {
     this.priority = 10
     this.rule = [
       {
-        reg: '^#重启$',
+        reg: /^#重启$/,
         fnc: this.restart.name,
         permission: 'master'
       },
       {
-        reg: '^#(停机|关机)$',
+        reg: /^#(停机|关机)$/,
         fnc: this.stop.name,
         permission: 'master'
       }

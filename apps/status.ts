@@ -19,7 +19,7 @@ export class status extends Plugin {
     super()
     this.rule = [
       {
-        reg: '^#状态$',
+        reg: /^#状态$/,
         fnc: this.status.name
       }
     ]

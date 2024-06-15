@@ -13,7 +13,7 @@ import { BOT_NAME } from 'yunzai/config'
 
 let uping = false
 
-const Cache = new Map()
+// const Cache = new Map()
 
 /**
  * 

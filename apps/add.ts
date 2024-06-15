@@ -30,24 +30,24 @@ export class add extends Plugin {
     this.priority = 50000
     this.rule = [
       {
-        reg: '^#(全局)?添加(.*)',
+        reg: /^#(全局)?添加(.*)/,
         fnc: this.add.name
       },
       {
-        reg: '^#(全局)?删除(.*)',
+        reg: /^#(全局)?删除(.*)/,
         fnc: this.del.name
       },
       {
-        reg: '(.*)',
+        reg: /(.*)/,
         fnc: this.getText.name,
         log: false
       },
       {
-        reg: '^#+(全局)?(?:查看|查询)(?:表情|词条)(.+)$',
+        reg: /^#+(全局)?(?:查看|查询)(?:表情|词条)(.+)$/,
         fnc: this.faceDetail.name
       },
       {
-        reg: '#(全局)?(表情|词条)(.*)',
+        reg: /#(全局)?(表情|词条)(.*)/,
         fnc: this.list.name
       },
     ]
