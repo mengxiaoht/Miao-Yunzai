@@ -1,14 +1,12 @@
 # Miao-Yunzai
 
-你应该积极使用 V3 ，它仍然是长期支持并维护的版本
-
 > 必要环境 Windows/Linux + Chrome/Chromium/Edge
 
 > 必要环境 Node.js>16.14.0 + Redis>5.0.0
 
 > 推荐环境 Node.js@18.18.2 + Rediss@6.0.0
 
-[！点击阅读Miao-Yunzai文档了解更多](https://ningmengchongshui.github.io/Miao-Yunzai-Docs/)
+[☞点击阅读文档了解更多](https://ningmengchongshui.github.io/Miao-Yunzai-Docs/)
 
 ## 使用教程
 
@@ -58,18 +56,6 @@ npm run app
 
 ```sh
 npm run login
-```
-
-- 托管
-
-```sh
-npm run start
-```
-
-- 杀死进程
-
-```sh
-npm run kill
 ```
 
 ## 致谢

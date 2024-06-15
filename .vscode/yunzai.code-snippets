@@ -1,1 +1,46 @@
-{}
+{
+  "Test Plugin Class": {
+    "prefix": "plugin",
+    "body": [
+      "import { Plugin } from 'yunzai/core'",
+      "export class App extends Plugin {",
+      "    constructor() {",
+      "        super()",
+      "        this.rule = [",
+      "           $1",
+      "        ]",
+      "    }",
+      "}"
+    ],
+    "description": "Create a new App plugin class for Yunzai"
+  },
+  "Image Class with Puppeteer": {
+    "prefix": "image",
+    "body": [
+      "import React from 'react'",
+      "import { Component, Puppeteer } from 'yunzai/utils'",
+      "const Com = new Component()",
+      "export class Image {",
+      "    Pup: typeof Puppeteer.prototype = null",
+      "    constructor() {",
+      "        // init",
+      "        this.Pup = new Puppeteer()",
+      "        // start",
+      "        this.Pup.start()",
+      "    }",
+      "    /**",
+      "     * 为指定用户生成html 生成指定数据下的html文件",
+      "     * @returns",
+      "     */",
+      "    createHello(uid: number, Props) {",
+      "        const Address = Com.create(<></>, {",
+      "            join_dir: 'hello',",
+      "            html_name: `${uid}.html`,",
+      "        })",
+      "        return this.Pup.render(Address)",
+      "    }",
+      "}"
+    ],
+    "description": "Creates a class that utilizes Puppeteer from yunzai/utils for rendering HTML."
+  }
+}
