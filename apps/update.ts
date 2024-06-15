@@ -175,27 +175,28 @@ export class update extends Plugin {
   async updateAll() {
     const dirs = fs.readdirSync('./plugins/')
 
-    const originalReply = this.reply
+    const MSG = (message)=>{
+        // 收集
+        this.messages.push(message)
+    }
 
     const testReg = /^#静默全部(强制)?更新$/.test(this.e.msg)
     if (testReg) {
       await this.reply(`开始执行静默全部更新,请稍等...`)
-      this.reply = (message) => {
-        this.messages.push(message)
-      }
     }
 
     await this.runUpdate()
 
-    for (let plu of dirs) {
-      plu = this.getPlugin(plu)
-      if (plu === false) continue
+    for (const plu of dirs) {
+      const Plu = this.getPlugin(plu)
+      if (Plu === false) continue
       await sleep(1500)
-      await this.runUpdate(plu)
+      await this.runUpdate(Plu)
     }
 
     if (testReg) {
-      await this.reply(await makeForwardMsg(this.e, this.messages))
+      const msg = await makeForwardMsg(this.e, this.messages)
+      MSG(msg)
     }
 
     if (this.isUp) {
@@ -203,7 +204,6 @@ export class update extends Plugin {
       setTimeout(() => this.restart(), 2000)
     }
 
-    this.reply = originalReply
   }
 
   restart() {
