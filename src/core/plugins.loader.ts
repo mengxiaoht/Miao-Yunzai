@@ -295,7 +295,7 @@ class PluginsLoader {
     if (!this.checkLimit(e)) return
 
     /**
-     * 处理消息
+     * 重新处理e
      */
     this.dealMsg(e)
 
@@ -606,6 +606,13 @@ class PluginsLoader {
       e.logText = `[私聊][${e.sender.nickname}(${e.user_id})]`
     }
 
+    if (e?.user_id) {
+      e.user_avatar = `https://q1.qlogo.cn/g?b=qq&s=0&nk=${e.user_id}`
+    }
+    if (e?.group_id) {
+      e.group_avatar = `https://p.qlogo.cn/gh/${e.group_id}/${e.group_id}/640/`
+    }
+
     /**
      *
      */
@@ -650,7 +657,7 @@ class PluginsLoader {
      * 只关注主动at msg处理
      */
     if (e.msg && e.isGroup) {
-      let groupCfg = cfg.getGroup(e.group_id)
+      const groupCfg = cfg.getGroup(e.group_id)
       let alias = groupCfg.botAlias
       if (!Array.isArray(alias)) {
         alias = [alias]

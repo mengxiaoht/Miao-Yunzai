@@ -78,7 +78,18 @@ interface EventTypeBase {
   /**
    * 群名
    */
-  group_name: string
+  group_name: string;
+
+  /**
+   * 用户头像
+   */
+  user_avatar: string | null
+
+  /**
+   *  群头像
+   */
+  group_avatar: string | null
+
   /**
    * 
    */
