@@ -210,7 +210,7 @@ export class Plugin {
    * @param isGroup
    * @returns
    */
-  getContext(type: string, isGroup?: boolean) {
+  getContext(type?: string, isGroup?: boolean) {
     if (type) return State[this.conKey(isGroup)]?.[type]
     return State[this.conKey(isGroup)]
   }

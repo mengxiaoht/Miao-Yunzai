@@ -340,27 +340,34 @@ class PluginsLoader {
      *
      */
     for (const plugin of priority) {
-      /**
-       * 上下文hook
-       */
-      if (!plugin.getContext) continue
+      if (!plugin?.getContext) continue
       const context = {
         ...plugin.getContext(),
         ...plugin.getContext(false, true)
       }
-      if (!lodash.isEmpty(context)) {
-        let ret
-        for (const fnc in context) {
-          // 不是函数，错误插件错误写法
-          if (typeof plugin[fnc] !== 'function') {
-            continue
-          }
-          ret ||= await plugin[fnc](context[fnc])
-        }
-        // 返回continue时，继续响应后续插件
-        if (ret === 'continue') continue
-        return
+
+      if (lodash.isEmpty(context)) {
+        continue
       }
+
+      // 不为空的时候
+      let ret = false
+
+      // 从方法里执行
+      for (const fnc in context) {
+        // 不是函数，错误插件错误写法
+        if (typeof plugin[fnc] !== 'function') {
+          continue
+        }
+        ret = await plugin[fnc](context[fnc])
+      }
+
+      // 不是约定的直接
+      if (typeof ret != 'boolean' && ret !== true) {
+        break
+      }
+
+      //
     }
 
     /**
