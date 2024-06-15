@@ -2,6 +2,8 @@ import { plugin } from 'yunzai/core'
 import User from '../model/user.js'
 import { MysInfo } from 'yunzai/mys'
 export class userAdmin extends plugin {
+  User = null
+  button = null
   constructor(e) {
     /**
       name: '用户管理',

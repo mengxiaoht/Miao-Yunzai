@@ -2,6 +2,9 @@ import base from './base.js'
 import { MysInfo } from 'yunzai/mys'
 import {gsCfg} from 'yunzai/mys'
 import lodash from 'lodash'
+
+// tudo
+
 import { Weapon, Character } from '#miao.models'
 
 export default class WeaponModel extends base {

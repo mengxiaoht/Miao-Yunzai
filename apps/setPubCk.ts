@@ -28,8 +28,9 @@ export class setPubCk extends plugin {
       ]
     })
 
-    this.file = "./plugins/genshin/config/mys.pubCk.yaml"
   }
+  
+  file = "./plugins/genshin/config/mys.pubCk.yaml"
 
   /** 配置公共ck */
   async setPubCk () {

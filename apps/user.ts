@@ -2,9 +2,7 @@ import { plugin } from 'yunzai/core'
 import { gsCfg} from 'yunzai/mys'
 import User from '../model/user.js'
 export class user extends plugin {
-
   User = null
-
   constructor(e) {
     /**
      * 

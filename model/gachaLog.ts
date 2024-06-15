@@ -4,6 +4,9 @@ import lodash from "lodash"
 import fs from "node:fs" 
 import { downFile, sleep} from 'yunzai/utils'
 import { gsCfg } from 'yunzai/mys'
+
+// tudo
+
 import { Character, Weapon } from "#miao.models"
 
 export default class GachaLog extends base {
