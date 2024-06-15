@@ -1,6 +1,5 @@
-import '../src/init/modules.js'
-import '../src/init/logger.js'
 import '../src/init/config.js'
+import '../src/init/logger.js'
 import '../src/init/redis.js'
 import './tailwindcss.js'
 import Koa from 'koa'
