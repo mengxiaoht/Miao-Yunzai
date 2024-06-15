@@ -608,6 +608,7 @@ class PluginsLoader {
 
     if (e?.user_id) {
       e.user_avatar = `https://q1.qlogo.cn/g?b=qq&s=0&nk=${e.user_id}`
+      e.user_name = e.sender.nickname
     }
     if (e?.group_id) {
       e.group_avatar = `https://p.qlogo.cn/gh/${e.group_id}/${e.group_id}/640/`

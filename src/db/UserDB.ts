@@ -1,8 +1,6 @@
 import BaseModel from './BaseModel.js'
 import lodash from 'lodash'
-import { UserGameDB } from './index.js'
 import MysUtil from '../mys/MysUtil.js'
-import MysUserDB from './MysUserDB.js'
 
 const { Types } = BaseModel
 
