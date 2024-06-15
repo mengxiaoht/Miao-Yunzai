@@ -5,11 +5,10 @@ import './tailwindcss.js'
 import Koa from 'koa'
 import KoaStatic from 'koa-static'
 import Router from 'koa-router'
-import { Component, createRequire } from 'yunzai/utils'
+import { Component } from 'yunzai/utils'
 import { readdirSync } from 'fs'
 import { join } from 'path'
 import mount from 'koa-mount'
-const require = createRequire(import.meta.url)
 
 const Com = new Component()
 const app = new Koa()
@@ -43,10 +42,9 @@ for (const flie of flies) {
           console.log(`http://127.0.0.1:${Port}${url}`)
           const options = item?.options ?? {}
           router.get(url, ctx => {
-            const href = require('../public/output.css')
             const HTML = Com.create(item.element, {
               ...options,
-              html_head: `${options?.html_head ?? ''}<link rel="stylesheet" href="${href}">`,
+              html_head: options?.html_head ?? '',
               file_create: false
             })
             // 转义路径中的所有反斜杠

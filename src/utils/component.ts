@@ -45,7 +45,7 @@ export class Component {
     const href = require('../../public/output.css')
     const DOCTYPE = '<!DOCTYPE html>'
     const Link = `<link rel="stylesheet" href="${href}"></link>`
-    const head = `<head>${options?.html_head ?? Link}</head>`
+    const head = `<head>${Link}${options?.html_head}</head>`
     const body = `<body> ${str} ${options?.html_body ?? ''}</body>`
     const html = `${DOCTYPE}<html>${head}${body}</html>`
     if (
