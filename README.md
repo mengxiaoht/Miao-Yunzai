@@ -15,7 +15,7 @@
 - 安装源码
 
 ```sh
-git clone --depth=1 -b dev https://github.com/yoimiya-kokomi/Miao-Yunzai.git
+git clone --depth=1 -b dev https://gitee.com/yoimiya-kokomi/Miao-Yunzai.git
 ```
 
 - 进入目录
@@ -28,15 +28,10 @@ cd Miao-Yunzai
 
 ```sh
 # 原神插件
-git clone --depth=1 -b genshin https://github.com/yoimiya-kokomi/Miao-Yunzai.git ./plugins/genshin/
-
-
-# 系统插件
-git clone --depth=1 -b system https://github.com/yoimiya-kokomi/Miao-Yunzai.git ./plugins/system/
-
+git clone --depth=1 -b genshin https://gitee.com/yoimiya-kokomi/Miao-Yunzai.git ./plugins/genshin/
 
 # 喵喵插件
-git clone --depth=1 https://github.com/yoimiya-kokomi/miao-plugin.git ./plugins/miao-plugin/
+git clone --depth=1 https://gitee.com/yoimiya-kokomi/miao-plugin.git ./plugins/miao-plugin/
 ```
 
 - 安装依赖
