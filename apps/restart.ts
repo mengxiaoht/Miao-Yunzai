@@ -6,6 +6,10 @@ import YAML from 'yaml'
 import { exec } from 'child_process'
 
 /**
+ * tudo
+ */
+
+/**
  * 
  * @param port 
  * @returns 
@@ -51,9 +55,9 @@ export class Restart extends Plugin {
   }
 
   async init() {
-    let restart = await redis.get(this.key)
-    if (restart) {
-      restart = JSON.parse(restart)
+    const data = await redis.get(this.key)
+    if (data) {
+      const   restart = JSON.parse(data)
       const uin = restart?.uin || Bot.uin
       let time = restart.time || new Date().getTime()
       time = (new Date().getTime() - time) / 1000

@@ -11,6 +11,9 @@ import { makeForwardMsg } from 'yunzai/core'
 
 const textArr = {}
 
+/**
+ * tudo
+ */
 export class add extends Plugin {
   path = './data/textJson/'
   facePath = './data/face/'

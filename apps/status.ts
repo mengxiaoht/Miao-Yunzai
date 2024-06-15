@@ -2,6 +2,11 @@
 import { ConfigController as cfg } from 'yunzai/config'
 import moment from 'moment'
 import { Plugin } from 'yunzai/core'
+
+/**
+ * tudo
+ */
+
 /**
  * 
  */
