@@ -1,18 +1,17 @@
-import { DataTypes } from 'sequelize'
 import BaseModel from './BaseModel.js'
 import lodash from 'lodash'
-/**
- *
- */
+
+const { Types } = BaseModel
+
 const COLUMNS = {
   // 用户ID，qq为数字
   userId: {
-    type: DataTypes.STRING
+    type: Types.STRING
   },
-  game: DataTypes.STRING,
-  uid: DataTypes.STRING,
+  game: Types.STRING,
+  uid: Types.STRING,
   data: {
-    type: DataTypes.STRING,
+    type: Types.STRING,
     get() {
       let data = this.getDataValue('data')
       let ret = {}
@@ -34,22 +33,9 @@ const COLUMNS = {
   }
 }
 
-/**
- *
- */
 class UserGameDB extends BaseModel {}
 
-/**
- *
- */
 BaseModel.initDB(UserGameDB, COLUMNS)
-
-/**
- *
- */
 await UserGameDB.sync()
 
-/**
- *
- */
 export default UserGameDB

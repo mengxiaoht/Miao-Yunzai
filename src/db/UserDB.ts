@@ -1,34 +1,34 @@
 import BaseModel from './BaseModel.js'
 import lodash from 'lodash'
+import { UserGameDB } from './index.js'
 import MysUtil from '../mys/MysUtil.js'
-import { DataTypes } from 'sequelize'
+import MysUserDB from './MysUserDB.js'
 
-/**
- *
- */
+const { Types } = BaseModel
+
 const COLUMNS = {
   // 用户ID，qq为数字
   id: {
-    type: DataTypes.STRING,
+    type: Types.STRING,
     autoIncrement: false,
     primaryKey: true
   },
 
   type: {
-    type: DataTypes.STRING,
+    type: Types.STRING,
     defaultValue: 'qq',
     notNull: true
   },
 
   // 昵称
-  name: DataTypes.STRING,
+  name: Types.STRING,
 
   // 头像
-  face: DataTypes.STRING,
+  face: Types.STRING,
 
-  ltuids: DataTypes.STRING,
+  ltuids: Types.STRING,
   games: {
-    type: DataTypes.STRING,
+    type: Types.STRING,
     get() {
       let data = this.getDataValue('games')
       let ret = {}
@@ -50,19 +50,10 @@ const COLUMNS = {
       this.setDataValue('games', JSON.stringify(data))
     }
   },
-  data: DataTypes.STRING
+  data: Types.STRING
 }
 
-/**
- *
- */
 class UserDB extends BaseModel {
-  /**
-   *
-   * @param id
-   * @param type
-   * @returns
-   */
   static async find(id, type = 'qq') {
     // user_id
     id = type === 'qq' ? '' + id : type + id
@@ -77,16 +68,9 @@ class UserDB extends BaseModel {
     return user
   }
 
-  games = null
-  ltuids = null
-
-  /**
-   *
-   * @param user
-   */
   async saveDB(user) {
-    const db = this
-    const ltuids = []
+    let db = this
+    let ltuids = []
     lodash.forEach(user.mysUsers, mys => {
       if (mys.ck && mys.ltuid) {
         ltuids.push(mys.ltuid)
@@ -111,17 +95,7 @@ class UserDB extends BaseModel {
   }
 }
 
-/**
- *
- */
 BaseModel.initDB(UserDB, COLUMNS)
-
-/**
- *
- */
 await UserDB.sync()
 
-/**
- *
- */
 export default UserDB

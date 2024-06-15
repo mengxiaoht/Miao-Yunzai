@@ -1,28 +1,26 @@
 import BaseModel from './BaseModel.js'
-import { DataTypes } from 'sequelize'
 
-/**
- *
- */
+const { Types } = BaseModel
+
 const COLUMNS = {
   // 用户ID，qq为数字
   ltuid: {
-    type: DataTypes.INTEGER,
+    type: Types.INTEGER,
     primaryKey: true
   },
 
   // MysUser类型，mys / hoyolab
   type: {
-    type: DataTypes.STRING,
+    type: Types.STRING,
     defaultValue: 'mys',
     notNull: true
   },
 
   // CK
-  ck: DataTypes.STRING,
-  device: DataTypes.STRING,
+  ck: Types.STRING,
+  device: Types.STRING,
   uids: {
-    type: DataTypes.STRING,
+    type: Types.STRING,
     get() {
       let data = this.getDataValue('uids')
       let ret = {}
@@ -39,15 +37,7 @@ const COLUMNS = {
   }
 }
 
-/**
- *
- */
 class MysUserDB extends BaseModel {
-  ck = null
-  type = null
-  device = null
-  uids = null
-
   static async find(ltuid = '', create = false) {
     // DB查询
     let mys = await MysUserDB.findByPk(ltuid)
@@ -58,6 +48,11 @@ class MysUserDB extends BaseModel {
     }
     return mys || false
   }
+
+  ck = null
+  type = null
+  device = null
+  uids = null
 
   async saveDB(mys) {
     if (!mys.ck || !mys.device || !mys.db) {
@@ -72,17 +67,7 @@ class MysUserDB extends BaseModel {
   }
 }
 
-/**
- *
- */
 BaseModel.initDB(MysUserDB, COLUMNS)
-
-/**
- *
- */
 await MysUserDB.sync()
 
-/**
- *
- */
 export default MysUserDB
