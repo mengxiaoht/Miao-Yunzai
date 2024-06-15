@@ -306,6 +306,24 @@ class PluginsLoader {
      */
     await Runtime.init(e)
 
+    // 判断是否是星铁命令，若是星铁命令则标准化处理
+    // e.isSr = true，且命令标准化为 #星铁 开头
+    Object.defineProperty(e, 'isSr', {
+      get: () => e.game === 'sr',
+      set: v => (e.game = v ? 'sr' : 'gs')
+    })
+    Object.defineProperty(e, 'isGs', {
+      get: () => e.game === 'gs',
+      set: v => (e.game = v ? 'gs' : 'sr')
+    })
+    /**
+     *
+     */
+    if (this.srReg.test(e.msg)) {
+      e.game = 'sr'
+      e.msg = e.msg.replace(this.srReg, '#星铁')
+    }
+
     /**
      *
      */
@@ -315,8 +333,8 @@ class PluginsLoader {
      *
      */
     for (const i of this.priority) {
-      // tudo e 为参数将废弃
       const p = new i.class(e)
+      // 现在给e，后续e将无法访问新增字段
       p.e = e
       /**
        * 判断是否启用功能，过滤事件
@@ -339,6 +357,11 @@ class PluginsLoader {
       if (!lodash.isEmpty(context)) {
         let ret
         for (const fnc in context) {
+          // 不是函数，错误插件错误写法
+          if (typeof plugin[fnc] !== 'function') {
+            // logger.info(plugin, fnc, '不是函数')
+            continue
+          }
           ret ||= await plugin[fnc](context[fnc])
         }
         // 返回continue时，继续响应后续插件
@@ -351,26 +374,6 @@ class PluginsLoader {
      * 是否只关注主动at
      */
     if (!this.onlyReplyAt(e)) return
-
-    // 判断是否是星铁命令，若是星铁命令则标准化处理
-    // e.isSr = true，且命令标准化为 #星铁 开头
-    Object.defineProperty(e, 'isSr', {
-      get: () => e.game === 'sr',
-      set: v => (e.game = v ? 'sr' : 'gs')
-    })
-
-    Object.defineProperty(e, 'isGs', {
-      get: () => e.game === 'gs',
-      set: v => (e.game = v ? 'gs' : 'sr')
-    })
-
-    /**
-     *
-     */
-    if (this.srReg.test(e.msg)) {
-      e.game = 'sr'
-      e.msg = e.msg.replace(this.srReg, '#星铁')
-    }
 
     /**
      * 优先执行 accept
@@ -423,21 +426,17 @@ class PluginsLoader {
          */
         try {
           const start = Date.now()
-          /**
-           *
-           */
-          const res = plugin[v.fnc] && (await plugin[v.fnc](e))
 
-          /**
-           * res 不是  false , 结束匹配
-           * 即 return false 的时候。继续匹配。
-           * tudo
-           * 匹配一次之后就不要再匹配，减少循环。
-           * 因此，修改为 仅有当 return true的时候
-           * 才会继续匹配
-           *
-           */
-          if (res !== false) {
+          // 不是函数。
+          if (typeof plugin[v.fnv] !== 'function') {
+            continue
+          }
+
+          const res = await plugin[v.fnc](e)
+
+          // 非常规返回，不是true，直接结束。
+
+          if (typeof res != 'boolean' && res !== true) {
             /**
              * 设置冷却cd
              */
@@ -449,6 +448,8 @@ class PluginsLoader {
             }
             break
           }
+
+          //
         } catch (error) {
           logger.error(`${e.logFnc}`)
           logger.error(error.stack)
