@@ -97,8 +97,7 @@ export class Restart extends Plugin {
     await redis.set(this.key, data, { EX: 120 })
     if (await isPortTaken(restart_port || 27881)) {
       try {
-        let result = await fetch(`http://localhost:${restart_port || 27881}/restart`)
-        result = await result.text()
+        const result = await fetch(`http://localhost:${restart_port || 27881}/restart`).then(res=>res.text())
         if (result !== `OK`) {
           redis.del(this.key)
           this.e.reply(`操作失败！`)
