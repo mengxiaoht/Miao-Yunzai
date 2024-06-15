@@ -7,7 +7,7 @@ import path from 'path'
  * @returns
  */
 export function createRequire(
-  basePath,
+  basePath: string,
   customExtensions = ['.css', '.png', '.jpg', '.less', '.scss']
 ) {
   const require = cRequire(basePath)

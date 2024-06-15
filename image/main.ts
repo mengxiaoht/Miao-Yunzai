@@ -68,5 +68,5 @@ app.use(router.routes())
 // listen 8000
 app.listen(Port, () => {
   console.log('Server is running on port ' + Port)
-  console.log('自行调整BOT浏览器尺寸 753 X 1180')
+  console.log('自行调整默认浏览器尺寸 800 X 1280 100%')
 })
