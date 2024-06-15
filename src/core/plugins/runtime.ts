@@ -10,6 +10,14 @@ import {
   MysUser
 } from '../../mys/index.js'
 
+import puppeteer from '../../utils/puppeteer/puppeteer.js'
+
+
+import lodash from 'lodash'
+import fs from 'node:fs'
+import { Version } from '../../miao.js'
+
+
 /**
  * ********************
  *  对e进行重构的危险代码
@@ -82,7 +90,7 @@ export default class Runtime {
    * @deprecated 不符合架构设计，已废弃
    */
   get puppeteer() {
-    return null
+    return puppeteer
   }
 
   /**
@@ -231,8 +239,88 @@ export default class Runtime {
 
   /**
    * @deprecated 不符合架构设计，已废弃
+   * @param plugin plugin key
+   * @param path html文件路径，相对于plugin resources目录
+   * @param data 渲染数据
+   * @param cfg 渲染配置
+   * @param cfg.retType 返回值类型
+   * * default/空：自动发送图片，返回true
+   * * msgId：自动发送图片，返回msg id
+   * * base64: 不自动发送图像，返回图像base64数据
+   * @param cfg.beforeRender({data}) 可改写渲染的data数据
+   * @returns {Promise<boolean>}
    */
-  async render(_, __, ___ = {}, ____ = {}) {
-    return false
+  async render (plugin, path, data = {}, cfg = {}) {
+     // 处理传入的path
+     path = path.replace(/.html$/, '')
+     let paths = lodash.filter(path.split('/'), (p) => !!p)
+     path = paths.join('/')
+     // 创建目录
+     const mkdir = (check) => {
+       let currDir = `${process.cwd()}/temp`
+       for (let p of check.split('/')) {
+         currDir = `${currDir}/${p}`
+         if (!fs.existsSync(currDir)) {
+           fs.mkdirSync(currDir)
+         }
+       }
+       return currDir
+     }
+     mkdir(`html/${plugin}/${path}`)
+     // 自动计算pluResPath
+     let pluResPath = `../../../${lodash.repeat('../', paths.length)}plugins/${plugin}/resources/`
+     let miaoResPath = `../../../${lodash.repeat('../', paths.length)}plugins/miao-plugin/resources/`
+     const layoutPath = process.cwd() + '/plugins/miao-plugin/resources/common/layout/'
+     // 渲染data
+     data = {
+       sys: {
+         scale: 1
+       },
+       /** miao 相关参数 **/
+       copyright: `Created By Miao-Yunzai<span class="version">${Version.yunzai}</span> `,
+       _res_path: pluResPath,
+       _miao_path: miaoResPath,
+       _tpl_path: process.cwd() + '/plugins/miao-plugin/resources/common/tpl/',
+       defaultLayout: layoutPath + 'default.html',
+       elemLayout: layoutPath + 'elem.html',
+ 
+       ...data,
+ 
+       /** 默认参数 **/
+       _plugin: plugin,
+       _htmlPath: path,
+       pluResPath,
+       tplFile: `./plugins/${plugin}/resources/${path}.html`,
+       saveId: data.saveId || data.save_id || paths[paths.length - 1],
+       pageGotoParams: {
+         waitUntil: 'networkidle2'
+       }
+     }
+     // 处理beforeRender
+     if (cfg.beforeRender) {
+       data = cfg.beforeRender({ data }) || data
+     }
+     // 保存模板数据
+     if (process.argv.includes('dev')) {
+       // debug下保存当前页面的渲染数据，方便模板编写与调试
+       // 由于只用于调试，开发者只关注自己当时开发的文件即可，暂不考虑app及plugin的命名冲突
+       let saveDir = mkdir(`ViewData/${plugin}`)
+       let file = `${saveDir}/${data._htmlPath.split('/').join('_')}.json`
+       fs.writeFileSync(file, JSON.stringify(data))
+     }
+     // 截图
+     let base64 = await puppeteer.screenshot(`${plugin}/${path}`, data)
+     if (cfg.retType === 'base64') {
+       return base64
+     }
+     let ret = true
+     if (base64) {
+       if (cfg.recallMsg) {
+         ret = await this.e.reply(base64, false, {})
+       } else {
+         ret = await this.e.reply(base64)
+       }
+     }
+     return cfg.retType === 'msgId' ? ret : true
   }
 }

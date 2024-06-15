@@ -1,4 +1,4 @@
-export { Common, Data } from '#miao'
+export { Common, Data, Version } from '#miao'
 export { Character, Weapon } from '#miao.models'
 // import lodash from 'lodash'
 // import { existsSync, mkdirSync } from 'node:fs'
