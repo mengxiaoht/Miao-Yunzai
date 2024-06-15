@@ -1,28 +1,7 @@
 import YAML from 'yaml'
 import chokidar from 'chokidar'
 import { join } from 'node:path'
-import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync } from 'node:fs'
-import { CONFIG_DEFAULT_PATH, CONFIG_INIT_PATH } from './system.js'
-
-/**
- * 配置文件初始化
- */
-export function configInit() {
-  const path = CONFIG_INIT_PATH
-  const pathDef = CONFIG_DEFAULT_PATH
-  const files = readdirSync(pathDef).filter(file => file.endsWith('.yaml'))
-  mkdirSync(join(process.cwd(), path), {
-    'recursive': true
-  })
-  for (const file of files) {
-    if (!existsSync(`${path}${file}`)) {
-      copyFileSync(`${pathDef}${file}`, `${path}${file}`)
-    }
-  }
-  if (!existsSync("data")) mkdirSync("data")
-  if (!existsSync("resources")) mkdirSync("resources")
-}
-
+import { readFileSync, } from 'node:fs'
 /**
  * ********
  * 配置文件

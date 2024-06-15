@@ -1,6 +1,6 @@
 import './init/modules.js'
-import './init/logger.js'
 import './init/config.js'
+import './init/logger.js'
 import './init/redis.js'
 import { promises } from 'node:fs'
 import yaml from 'yaml'
