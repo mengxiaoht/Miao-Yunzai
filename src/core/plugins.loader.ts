@@ -340,6 +340,8 @@ class PluginsLoader {
      *
      */
     for (const plugin of priority) {
+      console.log('plugin', plugin.add)
+
       /**
        * 上下文hook
        */
@@ -352,8 +354,7 @@ class PluginsLoader {
         let ret
         for (const fnc in context) {
           // 不是函数，错误插件错误写法
-          if (typeof plugin[fnc] !== 'function') {
-            // logger.info(plugin, fnc, '不是函数')
+          if (!plugin[fnc]) {
             continue
           }
           ret ||= await plugin[fnc](context[fnc])
@@ -415,7 +416,7 @@ class PluginsLoader {
         try {
           const start = Date.now()
           // 不是函数。
-          if (typeof plugin[v.fnv] !== 'function') {
+          if (!plugin[v.fnc]) {
             continue
           }
           const res = await plugin[v.fnc](e)
