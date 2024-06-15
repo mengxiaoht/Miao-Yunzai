@@ -1,14 +1,16 @@
 import { type GroupMessage } from 'icqq'
-// import { Client } from 'icqq'
-// import { PrivateMessage } from 'oicq'
+import Runtime from './runtime'
 
+/**
+ * 消息事件体
+ */
 export interface EventType extends GroupMessage {
   /**
-   * 是否是主人
+   * 是否是机器人主人
    */
   isMaster: boolean
   /**
-   * 是否是管理员
+   * 是否是机器人管理员
    */
   // isAdmin: boolean;
   /**
@@ -16,13 +18,21 @@ export interface EventType extends GroupMessage {
    */
   isGroup: boolean
   /**
+   * 是否是群管理
+   */
+  // isGroupAdmin:boolean
+  /**
    * 是私聊
    */
-  isPrivate?: any
+  isPrivate: boolean
   /**
    * 是频道
    */
-  isGuild?: any
+  isGuild: boolean
+  /**
+   * 用户名
+   */
+  user_id: number
   /**
    * 用户名
    */
@@ -30,7 +40,7 @@ export interface EventType extends GroupMessage {
   /**
    * 用户头像
    */
-  user_avatar: string | null
+  user_avatar: string
   /**
    * 用户消息
    */
@@ -52,9 +62,15 @@ export interface EventType extends GroupMessage {
   /**
    *  群头像
    */
-  group_avatar: string | null
+  group_avatar: string
+
   /**
-   * 
+   * @deprecated 已废弃
+   */
+  runtime: typeof Runtime.prototype
+
+  /**
+   * @deprecated 已废弃
    */
   group: {
     is_owner: any;
@@ -62,28 +78,30 @@ export interface EventType extends GroupMessage {
     getMemberMap: any;
     quit: any;
     mute_left: any
-
     pickMember: any
-
-
     sendMsg: any
   };
   /**
+   * @deprecated 已废弃
  */
   file: any;
   /**
+   * @deprecated 已废弃
    */
   bot: any;
   /** 
    * 
+   * @deprecated 已废弃
    */
   approve: any;
   /**
    * 
+   * @deprecated 已废弃
    */
   member: any;
   /**
    * 
+   * @deprecated 已废弃
    */
   logText: any;
   /**
@@ -96,34 +114,41 @@ export interface EventType extends GroupMessage {
   isGs?: boolean
   /**
    * 
+   * @deprecated 已废弃
    */
   self_id?: any
   /**
    * 
+   * @deprecated 已废弃
    */
   game?: any
   /**
    * 
+   * @deprecated 已废弃
    */
   detail_type?: any
   /**
    * 
+   * @deprecated 已废弃
    */
   at?: any
   /**
    * 
+   * @deprecated 已废弃
    */
   atBot: any;
   /**
    * 
+   * @deprecated 已废弃
    */
   hasAlias?: any
   /**
    * 
+   * @deprecated 已废弃
    */
   replyNew?: any
   /**
-   * 
+   * @deprecated 已废弃
    */
   friend?: any
 }

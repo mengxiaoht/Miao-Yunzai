@@ -152,18 +152,11 @@ class PluginsLoader {
    */
   #importPlugin = async (file, packageErr?: any) => {
     try {
-      // 应该去去印插件的路径。
-      // 才能确定是谁的插件
-
       const app = await import(`file://${join(process.cwd(), file.path)}`)
-
       const pluginArray = []
-
       for (const key in app.apps) {
-        // console.log('key', key)
         pluginArray.push(this.loadPlugin(file, app.apps[key], key))
       }
-
       for (const i of await Promise.allSettled(pluginArray))
         if (i?.status && i.status != 'fulfilled') {
           logger.error(`加载插件错误：${logger.red(file.name)}`)
