@@ -59,11 +59,7 @@ interface EventTypeBase {
    * 
    */
   game?: any
-
-  /**
-   * 
-   */
-  logFnc?: any
+  
 
   /**
    * 

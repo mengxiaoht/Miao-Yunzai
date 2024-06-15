@@ -152,9 +152,18 @@ class PluginsLoader {
    */
   #importPlugin = async (file, packageErr?: any) => {
     try {
+      // 应该去去印插件的路径。
+      // 才能确定是谁的插件
+
       const app = await import(`file://${join(process.cwd(), file.path)}`)
+
       const pluginArray = []
-      lodash.forEach(app.apps, p => pluginArray.push(this.loadPlugin(file, p)))
+
+      for (const key in app.apps) {
+        // console.log('key', key)
+        pluginArray.push(this.loadPlugin(file, app.apps[key], key))
+      }
+
       for (const i of await Promise.allSettled(pluginArray))
         if (i?.status && i.status != 'fulfilled') {
           logger.error(`加载插件错误：${logger.red(file.name)}`)
@@ -175,9 +184,10 @@ class PluginsLoader {
    * 解析插件
    * @param file
    * @param p
+   * @param name
    * @returns
    */
-  async loadPlugin(file, p) {
+  async loadPlugin(file, p, name) {
     // 不存在原型链
     if (!p?.prototype) return
 
@@ -194,7 +204,7 @@ class PluginsLoader {
     /**
      *
      */
-    logger.debug(`加载插件 [${file.name}][${plugin.name}]`)
+    logger.debug(`加载插件 [${file.name}][${name}]`)
 
     /**
      * 执行初始化，返回 return 则跳过加载
@@ -210,9 +220,13 @@ class PluginsLoader {
      *
      */
     this.priority.push({
+      // tudo 不标准写法 - -- 使用 关键词
       class: p,
+      // 插件名
       key: file.name,
-      name: plugin.name,
+      // 单例名
+      name: name,
+      // 优先级
       priority: plugin.priority
     })
 
@@ -329,6 +343,8 @@ class PluginsLoader {
     for (const i of this.priority) {
       const p = new i.class(e)
       // 现在给e，后续e将无法访问新增字段
+      p._key = i.key
+      p._name = i.name
       p.e = e
       /**
        * 判断是否启用功能，过滤事件
@@ -400,15 +416,17 @@ class PluginsLoader {
          */
         if (!new RegExp(v.reg).test(e.msg)) continue
         /**
-         *
+         * tudo
+         * 名字是被识别起来的名字
+         * 不是开发者自己随便起的
          */
-        e.logFnc = `[${plugin.name}][${v.fnc}]`
+        const LOG = `[${plugin._key}][${plugin._name}][${v.fnc}]`
         /**
          *
          */
         if (v.log !== false) {
           logger.info(
-            `${e.logFnc}${e.logText} ${lodash.truncate(e.msg, { length: 100 })}`
+            `${LOG}${e.logText} ${lodash.truncate(e.msg, { length: 100 })}`
           )
         }
         /**
@@ -433,14 +451,14 @@ class PluginsLoader {
             this.setLimit(e)
             if (v.log !== false) {
               logger.mark(
-                `${e.logFnc} ${lodash.truncate(e.msg, { length: 100 })} 处理完成 ${Date.now() - start}ms`
+                `${LOG} ${lodash.truncate(e.msg, { length: 100 })} 处理完成 ${Date.now() - start}ms`
               )
             }
             break
           }
           //
         } catch (error) {
-          logger.error(`${e.logFnc}`)
+          logger.error(LOG)
           logger.error(error.stack)
           break
         }
