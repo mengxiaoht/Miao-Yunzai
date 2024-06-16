@@ -2,12 +2,11 @@ import '../src/init/require.js'
 import '../src/init/config.js'
 import '../src/init/logger.js'
 import '../src/init/redis.js'
-import './tailwindcss.js'
 import Koa from 'koa'
 import KoaStatic from 'koa-static'
 import Router from 'koa-router'
 import { Component } from 'yunzai/utils'
-import { readdirSync } from 'fs'
+import { Dirent, readdirSync } from 'fs'
 import { join } from 'path'
 import mount from 'koa-mount'
 
@@ -17,62 +16,87 @@ const router = new Router()
 const Port = 8080
 const PATH = process.cwd()
 
+const Dynamic = async (Router: Dirent) => {
+  const modulePath = `file://${join(Router.parentPath, Router.name)}?update=${Date.now()}`
+  return (await import(modulePath))?.default
+}
+
 // 得到plugins目录
 const flies = readdirSync(join(process.cwd(), 'plugins'), {
   withFileTypes: true
-}).filter(flie => !flie.isFile())
+})
+  .filter(flie => !flie.isFile())
+  .map(flie => {
+    const dir = flie?.path ?? flie?.parentPath
+    flie.parentPath = dir
+    return flie
+  }) // 增加兼容性
+
+//
+const Routers = []
 
 // 解析路由
 for (const flie of flies) {
-  const dir = flie?.path ?? flie?.parentPath
-  if (!dir) {
-    console.log('flie.name', flie.name, '识别错误')
-    continue
-  }
-  /**
-   *
-   */
-  const plugins = readdirSync(join(dir, flie.name), {
+  const plugins = readdirSync(join(flie?.parentPath, flie.name), {
     withFileTypes: true
-  }).filter(flie => flie.isFile())
+  })
+    .filter(
+      flie => flie.isFile() && /^(routes.jsx|routes.tsx)$/.test(flie.name)
+    )
+    .map(flie => {
+      const dir = flie?.path ?? flie?.parentPath
+      flie.parentPath = dir
+      return flie
+    }) // 增加兼容性
+
+  //
   for (const plugin of plugins) {
-    /**
-     *
-     */
-    if (/^(routes.jsx|routes.tsx)$/.test(plugin.name)) {
-      const routes = (await import(`file://${join(plugin.path, plugin.name)}`))
-        ?.default
-      if (!routes) continue
-      /**
-       *
-       */
-      if (Array.isArray(routes)) {
-        /**
-         *
-         */
-        for (const item of routes) {
-          const url = `/${flie.name}${item.url}`
-          console.log(`http://127.0.0.1:${Port}${url}`)
-          /**
-           * 推送接口
-           */
-          router.get(url, ctx => {
-            const options = item?.options ?? {}
-            const HTML = Com.create(item.element, {
-              ...options,
-              html_head: options?.html_head ?? '',
-              file_create: false
-            })
-            // 转义路径中的所有反斜杠
-            const escapedPath = PATH.replace(/\\/g, '\\\\')
-            // 创建一个正则表达式，'g' 表示全局匹配
-            const regex = new RegExp(escapedPath, 'g')
-            ctx.body = HTML.replace(regex, '/file')
-          })
-        }
-      }
+    const routes = await Dynamic(plugin)
+    // 不存在
+    if (!routes) continue
+    // 不是数组
+    if (!Array.isArray(routes)) continue
+    //
+    for (const item of routes) {
+      const url = `/${flie.name}${item.url}`
+      console.log(`http://127.0.0.1:${Port}${url}`)
+      Routers.push({
+        parentPath: plugin.parentPath,
+        name: plugin.name,
+        uri: url,
+        url: item.url
+      })
     }
   }
+}
+
+for (const Router of Routers) {
+  router.get(Router.uri, async ctx => {
+    // 动态加载
+    const routes = await Dynamic(Router)
+    // 不存在
+    if (!routes) return
+    // 不是数组
+    if (!Array.isArray(routes)) return
+    // 查找
+    const item = routes.find(i => i.url == Router.url)
+    // 丢失了
+    if (!item) return
+    /**
+     * 渲染html
+     */
+    const options = item?.options ?? {}
+    const HTML = Com.create(item.element, {
+      ...options,
+      file_create: false
+    })
+    // 转义路径中的所有反斜杠
+    const escapedPath = PATH.replace(/\\/g, '\\\\')
+    // 创建一个正则表达式
+    const regex = new RegExp(escapedPath, 'g')
+    // 置换为file请求
+    ctx.body = HTML.replace(regex, '/file')
+  })
 }
 
 // static
@@ -83,6 +107,11 @@ app.use(router.routes())
 
 // listen 8000
 app.listen(Port, () => {
+  console.log('______________')
   console.log('Server is running on port ' + Port)
-  console.log('默认浏览器尺寸 800 X 1280 100%')
+  console.log('______________')
+  console.log('自行调整默认浏览器尺寸 800 X 1280 100%')
+  console.log('如果需要运行时重新计算className')
+  console.log('请确保一直打开此程序')
+  console.log('______________')
 })
