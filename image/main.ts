@@ -1,3 +1,4 @@
+import '../src/init/require.js'
 import '../src/init/config.js'
 import '../src/init/logger.js'
 import '../src/init/redis.js'
@@ -28,20 +29,35 @@ for (const flie of flies) {
     console.log('flie.name', flie.name, '识别错误')
     continue
   }
+  /**
+   *
+   */
   const plugins = readdirSync(join(dir, flie.name), {
     withFileTypes: true
   }).filter(flie => flie.isFile())
   for (const plugin of plugins) {
+    /**
+     *
+     */
     if (/^(routes.jsx|routes.tsx)$/.test(plugin.name)) {
       const routes = (await import(`file://${join(plugin.path, plugin.name)}`))
         ?.default
       if (!routes) continue
+      /**
+       *
+       */
       if (Array.isArray(routes)) {
+        /**
+         *
+         */
         for (const item of routes) {
           const url = `/${flie.name}${item.url}`
           console.log(`http://127.0.0.1:${Port}${url}`)
-          const options = item?.options ?? {}
+          /**
+           * 推送接口
+           */
           router.get(url, ctx => {
+            const options = item?.options ?? {}
             const HTML = Com.create(item.element, {
               ...options,
               html_head: options?.html_head ?? '',
@@ -68,5 +84,5 @@ app.use(router.routes())
 // listen 8000
 app.listen(Port, () => {
   console.log('Server is running on port ' + Port)
-  console.log('自行调整默认浏览器尺寸 800 X 1280 100%')
+  console.log('默认浏览器尺寸 800 X 1280 100%')
 })

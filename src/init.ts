@@ -1,3 +1,4 @@
+import './init/require.js'
 import './init/config.js'
 import './init/logger.js'
 import './init/redis.js'
