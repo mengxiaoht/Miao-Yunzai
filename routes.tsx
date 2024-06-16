@@ -1,13 +1,13 @@
 import React from "react"
-import { type RouterType } from "yunzai/image/types"
 import Hello from "./views/hello.tsx"
-import Music from "./views/music.tsx"
-import { createRequire } from 'yunzai/utils'
-const require = createRequire(import.meta.url)
-const movies  = [
+import Music from './views/music.tsx'
+import { createRequire } from 'module'
+const require  = createRequire(import.meta.url)
+const image: string = require('./resources/example.png')
+const movies = [
   {
     id: 0,
-    image: require('./resources/example.png'),
+    image: image,
     title: 'Prognosis Negative',
     starRating: '2.66',
     rating: 'PG-13',
@@ -17,14 +17,14 @@ const movies  = [
     cast: 'Simon Pegg, Zach Galifianakis  '
   }
 ]
-const Config: RouterType = [
+const Config = [
   {
-    url: "/",
+    url: "/hello",
     element: <Hello data={{ name: "word" }} movies={movies} />
   },
   {
     url: "/music",
-    element:  <Music />
+    element: <Music />
   }
 ]
 export default Config

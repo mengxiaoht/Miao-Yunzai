@@ -34,7 +34,9 @@ export class Image {
             join_dir: 'hello',
             html_name: `${uid}.html`,
         })
-        return this.Pup.render(Address)
+        return this.Pup.render(Address,{
+            tab: ''
+        })
     }
 }
 // 初始化 图片生成对象
