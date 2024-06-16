@@ -7,7 +7,7 @@ export function createRequire(basePath: string) {
   return cRequire(basePath)
 }
 /**
- * 引入资源并返回地址
+ * @deprecated 已废弃
  * @param path
  * @returns
  */
