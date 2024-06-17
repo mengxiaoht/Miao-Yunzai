@@ -1,5 +1,5 @@
 import 'yunzai/init'
-import { Client, Bot as bot } from 'yunzai/core'
+import { Client } from 'yunzai/core'
 import { createQQ } from './qq.js'
 /**
  * 确保所有微任务做好准备后
@@ -11,10 +11,6 @@ setTimeout(async () => {
    * run
    */
   await Client.run()
-
-  console.log('bot', bot)
-  console.log('Bot', Bot)
-
   /**
    * Loader
    */
