@@ -2,8 +2,7 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { mkdirSync, writeFileSync } from 'fs'
 import { join } from 'path'
-import { createRequire } from './module.js'
-const require = createRequire(import.meta.url)
+import { getLink } from './link.tsx'
 /**
  *
  */
@@ -37,6 +36,7 @@ export type ComponentCreateOpsionType = {
  * **********
  */
 export class Component {
+  #Link = getLink()
   #dir = ''
   /**
    *
@@ -47,6 +47,7 @@ export class Component {
       recursive: true
     })
   }
+
   /**
    * 渲染字符串
    * @param element
@@ -58,10 +59,8 @@ export class Component {
     const dir = join(this.#dir, options?.join_dir ?? '')
     mkdirSync(dir, { recursive: true })
     const address = join(dir, options?.html_name ?? 'hello.html')
-    const href = require('../../public/output.css')
     const DOCTYPE = '<!DOCTYPE html>'
-    const Link = `<link rel="stylesheet" href="${href}"></link>`
-    const head = `<head>${Link}${options?.html_head ?? ''}</head>`
+    const head = `<head>${this.#Link}${options?.html_head ?? ''}</head>`
     const body = `<body>${str}${options?.html_body ?? ''}</body>`
     const html = `${DOCTYPE}<html>${head}${body}</html>`
     if (
