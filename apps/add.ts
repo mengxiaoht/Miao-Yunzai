@@ -1,10 +1,17 @@
-
-import fs from 'node:fs'
+import {
+  createWriteStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  unlink,
+  writeFileSync
+} from 'node:fs'
 import lodash from 'lodash'
-import { pipeline } from 'stream'
-import { promisify } from 'util'
 import fetch from 'node-fetch'
 import moment from 'moment'
+import { pipeline } from 'stream'
+import { promisify } from 'util'
 import { ConfigController as cfg } from 'yunzai/config'
 import { Plugin } from 'yunzai/core'
 import { makeForwardMsg } from 'yunzai/core'
@@ -18,15 +25,16 @@ export class add extends Plugin {
   path = './data/textJson/'
   facePath = './data/face/'
   isGlobal = false
+  keyWord = null
   /**
-   * 
+   *
    */
   constructor() {
     /**
       name: '添加表情',
       dsc: '添加表情，文字等',
      */
-    super();
+    super()
     this.priority = 50000
     this.rule = [
       {
@@ -49,46 +57,49 @@ export class add extends Plugin {
       {
         reg: /#(全局)?(表情|词条)(.*)/,
         fnc: this.list.name
-      },
+      }
     ]
-
   }
 
   /**
-   * 
+   *
    */
   async accept() {
     /** 处理消息 */
-    if (this.e.atBot && this.e.msg && this.e?.msg.includes('添加') && !this.e?.msg.includes('#')) {
+    if (
+      this.e.atBot &&
+      this.e.msg &&
+      this.e?.msg.includes('添加') &&
+      !this.e?.msg.includes('#')
+    ) {
       this.e.msg = '#' + this.e.msg
     }
   }
 
-  
   /**
-   * 
+   *
    */
   async init() {
-    if (!fs.existsSync(this.path)) {
-      fs.mkdirSync(this.path)
+    if (!existsSync(this.path)) {
+      mkdirSync(this.path)
     }
-    if (!fs.existsSync(this.facePath)) {
-      fs.mkdirSync(this.facePath)
+    if (!existsSync(this.facePath)) {
+      mkdirSync(this.facePath)
     }
   }
 
   /**
-   * 
+   *
    */
   get grpKey() {
     return `Yz:group_id:${this.e.user_id}`
   }
 
   /**
-   * 
+   *
    */
   async add() {
-    this.isGlobal = this.e?.msg.includes("全局");
+    this.isGlobal = this.e?.msg.includes('全局')
     await this.getGroupId()
 
     if (!this.group_id) {
@@ -119,13 +130,13 @@ export class add extends Plugin {
   }
 
   /**
-   * 
+   *
    */
   async getGroupId() {
     /** 添加全局表情，存入到机器人qq文件中 */
     if (this.isGlobal) {
-      this.group_id = this.e.bot.uin;
-      return this.e.bot.uin;
+      this.group_id = this.e.bot.uin
+      return this.e.bot.uin
     }
 
     if (this.e.isGroup) {
@@ -137,7 +148,7 @@ export class add extends Plugin {
     // redis获取
     let groupId = await redis.get(this.grpKey)
     if (groupId) {
-      this.group_id = groupId
+      this.group_id = Number(groupId)
       return this.group_id
     }
 
@@ -145,7 +156,7 @@ export class add extends Plugin {
   }
 
   /**
-   * 
+   *
    */
   checkAuth() {
     if (this.e.isMaster) return true
@@ -177,7 +188,7 @@ export class add extends Plugin {
   }
 
   /**
-   * 
+   *
    */
   checkKeyWord() {
     if (this.e.img && this.e.img.length > 1) {
@@ -186,7 +197,9 @@ export class add extends Plugin {
     }
 
     if (this.e.at) {
-      let at = lodash.filter(this.e.message, (o) => { return o.type == 'at' && o.qq != this.e.bot.uin })
+      let at = lodash.filter(this.e.message, o => {
+        return o.type == 'at' && o.qq != this.e.bot.uin
+      })
       if (at.length > 1) {
         this.e.reply('添加错误：只能@一个人当关键词')
         return false
@@ -203,7 +216,7 @@ export class add extends Plugin {
 
   /**
    * 单独添加
-   * @returns 
+   * @returns
    */
   async singleAdd() {
     if (this.e.message.length != 2) return false
@@ -211,7 +224,7 @@ export class add extends Plugin {
     if (!this.e.msg || !msg.image) return false
 
     // #全局添加文字+表情包，无法正确添加到全局路径
-    this.e.isGlobal = this.isGlobal;
+    this.e.isGlobal = this.isGlobal
     let keyWord = this.e.msg.replace(/#|＃|图片|表情|添加|全局/g, '').trim()
     if (!keyWord) return false
 
@@ -231,9 +244,10 @@ export class add extends Plugin {
    * 获取添加关键词
    */
   getKeyWord() {
-    this.e.isGlobal = this.e.msg.includes("全局");
+    this.e.isGlobal = this.e.msg.includes('全局')
 
-    this.keyWord = this.e.toString()
+    this.keyWord = this.e
+      .toString()
       .trim()
       /** 过滤#添加 */
       .replace(/#|＃|图片|表情|添加|删除|全局/g, '')
@@ -251,8 +265,8 @@ export class add extends Plugin {
 
   /**
    * 过滤别名
-   * @param msg 
-   * @returns 
+   * @param msg
+   * @returns
    */
   trimAlias(msg) {
     let groupCfg = cfg.getGroup(this.group_id)
@@ -271,10 +285,10 @@ export class add extends Plugin {
 
   /**
    * 添加内容
-   * @returns 
+   * @returns
    */
   async addContext() {
-    this.isGlobal = this.e.isGlobal || this.getContext()?.addContext?.isGlobal;
+    this.isGlobal = this.e.isGlobal || this.getContext()?.addContext?.isGlobal
     await this.getGroupId()
     /** 关键词 */
     let keyWord = this.keyWord || this.getContext()?.addContext?.keyWord
@@ -287,23 +301,23 @@ export class add extends Plugin {
     this.finish('addContext')
 
     for (let i in message) {
-      if (message[i].type == "at") {
+      if (message[i].type == 'at') {
         if (message[i].qq == this.e.bot.uin) {
-          this.e.reply("添加内容不能@机器人！");
-          return;
+          this.e.reply('添加内容不能@机器人！')
+          return
         }
       }
-      if (message[i].type == "file") {
-        this.e.reply("添加错误：禁止添加文件");
-        return;
+      if (message[i].type == 'file') {
+        this.e.reply('添加错误：禁止添加文件')
+        return
       }
 
       // 保存用户信息用于追溯添加者
       message[i].from_user = {
         card: this.e.sender.card,
         nickname: this.e.sender.nickname,
-        user_id: this.e.sender.user_id,
-      };
+        user_id: this.e.sender.user_id
+      }
     }
 
     if (message.length == 1 && message[0].type == 'image') {
@@ -338,10 +352,10 @@ export class add extends Plugin {
 
   /**
    * 添加成功回复消息
-   * @returns 
+   * @returns
    */
   getRetMsg() {
-    let retMsg = this.getContext()
+    const retMsg = this.getContext()
     let msg = ''
     if (retMsg?.addContext?.message) {
       msg = retMsg.addContext.message
@@ -349,7 +363,9 @@ export class add extends Plugin {
       for (let i in msg) {
         if (msg[i].type == 'text' && msg[i].text.includes('添加')) {
           msg[i].text = this.trimAlias(msg[i].text)
-          msg[i].text = msg[i].text.trim().replace(/#|＃|图片|表情|添加|全局/g, '')
+          msg[i].text = msg[i].text
+            .trim()
+            .replace(/#|＃|图片|表情|添加|全局/g, '')
           if (!msg[i].text) delete msg[i]
           continue
         }
@@ -370,7 +386,7 @@ export class add extends Plugin {
   }
 
   /**
-   * 
+   *
    */
   saveJson() {
     let obj = {}
@@ -378,36 +394,39 @@ export class add extends Plugin {
       obj[k] = v
     }
 
-    fs.writeFileSync(`${this.path}${this.group_id}.json`, JSON.stringify(obj, '', '\t'))
+    writeFileSync(
+      `${this.path}${this.group_id}.json`,
+      JSON.stringify(obj, '', '\t')
+    )
   }
 
   /**
-   * 
+   *
    */
   saveGlobalJson() {
-    let obj = {};
+    let obj = {}
     for (let [k, v] of textArr[this.e.bot.uin]) {
-      obj[k] = v;
+      obj[k] = v
     }
 
-    fs.writeFileSync(
+    writeFileSync(
       `${this.path}${this.e.bot.uin}.json`,
-      JSON.stringify(obj, "", "\t")
-    );
+      JSON.stringify(obj, '', '\t')
+    )
   }
 
   /**
-   * 
-   * @param url 
-   * @param keyWord 
-   * @returns 
+   *
+   * @param url
+   * @param keyWord
+   * @returns
    */
   async saveImg(url, keyWord) {
     let groupCfg = cfg.getGroup(this.group_id)
     let savePath = `${this.facePath}${this.group_id}/`
 
-    if (!fs.existsSync(savePath)) {
-      fs.mkdirSync(savePath)
+    if (!existsSync(savePath)) {
+      mkdirSync(savePath)
     }
 
     const response = await fetch(url)
@@ -428,21 +447,21 @@ export class add extends Plugin {
     let type = response.headers.get('content-type').split('/')[1]
     if (type == 'jpeg') type = 'jpg'
 
-    if (fs.existsSync(`${savePath}${keyWord}.${type}`)) {
+    if (existsSync(`${savePath}${keyWord}.${type}`)) {
       keyWord = `${keyWord}_${moment().format('X')}`
     }
 
     savePath = `${savePath}${keyWord}.${type}`
 
     const streamPipeline = promisify(pipeline)
-    await streamPipeline(response.body, fs.createWriteStream(savePath))
+    await streamPipeline(response.body, createWriteStream(savePath))
 
     return savePath
   }
 
   /**
-   * 
-   * @returns 
+   *
+   * @returns
    */
   async getText() {
     if (!this.e.message) return false
@@ -457,7 +476,8 @@ export class add extends Plugin {
 
     this.initGlobalTextArr()
 
-    let keyWord = this.e.toString()
+    let keyWord = this.e
+      .toString()
       .replace(/#|＃/g, '')
       .replace(`{at:${this.e.bot.uin}}`, '')
       .trim()
@@ -468,7 +488,11 @@ export class add extends Plugin {
     if (isNaN(keyWord)) {
       num = keyWord.trim().match(/[0-9]+$/)?.[0]
 
-      if (!isNaN(num) && !textArr[this.group_id].has(keyWord) && !textArr[this.e.bot.uin].has(keyWord)) {
+      if (
+        !isNaN(num) &&
+        !textArr[this.group_id].has(keyWord) &&
+        !textArr[this.e.bot.uin].has(keyWord)
+      ) {
         keyWord = lodash.trimEnd(keyWord, num).trim()
         num--
       }
@@ -489,7 +513,7 @@ export class add extends Plugin {
     }
 
     if (msg[0] && msg[0].local) {
-      if (fs.existsSync(msg[0].local)) {
+      if (existsSync(msg[0].local)) {
         let tmp = segment.image(msg[0].local)
         tmp.asface = msg[0].asface
         msg = tmp
@@ -502,7 +526,9 @@ export class add extends Plugin {
     if (Array.isArray(msg)) {
       msg.forEach(m => {
         /** 去除回复@@ */
-        if (m?.type == 'at') { delete m.text }
+        if (m?.type == 'at') {
+          delete m.text
+        }
       })
     }
 
@@ -516,9 +542,9 @@ export class add extends Plugin {
   }
 
   /**
-   * 
-   * @param keyWord 
-   * @param num 
+   *
+   * @param keyWord
+   * @param num
    */
   expiredMsg(keyWord, num) {
     logger.mark(`[发送表情]${this.e.logText} ${keyWord} 表情已过期失效`)
@@ -537,7 +563,7 @@ export class add extends Plugin {
 
   /**
    * 初始化已添加内容
-   * @returns 
+   * @returns
    */
   initTextArr() {
     if (textArr[this.group_id]) return
@@ -545,12 +571,12 @@ export class add extends Plugin {
     textArr[this.group_id] = new Map()
 
     let path = `${this.path}${this.group_id}.json`
-    if (!fs.existsSync(path)) {
+    if (!existsSync(path)) {
       return
     }
 
     try {
-      let text = JSON.parse(fs.readFileSync(path, 'utf8'))
+      let text = JSON.parse(readFileSync(path, 'utf8'))
       for (let i in text) {
         if (text[i][0] && !Array.isArray(text[i][0])) {
           text[i] = [text[i]]
@@ -567,8 +593,10 @@ export class add extends Plugin {
     /** 加载表情 */
     let facePath = `${this.facePath}${this.group_id}`
 
-    if (fs.existsSync(facePath)) {
-      const files = fs.readdirSync(`${this.facePath}${this.group_id}`).filter(file => /\.(jpeg|jpg|png|gif)$/g.test(file))
+    if (existsSync(facePath)) {
+      const files = readdirSync(`${this.facePath}${this.group_id}`).filter(
+        file => /\.(jpeg|jpg|png|gif)$/g.test(file)
+      )
       for (let val of files) {
         let tmp = val.split('.')
         tmp[0] = tmp[0].replace(/_[0-9]{10}$/, '')
@@ -576,91 +604,97 @@ export class add extends Plugin {
 
         if (textArr[this.group_id].has(tmp[0])) continue
 
-        textArr[this.group_id].set(tmp[0], [[{
-          local: `${facePath}/${val}`,
-          asface: true
-        }]])
+        textArr[this.group_id].set(tmp[0], [
+          [
+            {
+              local: `${facePath}/${val}`,
+              asface: true
+            }
+          ]
+        ])
       }
 
       this.saveJson()
     } else {
-      fs.mkdirSync(facePath)
+      mkdirSync(facePath)
     }
   }
 
   /**
    * 初始化全局已添加内容
-   * @returns 
+   * @returns
    */
   initGlobalTextArr() {
-    if (textArr[this.e.bot.uin]) return;
+    if (textArr[this.e.bot.uin]) return
 
-    textArr[this.e.bot.uin] = new Map();
+    textArr[this.e.bot.uin] = new Map()
 
-    let globalPath = `${this.path}${this.e.bot.uin}.json`;
-    if (!fs.existsSync(globalPath)) {
-      return;
+    let globalPath = `${this.path}${this.e.bot.uin}.json`
+    if (!existsSync(globalPath)) {
+      return
     }
 
     try {
-      let text = JSON.parse(fs.readFileSync(globalPath, "utf8"));
+      let text = JSON.parse(readFileSync(globalPath, 'utf8'))
 
       for (let i in text) {
         if (text[i][0] && !Array.isArray(text[i][0])) {
-          text[i] = [text[i]];
+          text[i] = [text[i]]
         }
-        textArr[this.e.bot.uin].set(String(i), text[i]);
+        textArr[this.e.bot.uin].set(String(i), text[i])
       }
     } catch (error) {
-      logger.error(`json格式错误：${globalPath}`);
-      delete textArr[this.e.bot.uin];
-      return false;
+      logger.error(`json格式错误：${globalPath}`)
+      delete textArr[this.e.bot.uin]
+      return false
     }
 
     /** 加载表情 */
-    let globalFacePath = `${this.facePath}${this.e.bot.uin}`;
+    let globalFacePath = `${this.facePath}${this.e.bot.uin}`
 
-    if (fs.existsSync(globalFacePath)) {
+    if (existsSync(globalFacePath)) {
       const files = fs
         .readdirSync(`${this.facePath}${this.e.bot.uin}`)
-        .filter((file) => /\.(jpeg|jpg|png|gif)$/g.test(file));
+        .filter(file => /\.(jpeg|jpg|png|gif)$/g.test(file))
 
       for (let val of files) {
-        let tmp = val.split(".");
-        tmp[0] = tmp[0].replace(/_[0-9]{10}$/, "");
-        if (/at|image/g.test(val)) continue;
+        let tmp = val.split('.')
+        tmp[0] = tmp[0].replace(/_[0-9]{10}$/, '')
+        if (/at|image/g.test(val)) continue
 
-        if (textArr[this.e.bot.uin].has(tmp[0])) continue;
+        if (textArr[this.e.bot.uin].has(tmp[0])) continue
 
         textArr[this.e.bot.uin].set(tmp[0], [
           [
             {
               local: `${globalFacePath}/${val}`,
-              asface: true,
-            },
-          ],
-        ]);
+              asface: true
+            }
+          ]
+        ])
       }
 
-      this.saveGlobalJson();
+      this.saveGlobalJson()
     } else {
-      fs.mkdirSync(globalFacePath);
+      mkdirSync(globalFacePath)
     }
   }
 
   /**
-   * 
-   * @returns 
+   *
+   * @returns
    */
   async del() {
-    this.isGlobal = this.e?.msg.includes("全局");
+    this.isGlobal = this.e?.msg.includes('全局')
     await this.getGroupId()
     if (!this.group_id) return false
     if (!this.checkAuth()) return
 
     this.initTextArr()
 
-    let keyWord = this.e.toString().replace(/#|＃|图片|表情|删除|全部|全局/g, '')
+    let keyWord = this.e
+      .toString()
+      .replace(/#|＃|图片|表情|删除|全部|全局/g, '')
 
     keyWord = this.trimAlias(keyWord)
 
@@ -736,7 +770,7 @@ export class add extends Plugin {
         img = item[0]
       }
       if (img.local) {
-        fs.unlink(img.local, () => { })
+        unlink(img.local, () => {})
       }
     })
 
@@ -744,10 +778,10 @@ export class add extends Plugin {
   }
 
   /**
-   * 
+   *
    */
   async list() {
-    this.isGlobal = this.e?.msg.includes("全局");
+    this.isGlobal = this.e?.msg.includes('全局')
 
     let page = 1
     let pageSize = 100
@@ -794,7 +828,9 @@ export class add extends Plugin {
       return
     }
 
-    let msg = [], result = [], num = 0
+    let msg = [],
+      result = [],
+      num = 0
     for (let i in arr) {
       if (num >= page * pageSize) break
 
@@ -816,11 +852,11 @@ export class add extends Plugin {
       result.push([msg[i]])
     }
     /** 计算页数 */
-    let book = count / pageSize;
+    let book = count / pageSize
     if (book % 1 === 0) {
-      book = result;
+      book = result
     } else {
-      book = Math.floor(book) + 1;
+      book = Math.floor(book) + 1
     }
     if (type == 'list' && msg.length >= pageSize) {
       result.push(`更多内容请翻页查看\n如：#表情列表${Number(page) + 1}`)
@@ -837,17 +873,19 @@ export class add extends Plugin {
   }
 
   /**
-   * 
+   *
    */
   pagination(pageNo, pageSize, array) {
     let offset = (pageNo - 1) * pageSize
-    return offset + pageSize >= array.length ? array.slice(offset, array.length) : array.slice(offset, offset + pageSize)
+    return offset + pageSize >= array.length
+      ? array.slice(offset, array.length)
+      : array.slice(offset, offset + pageSize)
   }
 
   /**
    * 关键词转换成可发送消息
-   * @param msg 
-   * @returns 
+   * @param msg
+   * @returns
    */
   async keyWordTran(msg) {
     /** 图片 */
@@ -864,7 +902,9 @@ export class add extends Plugin {
 
       for (let qq of tmp) {
         qq = qq.match(/[1-9][0-9]{4,14}/g)[0]
-        let member = await await this.e.bot.getGroupMemberInfo(this.group_id, Number(qq)).catch(() => { })
+        let member = await await this.e.bot
+          .getGroupMemberInfo(this.group_id, Number(qq))
+          .catch(() => {})
         let name = member?.card ?? member?.nickname
         if (!name) continue
         msg = msg.replace(`{at:${qq}}`, `@${name}`)
@@ -883,8 +923,8 @@ export class add extends Plugin {
   }
 
   /**
-   * 
-   * @returns 
+   *
+   * @returns
    */
   async faceDetail() {
     if (!this.e.message) return false
@@ -912,7 +952,6 @@ export class add extends Plugin {
       await this.e.reply(`表情${keyWord}不存在`)
       return
     }
-
 
     // process faces into replyArr in type:
     let replyArr = []
@@ -944,7 +983,11 @@ export class add extends Plugin {
       return
     }
 
-    let forwardMsg = await makeForwardMsg(this.e, replyArr, `表情${keyWord}详情`)
+    let forwardMsg = await makeForwardMsg(
+      this.e,
+      replyArr,
+      `表情${keyWord}详情`
+    )
 
     this.e.reply(forwardMsg)
   }

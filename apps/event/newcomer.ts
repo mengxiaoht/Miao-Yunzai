@@ -1,10 +1,10 @@
 import { Plugin, segment } from 'yunzai/core'
 /**
- * 
+ *
  */
 export class newcomer extends Plugin {
   /**
-   * 
+   *
    */
   constructor() {
     /**
@@ -12,13 +12,13 @@ export class newcomer extends Plugin {
       dsc: '新人入群欢迎',
      */
     super()
-    this.event  = 'notice.group.increase'
+    this.event = 'notice.group.increase'
     this.priority = 5000
   }
 
   /**
    * 接受到消息都会执行一次
-   * @returns 
+   * @returns
    */
   async accept() {
     /** 定义入群欢迎内容 */
@@ -38,4 +38,3 @@ export class newcomer extends Plugin {
     ])
   }
 }
-

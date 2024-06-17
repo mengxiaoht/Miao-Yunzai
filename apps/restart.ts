@@ -1,7 +1,7 @@
 import { Plugin } from 'yunzai/core'
 import fetch from 'node-fetch'
 import net from 'net'
-import fs from 'fs'
+import { readFileSync } from 'fs'
 import YAML from 'yaml'
 import { exec } from 'child_process'
 
@@ -10,28 +10,31 @@ import { exec } from 'child_process'
  */
 
 /**
- * 
- * @param port 
- * @returns 
+ *
+ * @param port
+ * @returns
  */
-const isPortTaken = async (port) => {
-  return new Promise((resolve) => {
-    const tester = net.createServer()
+const isPortTaken = async port => {
+  return new Promise(resolve => {
+    const tester = net
+      .createServer()
       .once('error', () => resolve(true))
-      .once('listening', () => tester.once('close', () => resolve(false)).close())
-      .listen(port);
-  });
-};
+      .once('listening', () =>
+        tester.once('close', () => resolve(false)).close()
+      )
+      .listen(port)
+  })
+}
 
 /**
- * 
+ *
  */
 export class Restart extends Plugin {
   key = 'Yz:restart'
 
   /**
-   * 
-   * @param e 
+   *
+   * @param e
    */
   constructor() {
     /**
@@ -57,7 +60,7 @@ export class Restart extends Plugin {
   async init() {
     const data = await redis.get(this.key)
     if (data) {
-      const   restart = JSON.parse(data)
+      const restart = JSON.parse(data)
       const uin = restart?.uin || Bot.uin
       let time = restart.time || new Date().getTime()
       time = (new Date().getTime() - time) / 1000
@@ -80,9 +83,11 @@ export class Restart extends Plugin {
   async restart() {
     let restart_port
     try {
-      restart_port = YAML.parse(fs.readFileSync(`./config/config/bot.yaml`, `utf-8`))
+      restart_port = YAML.parse(
+        readFileSync(`./config/config/bot.yaml`, `utf-8`)
+      )
       restart_port = restart_port.restart_port || 27881
-    } catch { }
+    } catch {}
     await this.e.reply('开始执行重启，请稍等...')
     logger.mark(`${this.e.logFnc} 开始执行重启，请稍等...`)
 
@@ -97,7 +102,9 @@ export class Restart extends Plugin {
     await redis.set(this.key, data, { EX: 120 })
     if (await isPortTaken(restart_port || 27881)) {
       try {
-        const result = await fetch(`http://localhost:${restart_port || 27881}/restart`).then(res=>res.text())
+        const result = await fetch(
+          `http://localhost:${restart_port || 27881}/restart`
+        ).then(res => res.text())
         if (result !== `OK`) {
           redis.del(this.key)
           this.e.reply(`操作失败！`)
@@ -144,7 +151,7 @@ export class Restart extends Plugin {
   }
 
   async execSync(cmd) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       exec(cmd, { windowsHide: true }, (error, stdout, stderr) => {
         resolve({ error, stdout, stderr })
       })
@@ -154,9 +161,11 @@ export class Restart extends Plugin {
   async stop() {
     let restart_port
     try {
-      restart_port = YAML.parse(fs.readFileSync(`./config/config/bot.yaml`, `utf-8`))
+      restart_port = YAML.parse(
+        readFileSync(`./config/config/bot.yaml`, `utf-8`)
+      )
       restart_port = restart_port.restart_port || 27881
-    } catch { }
+    } catch {}
     if (await isPortTaken(restart_port || 27881)) {
       try {
         logger.mark('关机成功，已停止运行')
@@ -179,7 +188,7 @@ export class Restart extends Plugin {
     await this.e.reply('关机成功，已停止运行')
 
     let npm = await this.checkPnpm()
-    exec(`${npm} stop`, { windowsHide: true }, (error, stdout, stderr) => {
+    exec(`${npm} stop`, { windowsHide: true }, error => {
       if (error) {
         this.e.reply(`操作失败！\n${error.stack}`)
         logger.error(`关机失败\n${error.stack}`)

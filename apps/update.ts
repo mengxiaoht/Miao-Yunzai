@@ -1,8 +1,8 @@
-import { Plugin ,makeForwardMsg} from 'yunzai/core'
+import { Plugin, makeForwardMsg } from 'yunzai/core'
 import lodash from 'lodash'
-import fs from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import { BOT_NAME } from 'yunzai/config'
-import  { exec, execSync }  from 'child_process'
+import { exec, execSync } from 'child_process'
 import { Restart } from './restart.js'
 import { sleep } from 'yunzai/utils'
 let uping = false
@@ -67,19 +67,23 @@ export class update extends Plugin {
       if (!plugin) return ''
     }
 
-    if (!fs.existsSync(`plugins/${plugin}/.git`)) return false
+    if (!existsSync(`plugins/${plugin}/.git`)) return false
 
     this.typeName = plugin
     return plugin
   }
 
   async execSync(cmd) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       exec(cmd, { windowsHide: true }, (error, stdout, stderr) => {
         resolve({ error, stdout, stderr })
       })
     })
   }
+
+  isUp = null
+  isNowUp = null
+  oldCommitId = null
 
   async runUpdate(plugin = '') {
     this.isNowUp = false
@@ -162,22 +166,26 @@ export class update extends Plugin {
     }
 
     if (errMsg.includes('be overwritten by merge')) {
-      return this.e.reply(`${msg}\n存在冲突：\n${errMsg}\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改`)
+      return this.e.reply(
+        `${msg}\n存在冲突：\n${errMsg}\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改`
+      )
     }
 
     if (stdout.includes('CONFLICT')) {
-      return this.e.reply(`${msg}\n存在冲突：\n${errMsg}${stdout}\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改`)
+      return this.e.reply(
+        `${msg}\n存在冲突：\n${errMsg}${stdout}\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改`
+      )
     }
 
     return this.e.reply([errMsg, stdout])
   }
 
   async updateAll() {
-    const dirs = fs.readdirSync('./plugins/')
+    const dirs = readdirSync('./plugins/')
 
-    const MSG = (message)=>{
-        // 收集
-        this.messages.push(message)
+    const MSG = message => {
+      // 收集
+      this.messages.push(message)
     }
 
     const testReg = /^#静默全部(强制)?更新$/.test(this.e.msg)
@@ -203,7 +211,6 @@ export class update extends Plugin {
       // await this.e.reply('即将执行重启，以应用更新')
       setTimeout(() => this.restart(), 2000)
     }
-
   }
 
   restart() {
@@ -243,13 +250,21 @@ export class update extends Plugin {
       cm = 'git config -l'
       if (plugin) cm = `cd "plugins/${plugin}" && ${cm}`
       end = await execSync(cm, { encoding: 'utf-8' })
-      end = end.match(/remote\..*\.url=.+/g).join('\n\n').replace(/remote\..*\.url=/g, '').replace(/\/\/([^@]+)@/, '//')
+      end = end
+        .match(/remote\..*\.url=.+/g)
+        .join('\n\n')
+        .replace(/remote\..*\.url=/g, '')
+        .replace(/\/\/([^@]+)@/, '//')
     } catch (error) {
       logger.error(error.toString())
       await this.e.reply(error.toString())
     }
 
-    return makeForwardMsg(this.e, [log, end], `${plugin || 'Miao-Yunzai'} 更新日志，共${line}条`)
+    return makeForwardMsg(
+      this.e,
+      [log, end],
+      `${plugin || 'Miao-Yunzai'} 更新日志，共${line}条`
+    )
   }
 
   async updateLog() {

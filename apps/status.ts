@@ -1,4 +1,3 @@
-
 import { ConfigController as cfg } from 'yunzai/config'
 import moment from 'moment'
 import { Plugin } from 'yunzai/core'
@@ -8,7 +7,7 @@ import { Plugin } from 'yunzai/core'
  */
 
 /**
- * 
+ *
  */
 export class status extends Plugin {
   /**
@@ -26,8 +25,8 @@ export class status extends Plugin {
   }
 
   /**
-   * 
-   * @returns 
+   *
+   * @returns
    */
   async status() {
     if (this.e.isMaster) return this.statusMaster()
@@ -41,22 +40,27 @@ export class status extends Plugin {
   }
 
   async statusMaster() {
-    let runTime = moment().diff(moment.unix(this.e.bot.stat.start_time), 'seconds')
+    let runTime = moment().diff(
+      moment.unix(this.e.bot.stat.start_time),
+      'seconds'
+    )
     let Day = Math.floor(runTime / 3600 / 24)
     let Hour = Math.floor((runTime / 3600) % 24)
     let Min = Math.floor((runTime / 60) % 60)
+
+    let data = ''
     if (Day > 0) {
-      runTime = `${Day}天${Hour}小时${Min}分钟`
+      data = `${Day}天${Hour}小时${Min}分钟`
     } else {
-      runTime = `${Hour}小时${Min}分钟`
+      data = `${Hour}小时${Min}分钟`
     }
 
-    let format = (bytes) => {
+    let format = bytes => {
       return (bytes / 1024 / 1024).toFixed(2) + 'MB'
     }
 
     let msg = '-------状态-------'
-    msg += `\n运行时间：${runTime}`
+    msg += `\n运行时间：${data}`
     msg += `\n内存使用：${format(process.memoryUsage().rss)}`
     msg += `\n当前版本：v${cfg.package.version}`
     msg += '\n-------累计-------'
@@ -72,7 +76,13 @@ export class status extends Plugin {
     await this.e.reply(msg)
   }
 
-  async getCount(groupId:number | string = '') {
+  date = null
+  month = null
+  key = null
+  msgKey = null
+  screenshotKey = null
+
+  async getCount(groupId: number | string = '') {
     this.date = moment().format('MMDD')
     this.month = Number(moment().month()) + 1
 
@@ -100,22 +110,25 @@ export class status extends Plugin {
       let date = moment().startOf('week').add(i, 'days').format('MMDD')
 
       week.msg += Number(await redis.get(`${this.msgKey.day}${date}`)) ?? 0
-      week.screenshot += Number(await redis.get(`${this.screenshotKey.day}${date}`)) ?? 0
+      week.screenshot +=
+        Number(await redis.get(`${this.screenshotKey.day}${date}`)) ?? 0
     }
 
     let count = {
       total: {
-        msg: await redis.get(`${this.key}sendMsg:total`) || 0,
-        screenshot: await redis.get(`${this.key}screenshot:total`) || 0
+        msg: (await redis.get(`${this.key}sendMsg:total`)) || 0,
+        screenshot: (await redis.get(`${this.key}screenshot:total`)) || 0
       },
       today: {
-        msg: await redis.get(`${this.msgKey.day}${this.date}`) || 0,
-        screenshot: await redis.get(`${this.screenshotKey.day}${this.date}`) || 0
+        msg: (await redis.get(`${this.msgKey.day}${this.date}`)) || 0,
+        screenshot:
+          (await redis.get(`${this.screenshotKey.day}${this.date}`)) || 0
       },
       week,
       month: {
-        msg: await redis.get(`${this.msgKey.month}${this.month}`) || 0,
-        screenshot: await redis.get(`${this.screenshotKey.month}${this.month}`) || 0
+        msg: (await redis.get(`${this.msgKey.month}${this.month}`)) || 0,
+        screenshot:
+          (await redis.get(`${this.screenshotKey.month}${this.month}`)) || 0
       }
     }
 
@@ -128,12 +141,12 @@ export class status extends Plugin {
       msg += `\n生成图片：${count.total.screenshot}次`
     }
 
-    if (count.month.msg > 200) {
+    if (Number(count.month.msg) > 200) {
       msg += '\n-------本周-------'
       msg += `\n发送消息：${count.week.msg}条`
       msg += `\n生成图片：${count.week.screenshot}次`
     }
-    if (moment().format('D') >= 8 && count.month.msg > 400) {
+    if (Number(moment().format('D')) >= 8 && Number(count.month.msg) > 400) {
       msg += '\n-------本月-------'
       msg += `\n发送消息：${count.month.msg}条`
       msg += `\n生成图片：${count.month.screenshot}次`
