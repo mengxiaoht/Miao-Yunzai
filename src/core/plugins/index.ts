@@ -1,5 +1,5 @@
 
-import { Common } from '../../miao.js'
+import { Common } from '../../mys/miao.js'
 import { EventType } from './types.js'
 
 import { type EventMap } from 'icqq'
@@ -266,3 +266,8 @@ export class Plugin {
  * @deprecated 已废弃
  */
 export const plugin = Plugin
+
+/**
+ * global.plugin
+ */
+global.plugin = plugin

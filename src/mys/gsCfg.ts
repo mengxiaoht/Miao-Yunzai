@@ -4,7 +4,7 @@ import fs from 'node:fs'
 import lodash from 'lodash'
 import MysInfo from './mysInfo.js'
 import NoteUser from './NoteUser.js'
-import { Character, Weapon } from '../miao.js'
+import { Character, Weapon } from './miao.js'
 
 /**
  * ***********
@@ -350,7 +350,7 @@ class GsCfg {
    * @returns
    */
   getWeaponDataByWeaponHash(_) {
-    console.log('gsCfg.getWeaponDataByWeaponHash() 已废弃')
+    logger.info('gsCfg.getWeaponDataByWeaponHash() 已废弃')
     return {}
   }
 
@@ -360,7 +360,7 @@ class GsCfg {
    * @returns
    */
   getAllAbbr() {
-    console.log('gsCfg.getAllAbbr() 已废弃')
+    logger.info('gsCfg.getAllAbbr() 已废弃')
     return {}
   }
 
@@ -371,7 +371,7 @@ class GsCfg {
    * @returns
    */
   getBingCkSingle(_) {
-    console.log('gsCfg.getBingCkSingle() 已废弃')
+    logger.info('gsCfg.getBingCkSingle() 已废弃')
     return {}
   }
 
@@ -382,7 +382,7 @@ class GsCfg {
    * @param data
    */
   saveBingCk(_, __) {
-    console.log('gsCfg.saveBingCk() 已废弃')
+    logger.info('gsCfg.saveBingCk() 已废弃')
   }
 
   /**
@@ -392,7 +392,7 @@ class GsCfg {
    * @returns
    */
   getElementByRoleName(_) {
-    console.log('gsCfg.getElementByRoleName() 已废弃')
+    logger.info('gsCfg.getElementByRoleName() 已废弃')
     return ''
   }
 
@@ -404,7 +404,7 @@ class GsCfg {
    * @returns
    */
   getSkillDataByskillId(_, __) {
-    console.log('gsCfg.getSkillDataByskillId() 已废弃')
+    logger.info('gsCfg.getSkillDataByskillId() 已废弃')
     return {}
   }
 
@@ -415,7 +415,7 @@ class GsCfg {
    * @returns
    */
   fightPropIdToName(_) {
-    console.log('gsCfg.fightPropIdToName() 已废弃')
+    logger.info('gsCfg.fightPropIdToName() 已废弃')
     return ''
   }
 
@@ -426,7 +426,7 @@ class GsCfg {
    * @returns
    */
   getRoleTalentByTalentId(_) {
-    console.log('gsCfg.getRoleTalentByTalentId 已废弃')
+    logger.info('gsCfg.getRoleTalentByTalentId 已废弃')
     return {}
   }
 
@@ -435,7 +435,7 @@ class GsCfg {
    * @deprecated 已废弃
    */
   getAbbr() {
-    console.log('gsCfg.getAbbr() 已经废弃')
+    logger.info('gsCfg.getAbbr() 已经废弃')
   }
 }
 

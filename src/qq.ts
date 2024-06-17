@@ -1,34 +1,36 @@
 import fs from 'fs'
 import inquirer from 'inquirer'
 import chalk from 'chalk'
-import { BOT_NAME, CONFIG_DEFAULT_PATH, CONFIG_INIT_PATH } from './system.js'
-import cfg from './config.js'
-import { sleep } from "./utils.js"
+import {
+  BOT_NAME,
+  CONFIG_DEFAULT_PATH,
+  CONFIG_INIT_PATH,
+  ConfigController as cfg
+} from 'yunzai/config'
+import { sleep } from 'yunzai/utils'
 
 /**
  * 创建qq配置文件 `config/bot/qq.yaml`
  * Git Bash 运行npm命令会无法选择列表
- * @returns 
+ * @returns
  */
 export async function createQQ() {
   /** 跳过登录ICQQ */
   if (cfg.bot.skip_login) return
-
   /**
-   * 
+   *
    */
   if (cfg.qq && !process.argv.includes('login')) {
     return
   }
-
   /**
-   * 
+   *
    */
-  console.log(`欢迎使用${chalk.green(`${BOT_NAME} v` + cfg.package.version)}\n请按提示输入完成QQ配置`)
-
-
+  logger.info(
+    `欢迎使用${chalk.green(`${BOT_NAME} v` + cfg.package.version)}\n请按提示输入完成QQ配置`
+  )
   /**
-   * 
+   *
    */
   const propmtList = [
     {
@@ -51,22 +53,28 @@ export async function createQQ() {
       name: 'platform',
       default: '6',
       choices: ['Tim', 'iPad', '安卓手机', '安卓手表', 'MacOS', 'aPad'],
-      filter: (val) => {
+      filter: val => {
         switch (val) {
-          case 'Tim': return 6
-          case 'iPad': return 5
-          case 'MacOS': return 4
-          case '安卓手机': return 1
-          case '安卓手表': return 3
-          case 'aPad': return 2
-          default: return 6
+          case 'Tim':
+            return 6
+          case 'iPad':
+            return 5
+          case 'MacOS':
+            return 4
+          case '安卓手机':
+            return 1
+          case '安卓手表':
+            return 3
+          case 'aPad':
+            return 2
+          default:
+            return 6
         }
       }
     }
   ]
-
   /**
-   * 
+   *
    */
   if (!process.argv.includes('login')) {
     propmtList.push({
@@ -75,59 +83,49 @@ export async function createQQ() {
       name: 'masterQQ'
     })
   }
-
   /**
-   * 
+   *
    */
   propmtList.push({
     type: 'input',
     message: '请输入签名API地址（可留空）：',
     name: 'signAPI'
   })
-
   /**
-   * 
+   *
    */
   const ret = await inquirer.prompt(propmtList)
-
   /**
-   * 
+   *
    */
   const file = `./${CONFIG_INIT_PATH}`
-
   const fileDef = `./${CONFIG_DEFAULT_PATH}`
-
   let qq = fs.readFileSync(`${fileDef}qq.yaml`, 'utf8')
-
   qq = qq.replace(/qq:/g, 'qq: ' + ret.QQ)
   qq = qq.replace(/pwd:/g, `pwd:  '${ret.pwd}'`)
   qq = qq.replace(/platform: [1-6]/g, 'platform: ' + Number(ret.platform))
   fs.writeFileSync(`${file}qq.yaml`, qq, 'utf8')
-
   let bot = fs.readFileSync(`${fileDef}bot.yaml`, 'utf8')
-
   /**
-   * 
+   *
    */
   if (ret.masterQQ) {
     let other = fs.readFileSync(`${fileDef}other.yaml`, 'utf8')
     other = other.replace(/masterQQ:/g, `masterQQ:\n  - ${ret.masterQQ}`)
     fs.writeFileSync(`${file}other.yaml`, other, 'utf8')
   }
-
   /**
-   * 
+   *
    */
   if (ret.signAPI) {
     bot = bot.replace(/sign_api_addr:/g, `sign_api_addr: ${ret.signAPI}`)
   }
-
   fs.writeFileSync(`${file}bot.yaml`, bot, 'utf8')
-
-  console.log(`\nQQ配置完成，正在登录\n后续修改账号可以运行命令： ${chalk.green('npm run login')}\n`)
-
+  logger.info(
+    `\nQQ配置完成，正在登录\n后续修改账号可以运行命令： ${chalk.green('npm run login')}\n`
+  )
   /**
-   * 
+   *
    */
   await sleep(2000)
 }

@@ -163,7 +163,7 @@ class PluginsLoader {
           logger.error(decodeURI(i.reason))
         }
     } catch (error) {
-      console.error(error)
+      logger.error(error)
       if (packageErr && error.stack.includes('Cannot find package')) {
         packageErr.push({ error, file })
       } else {

@@ -48,18 +48,22 @@ export class Client extends IcqqClient {
     /**
      * 跳过登录
      */
-    if (cfg.bot.skip_login) return await this.skip_login(bot)
+    if (cfg.bot.skip_login) {
+      return await this.skip_login(bot)
+    }
 
     /**
      * 正常的登录
      */
     await bot.login(cfg.qq, cfg.pwd)
+
     bot[bot.uin] = bot
 
     /**
      * 全局变量 bot
      */
     global.Bot = bot
+
     return bot
   }
 
@@ -69,29 +73,39 @@ export class Client extends IcqqClient {
    * @returns
    */
   static async skip_login(bot) {
+    //
     bot.uin = 88888
+    //
     bot[bot.uin] = bot
     /**
      * 全局变量 bot
      */
     global.Bot = bot
     /**
-     * 加载插件
-     */
-    await PluginsLoader.load()
-    /**
      *
      */
-    return
+    return bot
   }
+
+  /**
+   * 加载插件
+   * @param bot
+   * @returns
+   */
+  static async PluginsLoader() {
+    await PluginsLoader.load()
+  }
+
+  //
 }
 
 /**
- * 内置Redis
+ * 不推荐使用，可能放弃
+ * @deprecated
  */
 export const Redis = global.redis
 
 /**
  * 机器人客户端
  */
-export const Bot = global.Bot as typeof Client.prototype
+export const Bot = global.Bot

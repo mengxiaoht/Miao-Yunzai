@@ -10,7 +10,7 @@ const child1 = spawn(
   }
 )
 const child2 = spawn(
-  'node --no-warnings=ExperimentalWarning --loader ts-node/esm image/main.ts',
+  'node --no-warnings=ExperimentalWarning --loader ts-node/esm src/server.ts',
   argvs.split(' '),
   {
     shell: true,

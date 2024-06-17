@@ -11,7 +11,7 @@ import puppeteer from '../../utils/puppeteer/puppeteer.js'
 import * as common from '../../utils/common.js'
 import cfg from '../../config/config.js'
 import Handler from './handler.js'
-import { Version } from '../../miao.js'
+import { Version } from '../../mys/miao.js'
 
 /**
  * @deprecated 已废弃

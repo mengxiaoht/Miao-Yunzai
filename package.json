@@ -16,7 +16,7 @@
     "logs": "pm2 logs",
     "monit": "pm2 monit",
     "pm2": "pm2",
-    "image": "node image/index.js",
+    "image": "node image.js",
     "css": "tailwindcss -i ./src/input.css -o ./public/output.css",
     "format": "prettier --write .",
     "prepare": "husky"
@@ -98,8 +98,14 @@
     "./core": {
       "import": "./src/core/index.js"
     },
+    "./init": {
+      "import": "./src/init/index.js"
+    },
+    "./image": {
+      "import": "./src/image/index.js"
+    },
     "./image/types": {
-      "import": "./image/types.js"
+      "import": "./src/image/types.js"
     }
   },
   "imports": {

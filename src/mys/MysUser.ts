@@ -13,7 +13,7 @@ import NoteUser from './NoteUser.js'
 import MysApi from './mysApi.js'
 import MysUtil from './MysUtil.js'
 import { MysUserDB } from '../db/index.js'
-import { Data } from '../miao.js'
+import { Data } from './miao.js'
 
 const tables = {
   // ltuid-uid 查询表

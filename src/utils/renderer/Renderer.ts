@@ -87,3 +87,8 @@ export default class Renderer {
     this.watcher[tplFile] = watcher
   }
 }
+
+/**
+ * global.Renderer
+ */
+global.Renderer = Renderer

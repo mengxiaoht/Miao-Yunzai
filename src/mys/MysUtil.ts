@@ -1,4 +1,4 @@
-import { Data } from '../miao.js'
+import { Data } from './miao.js'
 
 /**
  *

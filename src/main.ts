@@ -1,19 +1,6 @@
-import './init.js'
-import { plugin, segment, Client } from './core/index.js'
-import { Renderer } from './utils/index.js'
-import { createQQ } from './config/qq.js'
-/**
- * global.plugin
- */
-global.plugin = plugin
-/**
- * global.segment
- */
-global.segment = segment
-/**
- * global.Renderer
- */
-global.Renderer = Renderer
+import 'yunzai/init'
+import { Client, Bot as bot } from 'yunzai/core'
+import { createQQ } from './qq.js'
 /**
  * 确保所有微任务做好准备后
  * 再进行宏任务
@@ -24,4 +11,12 @@ setTimeout(async () => {
    * run
    */
   await Client.run()
+
+  console.log('bot', bot)
+  console.log('Bot', Bot)
+
+  /**
+   * Loader
+   */
+  await Client.PluginsLoader()
 }, 0)

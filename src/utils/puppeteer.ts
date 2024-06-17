@@ -65,11 +65,11 @@ export class Puppeteer {
     try {
       this.browser = await puppeteer.launch(this.#launch)
       this.#isBrowser = true
-      console.info('[puppeteer] open success')
+      logger.info('[puppeteer] open success')
       return true
     } catch (err) {
       this.#isBrowser = false
-      console.error('[puppeteer] err', err)
+      logger.error('[puppeteer] err', err)
       return false
     }
   }
@@ -96,12 +96,12 @@ export class Puppeteer {
        * 重置次数
        */
       this.#pic = 0
-      console.info('[puppeteer] close')
+      logger.info('[puppeteer] close')
       this.#isBrowser = false
       this.browser?.close().catch(err => {
-        console.error('[puppeteer] close', err)
+        logger.error('[puppeteer] close', err)
       })
-      console.info('[puppeteer] reopen')
+      logger.info('[puppeteer] reopen')
       if (!(await this.start())) return false
       this.#pic++
     }
@@ -121,7 +121,7 @@ export class Puppeteer {
     if (!(await this.isStart())) return false
     try {
       const page = await this.browser?.newPage().catch(err => {
-        console.error(err)
+        logger.error(err)
       })
       if (!page) return false
       await page.goto(`file://${htmlPath}`, {
@@ -129,7 +129,7 @@ export class Puppeteer {
       })
       const body = await page.$(Options?.tab ?? 'body')
       if (!body) return false
-      console.info('[puppeteer] success')
+      logger.info('[puppeteer] success')
       const buff: string | false | Buffer = await body
         .screenshot(
           Options?.SOptions ?? {
@@ -137,19 +137,19 @@ export class Puppeteer {
           }
         )
         .catch(err => {
-          console.error('[puppeteer]', 'screenshot', err)
+          logger.error('[puppeteer]', 'screenshot', err)
           return false
         })
       await page.close().catch(err => {
-        console.error('[puppeteer]', 'page close', err)
+        logger.error('[puppeteer]', 'page close', err)
       })
       if (!buff) {
-        console.error('[puppeteer]', htmlPath)
+        logger.error('[puppeteer]', htmlPath)
         return false
       }
       return buff
     } catch (err) {
-      console.error('[puppeteer] newPage', err)
+      logger.error('[puppeteer] newPage', err)
       return false
     }
   }
