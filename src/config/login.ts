@@ -5,16 +5,20 @@ import {
   BOT_NAME,
   CONFIG_DEFAULT_PATH,
   CONFIG_INIT_PATH,
-  ConfigController as cfg
-} from 'yunzai/config'
-import { sleep } from 'yunzai/utils'
+} from './system.js'
+import cfg from './config.js'
+
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 
 /**
  * 创建qq配置文件 `config/bot/qq.yaml`
  * Git Bash 运行npm命令会无法选择列表
  * @returns
  */
-export async function createQQ() {
+export async function createLogin() {
   /** 跳过登录ICQQ */
   if (cfg.bot.skip_login) return
   /**

@@ -1,12 +1,17 @@
 import 'yunzai/init'
 import { Client } from 'yunzai/core'
-import { createQQ } from './qq.js'
+import { createLogin } from 'yunzai/config'
 /**
+ * *********************
  * 确保所有微任务做好准备后
  * 再进行宏任务
+ * ****************
  */
 setTimeout(async () => {
-  await createQQ()
+  /**
+   * login
+   */
+  await createLogin()
   /**
    * run
    */
