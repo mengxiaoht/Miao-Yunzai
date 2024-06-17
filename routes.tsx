@@ -1,22 +1,9 @@
 import React from "react"
-import Hello from "./views/hello.tsx"
-import Music from './views/music.tsx'
-import { createRequire } from 'module'
-const require  = createRequire(import.meta.url)
-const image: string = require('./resources/example.png')
-const movies = [
-  {
-    id: 0,
-    image: image,
-    title: 'Prognosis Negative',
-    starRating: '2.66',
-    rating: 'PG-13',
-    year: '2021',
-    genre: 'Comedy',
-    runtime: '1h 46m',
-    cast: 'Simon Pegg, Zach Galifianakis  '
-  }
-]
+import { movies } from "./data"
+import { createDynamic } from 'yunzai/utils'
+const require = createDynamic(import.meta.url)
+const Hello = (await require('./views/hello.tsx')).default;
+const Music = (await require('./views/music.tsx')).default;
 const Config = [
   {
     url: "/hello",

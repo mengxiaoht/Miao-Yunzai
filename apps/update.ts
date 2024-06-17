@@ -36,7 +36,7 @@ export class update extends Plugin {
 
   async update() {
     if (!this.e.isMaster) return false
-    if (uping) return this.reply('已有命令更新中..请勿重复操作')
+    if (uping) return this.e.reply('已有命令更新中..请勿重复操作')
 
     if (/详细|详情|面板|面版/.test(this.e.msg)) return false
 
@@ -56,7 +56,7 @@ export class update extends Plugin {
 
     /** 是否需要重启 */
     if (this.isUp) {
-      // await this.reply('即将执行重启，以应用更新')
+      // await this.e.reply('即将执行重启，以应用更新')
       setTimeout(() => this.restart(), 2000)
     }
   }
@@ -97,7 +97,7 @@ export class update extends Plugin {
 
     logger.mark(`${this.e.logFnc} 开始${type}：${this.typeName}`)
 
-    await this.reply(`开始${type} ${this.typeName}`)
+    await this.e.reply(`开始${type} ${this.typeName}`)
     uping = true
     const ret = await this.execSync(cm)
     uping = false
@@ -111,11 +111,11 @@ export class update extends Plugin {
     const time = await this.getTime(plugin)
 
     if (/Already up|已经是最新/g.test(ret.stdout)) {
-      await this.reply(`${this.typeName} 已是最新\n最后更新时间：${time}`)
+      await this.e.reply(`${this.typeName} 已是最新\n最后更新时间：${time}`)
     } else {
-      await this.reply(`${this.typeName} 更新成功\n更新时间：${time}`)
+      await this.e.reply(`${this.typeName} 更新成功\n更新时间：${time}`)
       this.isUp = true
-      await this.reply(await this.getLog(plugin))
+      await this.e.reply(await this.getLog(plugin))
     }
 
     logger.mark(`${this.e.logFnc} 最后更新时间：${time}`)
@@ -153,23 +153,23 @@ export class update extends Plugin {
 
     if (errMsg.includes('Timed out')) {
       const remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, '')
-      return this.reply(`${msg}\n连接超时：${remote}`)
+      return this.e.reply(`${msg}\n连接超时：${remote}`)
     }
 
     if (/Failed to connect|unable to access/g.test(errMsg)) {
       const remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, '')
-      return this.reply(`${msg}\n连接失败：${remote}`)
+      return this.e.reply(`${msg}\n连接失败：${remote}`)
     }
 
     if (errMsg.includes('be overwritten by merge')) {
-      return this.reply(`${msg}\n存在冲突：\n${errMsg}\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改`)
+      return this.e.reply(`${msg}\n存在冲突：\n${errMsg}\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改`)
     }
 
     if (stdout.includes('CONFLICT')) {
-      return this.reply(`${msg}\n存在冲突：\n${errMsg}${stdout}\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改`)
+      return this.e.reply(`${msg}\n存在冲突：\n${errMsg}${stdout}\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改`)
     }
 
-    return this.reply([errMsg, stdout])
+    return this.e.reply([errMsg, stdout])
   }
 
   async updateAll() {
@@ -182,7 +182,7 @@ export class update extends Plugin {
 
     const testReg = /^#静默全部(强制)?更新$/.test(this.e.msg)
     if (testReg) {
-      await this.reply(`开始执行静默全部更新,请稍等...`)
+      await this.e.reply(`开始执行静默全部更新,请稍等...`)
     }
 
     await this.runUpdate()
@@ -200,7 +200,7 @@ export class update extends Plugin {
     }
 
     if (this.isUp) {
-      // await this.reply('即将执行重启，以应用更新')
+      // await this.e.reply('即将执行重启，以应用更新')
       setTimeout(() => this.restart(), 2000)
     }
 
@@ -219,7 +219,7 @@ export class update extends Plugin {
       logAll = await execSync(cm, { encoding: 'utf-8' })
     } catch (error) {
       logger.error(error.toString())
-      await this.reply(error.toString())
+      await this.e.reply(error.toString())
     }
 
     if (!logAll) return false
@@ -246,7 +246,7 @@ export class update extends Plugin {
       end = end.match(/remote\..*\.url=.+/g).join('\n\n').replace(/remote\..*\.url=/g, '').replace(/\/\/([^@]+)@/, '//')
     } catch (error) {
       logger.error(error.toString())
-      await this.reply(error.toString())
+      await this.e.reply(error.toString())
     }
 
     return makeForwardMsg(this.e, [log, end], `${plugin || 'Miao-Yunzai'} 更新日志，共${line}条`)
@@ -255,6 +255,6 @@ export class update extends Plugin {
   async updateLog() {
     const plugin = this.getPlugin()
     if (plugin === false) return false
-    return this.reply(await this.getLog(plugin))
+    return this.e.reply(await this.getLog(plugin))
   }
 }

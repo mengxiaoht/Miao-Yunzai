@@ -1,25 +1,13 @@
 import React from 'react'
-import { Component, Puppeteer } from 'yunzai/utils'
-import Hello, { PropsType } from './views/hello.tsx'
-// 初始化 组件渲染对象
-const Com = new Component()
-export class Image {
-    Pup: typeof Puppeteer.prototype = null
-    /**
-    * 初始化运行Puppeteer
-    */
+import { Picture } from 'yunzai/utils'
+import { createDynamic } from 'yunzai/utils'
+import { PropsType } from './views/hello.tsx'
+const require = createDynamic(import.meta.url)
+export class Image extends Picture {
     constructor() {
-        // init
-        this.Pup = new Puppeteer()
+        super()
         // start
         this.Pup.start()
-
-        this.Pup.setLaunch({
-            defaultViewport: {
-              width: 1280,
-              height: 800
-            }
-          })
     }
     /**
      * 为指定用户生成html 生成指定数据下的html文件
@@ -27,14 +15,16 @@ export class Image {
      * @param Props 组件参数
      * @returns 
      */
-    createHello(uid: number, Props: PropsType) {
+    async createHello(uid: number, Props: PropsType) {
+        // 此作用域可被重复执行，此处将变成动态组件 - 这是危险的！
+        const Hello = (await require('./views/hello.tsx')).default;
         // 生成 html 地址 或 html字符串
-        const Address = Com.create(<Hello {...Props} />, {
+        const Address = this.Com.create(<Hello {...Props} />, {
             // html/hello/uid.html
             join_dir: 'hello',
             html_name: `${uid}.html`,
         })
-        return this.Pup.render(Address,{
+        return this.Pup.render(Address, {
             tab: ''
         })
     }

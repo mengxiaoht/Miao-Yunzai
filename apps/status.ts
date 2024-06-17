@@ -33,7 +33,7 @@ export class status extends Plugin {
     if (this.e.isMaster) return this.statusMaster()
 
     if (!this.e.isGroup) {
-      this.reply('请群聊查看')
+      this.e.reply('请群聊查看')
       return
     }
 
@@ -62,14 +62,14 @@ export class status extends Plugin {
     msg += '\n-------累计-------'
     msg += await this.getCount()
 
-    await this.reply(msg)
+    await this.e.reply(msg)
   }
 
   async statusGroup() {
     let msg = '-------状态-------'
     msg += await this.getCount(this.e.group_id)
 
-    await this.reply(msg)
+    await this.e.reply(msg)
   }
 
   async getCount(groupId:number | string = '') {
