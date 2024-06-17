@@ -1,10 +1,25 @@
 import { type GroupMessage } from 'icqq'
 import Runtime from './runtime'
 
+
+/**
+ * 消息体
+ * 应该是根据
+ * eleven 来进行赋值的
+ * 
+ * tudo
+ * 错误的设计导致其混乱
+ */
+
 /**
  * 消息事件体
  */
 export interface EventType extends GroupMessage {
+  /**
+   *  'group' | 'private'
+   * @deprecated 已废弃
+   */
+  message_type:  any,
   /**
    * 是否是机器人主人
    */
@@ -46,6 +61,11 @@ export interface EventType extends GroupMessage {
    */
   msg: string
   /**
+   * 图片
+   * @deprecated 已废弃
+   */
+  img:  string[]
+  /**
    * 消息发送
    * @param arg
    * @returns
@@ -72,14 +92,44 @@ export interface EventType extends GroupMessage {
   /**
    * @deprecated 已废弃
    */
+  notice_type: any
+
+  /**
+   * @deprecated 已废弃
+   */
   group: {
+    /**
+     * @deprecated 已废弃
+     */
     is_owner: any;
+    /**
+     * @deprecated 已废弃
+     */
     recallMsg: (...arg: any[]) => any;
+    /**
+     * @deprecated 已废弃
+     */
     getMemberMap: any;
+    /**
+     * @deprecated 已废弃
+     */
     quit: any;
+    /**
+     * @deprecated 已废弃
+     */
     mute_left: any
+    /**
+     * @deprecated 已废弃
+     */
     pickMember: any
+    /**
+     * @deprecated 已废弃
+     */
     sendMsg: any
+    /**
+     * @deprecated 已废弃
+     */
+    name: any
   };
   /**
    * @deprecated 已废弃

@@ -32,12 +32,13 @@ export class Puppeteer {
   #pic = 0
   // 重启次数控制
   #restart = 200
-  // 应用缓存
-  #browser: Browser | null = null
   // 状态
   #isBrowser = false
   // 配置
   #launch: PuppeteerLaunchOptions = PuppeteerLunchConfig.all()
+
+  // 应用缓存
+  browser: Browser | null = null
 
   /**
    * 设置
@@ -62,7 +63,7 @@ export class Puppeteer {
    */
   async start() {
     try {
-      this.#browser = await puppeteer.launch(this.#launch)
+      this.browser = await puppeteer.launch(this.#launch)
       this.#isBrowser = true
       console.info('[puppeteer] open success')
       return true
@@ -97,7 +98,7 @@ export class Puppeteer {
       this.#pic = 0
       console.info('[puppeteer] close')
       this.#isBrowser = false
-      this.#browser?.close().catch(err => {
+      this.browser?.close().catch(err => {
         console.error('[puppeteer] close', err)
       })
       console.info('[puppeteer] reopen')
@@ -119,7 +120,7 @@ export class Puppeteer {
   async render(htmlPath: string, Options?: ScreenshotFileOptions) {
     if (!(await this.isStart())) return false
     try {
-      const page = await this.#browser?.newPage().catch(err => {
+      const page = await this.browser?.newPage().catch(err => {
         console.error(err)
       })
       if (!page) return false

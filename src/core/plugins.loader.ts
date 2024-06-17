@@ -465,7 +465,7 @@ class PluginsLoader {
    * @param v
    * @returns
    */
-  filtEvent(e, v) {
+  filtEvent(e: EventType, v) {
     if (!v.event) return false
     const event = v.event.split('.')
     const eventMap = this.eventMap[e.post_type] || []
@@ -483,7 +483,7 @@ class PluginsLoader {
    * @param v
    * @returns
    */
-  filtPermission(e, v) {
+  filtPermission(e: EventType, v) {
     if (v.permission == 'all' || !v.permission) return true
     if (v.permission == 'master') {
       if (e.isMaster) {
@@ -531,7 +531,7 @@ class PluginsLoader {
    * @param e.at 支持频道 tiny_id
    * @param e.atBot 支持频道
    */
-  dealMsg(e) {
+  dealMsg(e: EventType) {
     if (e.message) {
       for (let val of e.message) {
         switch (val.type) {
@@ -582,68 +582,85 @@ class PluginsLoader {
     e.logText = ''
 
     /**
-     *
+     * 私聊
      */
     if (e.message_type === 'private' || e.notice_type === 'friend') {
       e.isPrivate = true
 
+      // 存在
       if (e.sender) {
+        // nickname
         e.sender.card = e.sender.nickname
       } else {
+        // 不存在
         e.sender = {
+          // nickname
           card: e.friend?.nickname,
+          // nickname
           nickname: e.friend?.nickname
-        }
+        } as any
       }
-
       e.logText = `[私聊][${e.sender.nickname}(${e.user_id})]`
     }
 
-    if (e?.user_id) {
-      e.user_avatar = `https://q1.qlogo.cn/g?b=qq&s=0&nk=${e.user_id}`
-      e.user_name = e.sender.nickname
-    }
-    if (e?.group_id) {
-      e.group_avatar = `https://p.qlogo.cn/gh/${e.group_id}/${e.group_id}/640/`
-    }
-
     /**
-     *
+     * 群聊
      */
     if (e.message_type === 'group' || e.notice_type === 'group') {
+      //
       e.isGroup = true
+
+      // 存在
       if (e.sender) {
-        e.sender.card = e.sender.card || e.sender.nickname
+        // nickname
+        e.sender.card = e.sender.card ?? e.sender.nickname
       } else if (e.member) {
         e.sender = {
-          card: e.member.card || e.member.nickname
-        }
+          // nickname
+          card: e.member.card ?? e.member.nickname,
+          nickname: e.member.card ?? e.member.nickname
+        } as any
       } else if (e.nickname) {
         e.sender = {
+          // nickname
           card: e.nickname,
+          // nickname
           nickname: e.nickname
-        }
+        } as any
       } else {
         e.sender = {
-          card: '',
-          nickname: ''
-        }
+          card: e?.user_id ?? '',
+          nickname: e?.user_id ?? ''
+        } as any
       }
 
       if (!e.group_name) e.group_name = e.group?.name
 
       e.logText = `[${e.group_name}(${e.sender.card})]`
+
+      //
     } else if (e.detail_type === 'guild') {
+      //
       e.isGuild = true
+    }
+
+    if (!e.user_id) {
+      e.user_id = e.sender?.user_id
+    }
+    if (e?.user_id) {
+      e.user_avatar = `https://q1.qlogo.cn/g?b=qq&s=0&nk=${e.user_id}`
+    }
+    if (e?.group_id) {
+      e.group_avatar = `https://p.qlogo.cn/gh/${e.group_id}/${e.group_id}/640/`
+    }
+    if (e.sender.nickname) {
+      e.user_name = e.sender.nickname
     }
 
     /**
      *
      */
-    if (
-      e.user_id &&
-      cfg.masterQQ.includes(String(e.user_id) || String(e.user_id))
-    ) {
+    if (e.user_id && cfg.masterQQ.includes(String(e.user_id))) {
       e.isMaster = true
     }
 
@@ -651,7 +668,7 @@ class PluginsLoader {
      * 只关注主动at msg处理
      */
     if (e.msg && e.isGroup) {
-      const groupCfg = cfg.getGroup(e.group_id)
+      const groupCfg = cfg.getGroup(String(e.group_id))
       let alias = groupCfg.botAlias
       if (!Array.isArray(alias)) {
         alias = [alias]
