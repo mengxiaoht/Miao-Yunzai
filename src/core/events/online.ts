@@ -30,9 +30,6 @@ export class EventOnline extends EventListener {
       logger.green(`${BOT_NAME} 上线成功 版本v${cfg.package.version}`)
     )
     logger.mark(logger.green('https://github.com/yoimiya-kokomi/Miao-Yunzai'))
-    // logger.mark('-----------')
-    /** 加载插件 */
-    await this.plugins.load()
 
     /** 上线通知 */
     this.loginMsg()
