@@ -589,18 +589,16 @@ class PluginsLoader {
 
       // 存在
       if (e.sender) {
-        // nickname
-        e.sender.card = e.sender.nickname
+        e.sender.card = e.sender?.nickname
       } else {
+        e.sender = {} as any
         // 不存在
         e.sender = {
-          // nickname
           card: e.friend?.nickname,
-          // nickname
           nickname: e.friend?.nickname
         } as any
       }
-      e.logText = `[私聊][${e.sender.nickname}(${e.user_id})]`
+      e.logText = `[私聊][${e.sender?.nickname}(${e.user_id})]`
     }
 
     /**
@@ -612,22 +610,19 @@ class PluginsLoader {
 
       // 存在
       if (e.sender) {
-        // nickname
-        e.sender.card = e.sender.card ?? e.sender.nickname
+        e.sender.card = e.sender.card ?? e.sender?.nickname
       } else if (e.member) {
         e.sender = {
-          // nickname
-          card: e.member.card ?? e.member.nickname,
-          nickname: e.member.card ?? e.member.nickname
+          card: e.member.card ?? e.member?.nickname,
+          nickname: e.member.card ?? e.member?.nickname
         } as any
-      } else if (e.nickname) {
+      } else if (e?.nickname) {
         e.sender = {
-          // nickname
-          card: e.nickname,
-          // nickname
-          nickname: e.nickname
+          card: e?.nickname,
+          nickname: e?.nickname
         } as any
       } else {
+        e.sender = {} as any
         e.sender = {
           card: e?.user_id ?? '',
           nickname: e?.user_id ?? ''
@@ -653,8 +648,8 @@ class PluginsLoader {
     if (e?.group_id) {
       e.group_avatar = `https://p.qlogo.cn/gh/${e.group_id}/${e.group_id}/640/`
     }
-    if (e.sender.nickname) {
-      e.user_name = e.sender.nickname
+    if (e.sender?.nickname) {
+      e.user_name = e.sender?.nickname
     }
 
     /**
