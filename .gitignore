@@ -150,6 +150,6 @@ yunzai
 dist/
 docs/
 public/
-html/
+/html/
 
-plugins/
+/plugins/
