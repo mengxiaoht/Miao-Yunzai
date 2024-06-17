@@ -110,7 +110,7 @@ class ConfigController {
    * @param groupId 
    * @returns 
    */
-  getGroup(groupId = '') {
+  getGroup(groupId: number | string = '') {
     const config = this.getConfig('group')
     const defCfg = this.getdefSet('group')
     if (config[groupId]) {
@@ -162,7 +162,7 @@ class ConfigController {
    * @param type 默认跑配置-defSet，用户配置-config
    * @param name 名称
    */
-  getYaml(type, name) {
+  getYaml(type: string, name: string) {
     const file = `config/${type}/${name}.yaml`
     const key = `${type}.${name}`
     if (this.config[key]) return this.config[key]

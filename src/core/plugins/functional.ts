@@ -1,5 +1,5 @@
 import { MessageCallBackType } from './types.js'
-import { plugin } from './index.js'
+import { Plugin } from './index.js'
 import { EventMap } from 'icqq'
 
 /**
@@ -60,7 +60,7 @@ export class Messages {
    */
   get ok() {
     const App = this
-    class Children extends plugin {
+    class Children extends Plugin {
       constructor() {
         super({
           ...App.#init,
@@ -91,14 +91,14 @@ export class Events {
    *
    */
   #data: {
-    [key: string]: typeof plugin
+    [key: string]: typeof Plugin
   } = {}
 
   /**
    *
    * @param val
    */
-  use(val: typeof plugin) {
+  use(val: typeof Plugin) {
     this.#count++
     this.#data[this.#count] = val
   }

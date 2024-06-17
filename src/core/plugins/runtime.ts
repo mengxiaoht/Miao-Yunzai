@@ -1,5 +1,5 @@
 import lodash from 'lodash'
-import fs from 'node:fs'
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import {
   gsCfg,
   mysApi as MysApi,
@@ -265,16 +265,16 @@ export default class Runtime {
       let currDir = `${process.cwd()}/temp`
       for (let p of check.split('/')) {
         currDir = `${currDir}/${p}`
-        if (!fs.existsSync(currDir)) {
-          fs.mkdirSync(currDir)
+        if (!existsSync(currDir)) {
+          mkdirSync(currDir)
         }
       }
       return currDir
     }
     mkdir(`html/${plugin_name}/${path}`)
     // 自动计算pluResPath
-    let pluResPath = `../../../${lodash.repeat('../', paths.length)}plugins/${plugin_name}/resources/`
-    let miaoResPath = `../../../${lodash.repeat('../', paths.length)}plugins/miao-plugin/resources/`
+    const pluResPath = `../../../${lodash.repeat('../', paths.length)}plugins/${plugin_name}/resources/`
+    const miaoResPath = `../../../${lodash.repeat('../', paths.length)}plugins/miao-plugin/resources/`
     const layoutPath = process.cwd() + '/plugins/miao-plugin/resources/common/layout/'
     // 渲染data
     data = {
@@ -309,12 +309,12 @@ export default class Runtime {
     if (process.argv.includes('dev')) {
       // debug下保存当前页面的渲染数据，方便模板编写与调试
       // 由于只用于调试，开发者只关注自己当时开发的文件即可，暂不考虑app及plugin的命名冲突
-      let saveDir = mkdir(`ViewData/${plugin_name}`)
-      let file = `${saveDir}/${data._htmlPath.split('/').join('_')}.json`
-      fs.writeFileSync(file, JSON.stringify(data))
+      const saveDir = mkdir(`ViewData/${plugin_name}`)
+      const file = `${saveDir}/${data._htmlPath.split('/').join('_')}.json`
+      writeFileSync(file, JSON.stringify(data))
     }
     // 截图
-    let base64 = await puppeteer.screenshot(`${plugin_name}/${path}`, data)
+    const base64 = await puppeteer.screenshot(`${plugin_name}/${path}`, data)
     if (cfg.retType === 'base64') {
       return base64
     }

@@ -44,8 +44,6 @@ async function redisInit() {
   })
   /** 全局变量 redis */
   global.redis = client as any
-
-  //
   logger.info('Redis 连接成功')
   return client
 }

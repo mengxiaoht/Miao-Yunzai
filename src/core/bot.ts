@@ -39,54 +39,26 @@ export class Client extends IcqqClient {
    */
   static async run() {
     const bot = new Client(cfg.bot)
-
-    /**
-     * 加载监听事件
-     */
     await ListenerLoader.load(bot)
-
-    /**
-     * 跳过登录
-     */
     if (cfg.bot.skip_login) {
       return await this.skip_login(bot)
     }
-
-    /**
-     * 正常的登录
-     */
     await bot.login(cfg.qq, cfg.pwd)
-
     bot[bot.uin] = bot
-
-    /**
-     * 全局变量 bot
-     */
     global.Bot = bot
-
     return bot
   }
-
   /**
    * 跳过登录ICQQ
    * @param bot
    * @returns
    */
   static async skip_login(bot) {
-    //
     bot.uin = 88888
-    //
     bot[bot.uin] = bot
-    /**
-     * 全局变量 bot
-     */
     global.Bot = bot
-    /**
-     *
-     */
     return bot
   }
-
   /**
    * 加载插件
    * @param bot
@@ -95,8 +67,6 @@ export class Client extends IcqqClient {
   static async PluginsLoader() {
     await PluginsLoader.load()
   }
-
-  //
 }
 
 /**
