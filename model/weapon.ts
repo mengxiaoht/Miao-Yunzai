@@ -1,6 +1,6 @@
 import base from './base.js'
 import { MysInfo } from 'yunzai/mys'
-import {gsCfg} from 'yunzai/mys'
+import { gsCfg } from 'yunzai/mys'
 import lodash from 'lodash'
 
 // tudo
@@ -11,7 +11,7 @@ export default class WeaponModel extends base {
   constructor(e) {
     super(e)
   }
-  
+
   model = 'weapon'
 
   static async get(e) {
@@ -114,7 +114,11 @@ export default class WeaponModel extends base {
     }
 
     // 重新排序
-    ret = lodash.chain(ret).orderBy(['firstSort'], ['desc']).orderBy(['sort'], ['desc']).value()
+    ret = lodash
+      .chain(ret)
+      .orderBy(['firstSort'], ['desc'])
+      .orderBy(['sort'], ['desc'])
+      .value()
 
     return { list: ret, count }
   }

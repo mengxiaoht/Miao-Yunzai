@@ -1,22 +1,23 @@
-{{extend genshinLayout}}
-
-{{block 'css'}}
-<link rel="stylesheet" type="text/css" href="{{_res_path}}html/ledger/ledger-sr.css"/>
-<link rel="preload" href="{{_res_path}}script/g2plot.min.js" as="script"/>
-{{/block}}
-
-{{block 'main'}}
+{{extend genshinLayout}} {{block 'css'}}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{_res_path}}html/ledger/ledger-sr.css"
+/>
+<link rel="preload" href="{{_res_path}}script/g2plot.min.js" as="script" />
+{{/block}} {{block 'main'}}
 <div class="container">
   <div class="title">
     <div class="uid">
-      <div class="uid_item"><span class="uid_text">UID:</span><span class="uid_span">{{uid}}</span>
+      <div class="uid_item">
+        <span class="uid_text">UID:</span><span class="uid_span">{{uid}}</span>
       </div>
       <div class="uid_item"><span class="day_span">开拓月历·{{day}}</span></div>
     </div>
   </div>
   <div class="title_date">
     <div class="icon">
-      <img src="{{_res_path}}StarRail/img/role/{{icon}}"/>
+      <img src="{{_res_path}}StarRail/img/role/{{icon}}" />
     </div>
     <div class="title_date_text">
       <div>{{nowDay}}</div>
@@ -30,7 +31,9 @@
         <div class="head">当月获取：</div>
         <div class="primogems">
           <div class="icon-ys"></div>
-          <div class="text">星琼：{{month_data.current_hcoin}} | {{month_data.gacha}} 抽</div>
+          <div class="text">
+            星琼：{{month_data.current_hcoin}} | {{month_data.gacha}} 抽
+          </div>
         </div>
         <div class="primogems">
           <div class="icon-mola"></div>
@@ -41,7 +44,9 @@
         <div class="head">上月获取：</div>
         <div class="primogems">
           <div class="icon-ys"></div>
-          <div class="text">星琼：{{month_data.last_hcoin}} | {{month_data.last_gacha}} 抽</div>
+          <div class="text">
+            星琼：{{month_data.last_hcoin}} | {{month_data.last_gacha}} 抽
+          </div>
         </div>
         <div class="primogems">
           <div class="icon-mola"></div>
@@ -51,9 +56,7 @@
     </div>
   </div>
   <div class="title_wt">
-    <div>
-      星琼收入统计
-    </div>
+    <div>星琼收入统计</div>
   </div>
   <div class="chart-box">
     <div class="chart-info">
@@ -62,9 +65,9 @@
         {{each month_data.group_by val}}
         <li>
           <i style="background: {{val.color}}"></i>
-          <span class="action"><em>{{val.action_name}}</em></span> <span
-          class="num"><em>{{val.num}}</em></span><span
-          class="percent"><em>{{val.percent}}%</em></span>
+          <span class="action"><em>{{val.action_name}}</em></span>
+          <span class="num"><em>{{val.num}}</em></span
+          ><span class="percent"><em>{{val.percent}}%</em></span>
         </li>
         {{/each}}
       </ul>
@@ -98,7 +101,7 @@
       style: {
         textAlign: 'center',
         fontFamily: 'tttgbnumber',
-        'fontSize': 24
+        fontSize: 24
       },
       formatter: ({ percent }) => {
         percent = (percent * 100).toFixed(0)
@@ -111,14 +114,14 @@
         content: '总计',
         style: {
           fontFamily: 'tttgbnumber',
-          'fontSize': 32
+          fontSize: 32
         }
       },
       content: {
         offsetY: -10,
         style: {
           fontFamily: 'tttgbnumber',
-          'fontSize': 48
+          fontSize: 48
         }
       }
     },

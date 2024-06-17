@@ -1,5 +1,5 @@
 import { plugin } from 'yunzai/core'
-import { gsCfg} from 'yunzai/mys'
+import { gsCfg } from 'yunzai/mys'
 import User from '../model/user.js'
 export class user extends plugin {
   User = null
@@ -76,7 +76,10 @@ export class user extends plugin {
   accept() {
     if (!this.e.msg) return
     // 由于手机端米游社网页可能获取不到ltuid 可以尝试在通行证页面获取login_uid
-    if (/(ltoken|ltoken_v2)/.test(this.e.msg) && /(ltuid|login_uid|ltmid_v2)/.test(this.e.msg)) {
+    if (
+      /(ltoken|ltoken_v2)/.test(this.e.msg) &&
+      /(ltuid|login_uid|ltmid_v2)/.test(this.e.msg)
+    ) {
       if (this.e.isGroup) {
         this.reply('请私聊发送Cookie', false, { at: true })
         return true
@@ -87,14 +90,14 @@ export class user extends plugin {
     }
 
     if (/^#?(原神)?绑定uid$/i.test(this.e.msg)) {
-      this.setContext("saveUid")
-      this.reply("请发送绑定的原神uid", false, { at: true })
+      this.setContext('saveUid')
+      this.reply('请发送绑定的原神uid', false, { at: true })
       return true
     }
 
     if (/^#?星铁绑定uid$/i.test(this.e.msg)) {
-      this.setContext("saveSrUid")
-      this.reply("请发送绑定的星铁uid", false, { at: true })
+      this.setContext('saveSrUid')
+      this.reply('请发送绑定的星铁uid', false, { at: true })
       return true
     }
   }
@@ -104,12 +107,12 @@ export class user extends plugin {
     if (!this.e.msg) return
     let uid = this.e.msg.match(/([1-9]|18)[0-9]{8}/g)
     if (!uid) {
-      this.reply("原神UID输入错误", false, { at: true })
+      this.reply('原神UID输入错误', false, { at: true })
       return
     }
-    this.e.msg = "#绑定" + this.e.msg
+    this.e.msg = '#绑定' + this.e.msg
     this.bingUid()
-    this.finish("saveUid")
+    this.finish('saveUid')
   }
 
   /** 绑定星铁uid */
@@ -117,14 +120,14 @@ export class user extends plugin {
     if (!this.e.msg) return
     let uid = this.e.msg.match(/([1-9]|18)[0-9]{8}/g)
     if (!uid) {
-      this.reply("星铁UID输入错误", false, { at: true })
+      this.reply('星铁UID输入错误', false, { at: true })
       return
     }
-    this.e.msg = "#星铁绑定" + this.e.msg
+    this.e.msg = '#星铁绑定' + this.e.msg
     this.e.isSr = true
     this.e.game = 'sr'
     this.bingUid()
-    this.finish("saveSrUid")
+    this.finish('saveSrUid')
   }
 
   /** 未登录ck */
@@ -134,13 +137,15 @@ export class user extends plugin {
 
   /** #ck代码 */
   async ckCode() {
-    await this.reply('javascript:(()=>{prompt(\'\',document.cookie)})();')
+    await this.reply("javascript:(()=>{prompt('',document.cookie)})();")
   }
 
   /** ck帮助 */
   async ckHelp() {
     let set = gsCfg.getConfig('mys', 'set')
-    await this.reply(`Cookie绑定配置教程：${set.cookieDoc}\n获取Cookie后【私聊发送】进行绑定`)
+    await this.reply(
+      `Cookie绑定配置教程：${set.cookieDoc}\n获取Cookie后【私聊发送】进行绑定`
+    )
   }
 
   /** 绑定ck */
@@ -148,7 +153,9 @@ export class user extends plugin {
     let set = gsCfg.getConfig('mys', 'set')
 
     if (!this.e.ck) {
-      await this.reply(`请【私聊】发送米游社Cookie，获取教程：\n${set.cookieDoc}`)
+      await this.reply(
+        `请【私聊】发送米游社Cookie，获取教程：\n${set.cookieDoc}`
+      )
       return
     }
 
@@ -178,9 +185,11 @@ export class user extends plugin {
 
   async delUid() {
     let index = this.e.msg.match(/[0-9]{1,2}$/g)
-    if(!index) {
-        this.e.reply(`删除uid请带上序号\n例如：#删除uid1\n发送【#uid】可查看绑定的uid以及对应的序号`)
-        return true;
+    if (!index) {
+      this.e.reply(
+        `删除uid请带上序号\n例如：#删除uid1\n发送【#uid】可查看绑定的uid以及对应的序号`
+      )
+      return true
     }
     let uidIdx = index && index[0]
     let game = this.e

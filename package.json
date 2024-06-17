@@ -1,0 +1,10 @@
+{
+  "name": "system-plugin",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3"
+  }
+}

@@ -2,7 +2,7 @@ import { plugin } from 'yunzai/core'
 import MysNews from '../model/mysNews.js'
 import fs from 'node:fs'
 import lodash from 'lodash'
-import { gsCfg} from 'yunzai/mys'
+import { gsCfg } from 'yunzai/mys'
 import YAML from 'yaml'
 gsCfg.cpCfg('mys', 'pushNews')
 export class mysNews extends plugin {
@@ -47,7 +47,6 @@ export class mysNews extends plugin {
       ]
     })
 
-
     /** 定时任务 */
     this.task = {
       cron: gsCfg.getConfig('mys', 'pushNews').pushTime,
@@ -56,8 +55,8 @@ export class mysNews extends plugin {
       log: false
     }
   }
-  
-   file = './plugins/genshin/config/mys.pushNews.yaml'
+
+  file = './plugins/genshin/config/mys.pushNews.yaml'
 
   async init() {
     if (fs.existsSync(this.file)) return
@@ -88,7 +87,7 @@ export class mysNews extends plugin {
     }
     let typeName
     let pushGame
-    if(this.e.msg.includes('星铁')) {
+    if (this.e.msg.includes('星铁')) {
       typeName = `srActivityPush`
       pushGame = `星铁`
     } else {
@@ -96,11 +95,12 @@ export class mysNews extends plugin {
       pushGame = `原神`
     }
     let cfg = gsCfg.getConfig('mys', 'pushNews')
-    if(!cfg[typeName]) cfg[typeName] = {}
-    if(!Array.isArray(cfg[typeName][this.e.self_id])) cfg[typeName][this.e.self_id] = []
+    if (!cfg[typeName]) cfg[typeName] = {}
+    if (!Array.isArray(cfg[typeName][this.e.self_id]))
+      cfg[typeName][this.e.self_id] = []
     let model
     let msg = `${pushGame}活动到期预警推送已`
-    if(this.e.msg.includes('开启')) {
+    if (this.e.msg.includes('开启')) {
       model = '开启'
       cfg[typeName][this.e.self_id].push(this.e.group_id)
       cfg[typeName][this.e.self_id] = lodash.uniq(cfg[typeName][this.e.self_id])
@@ -108,14 +108,19 @@ export class mysNews extends plugin {
     } else {
       model = '关闭'
       msg += model
-      cfg[typeName][this.e.self_id] = lodash.difference(cfg[typeName][this.e.self_id], [this.e.group_id])
+      cfg[typeName][this.e.self_id] = lodash.difference(
+        cfg[typeName][this.e.self_id],
+        [this.e.group_id]
+      )
       if (lodash.isEmpty(cfg[typeName][this.e.self_id]))
-      delete cfg[typeName][this.e.self_id]
+        delete cfg[typeName][this.e.self_id]
     }
     let yaml = YAML.stringify(cfg)
     fs.writeFileSync(this.file, yaml, 'utf8')
 
-    logger.mark(`${this.e.logFnc} ${model}${pushGame}活动到期预警：${this.e.group_id}`)
+    logger.mark(
+      `${this.e.logFnc} ${model}${pushGame}活动到期预警：${this.e.group_id}`
+    )
     await this.reply(msg)
   }
   async mysSearch() {
@@ -133,8 +138,7 @@ export class mysNews extends plugin {
 
   async mysEstimate() {
     let args = ['版本原石', 218945821]
-    if (/星(琼|铁)/.test(this.e.msg))
-      args = ['可获取星琼', 73779489]
+    if (/星(琼|铁)/.test(this.e.msg)) args = ['可获取星琼', 73779489]
     let data = await new MysNews(this.e).mysEstimate(...args)
     if (!data) return
     await this.reply(data)
@@ -153,7 +157,18 @@ export class mysNews extends plugin {
     let cfg = gsCfg.getConfig('mys', 'pushNews')
     let gids = this.gids()
 
-    let game = gids == 1 ? 'bbb' : gids == 2 ? 'gs' : gids == 3 ? 'bb' : gids == 4 ? 'wd' : gids == 6 ? 'sr' : 'zzz'
+    let game =
+      gids == 1
+        ? 'bbb'
+        : gids == 2
+          ? 'gs'
+          : gids == 3
+            ? 'bb'
+            : gids == 4
+              ? 'wd'
+              : gids == 6
+                ? 'sr'
+                : 'zzz'
     let type = `${game}announceGroup`
     let typeName = '公告'
     if (this.e.msg.includes('资讯')) {
@@ -175,7 +190,9 @@ export class mysNews extends plugin {
     } else {
       model = '关闭'
       msg += `${model}`
-      cfg[type][this.e.self_id] = lodash.difference(cfg[type][this.e.self_id], [this.e.group_id])
+      cfg[type][this.e.self_id] = lodash.difference(cfg[type][this.e.self_id], [
+        this.e.group_id
+      ])
       if (lodash.isEmpty(cfg[type][this.e.self_id]))
         delete cfg[type][this.e.self_id]
     }
@@ -188,7 +205,7 @@ export class mysNews extends plugin {
   }
 
   gids() {
-    let msg = this.e.msg.replace(/[#公告资讯活动开启关闭推送列表0-9]/g, '');
+    let msg = this.e.msg.replace(/[#公告资讯活动开启关闭推送列表0-9]/g, '')
     switch (msg) {
       case '崩坏三':
       case '崩三':

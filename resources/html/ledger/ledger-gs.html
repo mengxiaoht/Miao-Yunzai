@@ -1,26 +1,28 @@
-{{extend defaultLayout}}
-
-{{block 'css'}}
-<link rel="stylesheet" type="text/css" href="{{_res_path}}html/ledger/ledger-gs.css"/>
-<link rel="preload" href="{{_res_path}}script/g2plot.min.js" as="script"/>
-<link rel="preload" href="{{_res_path}}img/other/bg.webp" as="image">
-<link rel="preload" href="{{_res_path}}img/other/chart.png" as="image">
-{{/block}}
-
-{{block 'main'}}
+{{extend defaultLayout}} {{block 'css'}}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{_res_path}}html/ledger/ledger-gs.css"
+/>
+<link rel="preload" href="{{_res_path}}script/g2plot.min.js" as="script" />
+<link rel="preload" href="{{_res_path}}img/other/bg.webp" as="image" />
+<link rel="preload" href="{{_res_path}}img/other/chart.png" as="image" />
+{{/block}} {{block 'main'}}
 <div class="title-box">
   <div class="info">
     <div class="uid">ID：{{uid}}</div>
     <div class="month">{{day}}札记</div>
   </div>
-  <img class="genshin_logo" src="{{_res_path}}img/other/原神.png"/>
+  <img class="genshin_logo" src="{{_res_path}}img/other/原神.png" />
 </div>
 <div class="data-box">
   <div class="month">
     <div class="head">当月获取：</div>
     <div class="primogems">
       <div class="icon-ys"></div>
-      <div class="text">原石：{{month_data.current_primogems}} | {{month_data.gacha}} 抽</div>
+      <div class="text">
+        原石：{{month_data.current_primogems}} | {{month_data.gacha}} 抽
+      </div>
     </div>
     <div class="primogems">
       <div class="icon-mola"></div>
@@ -31,7 +33,9 @@
     <div class="head">上月获取：</div>
     <div class="primogems">
       <div class="icon-ys"></div>
-      <div class="text">原石：{{month_data.last_primogems}} | {{month_data.last_gacha}} 抽</div>
+      <div class="text">
+        原石：{{month_data.last_primogems}} | {{month_data.last_gacha}} 抽
+      </div>
     </div>
     <div class="primogems">
       <div class="icon-mola"></div>
@@ -47,13 +51,13 @@
       {{each month_data.group_by val}}
       <li>
         <i style="background: {{val.color}}"></i>
-        <span class="action">{{val.action}}</span> <em>{{val.percent}}%</em><span class="num">{{val.num}}</span>
+        <span class="action">{{val.action}}</span> <em>{{val.percent}}%</em
+        ><span class="num">{{val.num}}</span>
       </li>
       {{/each}}
     </ul>
   </div>
 </div>
-
 
 <script type="text/javascript" src="{{_res_path}}script/g2plot.min.js"></script>
 <script>

@@ -1,6 +1,6 @@
 @font-face {
-  font-family: "tttgbnumber";
-  src: url("../../font/tttgbnumber.ttf");
+  font-family: 'tttgbnumber';
+  src: url('../../font/tttgbnumber.ttf');
   font-weight: normal;
   font-style: normal;
 }
@@ -13,7 +13,7 @@
 body {
   font-size: 16px;
   color: #1e1f20;
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
   transform: scale(1.3);
   transform-origin: 0 0;
 }
@@ -108,7 +108,7 @@ body {
 }
 .item .item-bg .role-life::after {
   display: block;
-  content: " ";
+  content: ' ';
   width: 28px;
   height: 20px;
   top: 0px;

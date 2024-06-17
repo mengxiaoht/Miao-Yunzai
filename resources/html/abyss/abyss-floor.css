@@ -1,6 +1,6 @@
 @font-face {
-  font-family: "tttgbnumber";
-  src: url("../../font/tttgbnumber.ttf");
+  font-family: 'tttgbnumber';
+  src: url('../../font/tttgbnumber.ttf');
   font-weight: normal;
   font-style: normal;
 }
@@ -13,7 +13,10 @@
 body {
   font-size: 14px;
   color: #fff;
-  font-family: PingFangSC-Medium, PingFang SC, sans-serif;
+  font-family:
+    PingFangSC-Medium,
+    PingFang SC,
+    sans-serif;
   width: 400px;
   /*height: 265px;*/
   transform: scale(2);
@@ -21,7 +24,7 @@ body {
 }
 .container {
   width: 400px;
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
   padding: 7px;
 }
 .page {
@@ -30,16 +33,16 @@ body {
   /* margin: 7px; */
 }
 .bg12 {
-  background: url("../../img/abyss/floor12.png") 0% 0% / 100% no-repeat #1d2a4a;
+  background: url('../../img/abyss/floor12.png') 0% 0% / 100% no-repeat #1d2a4a;
 }
 .bg11 {
-  background: url("../../img/abyss/floor11.png") 0% 0% / 100% no-repeat #072550;
+  background: url('../../img/abyss/floor11.png') 0% 0% / 100% no-repeat #072550;
 }
 .bg10 {
-  background: url("../../img/abyss/floor10.png") 0% 0% / 100% no-repeat #382024;
+  background: url('../../img/abyss/floor10.png') 0% 0% / 100% no-repeat #382024;
 }
 .bg9 {
-  background: url("../../img/abyss/floor9.png") 0% 0% / 100% no-repeat #292b59;
+  background: url('../../img/abyss/floor9.png') 0% 0% / 100% no-repeat #292b59;
 }
 .border {
   border-radius: 7px;
@@ -199,6 +202,6 @@ body {
   border-radius: 2px;
   padding: 0px 3px;
   border-radius: 3px;
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
 }
 /*# sourceMappingURL=abyss-floor.css.map */

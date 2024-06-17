@@ -21,7 +21,9 @@ export default class RoleDetail extends base {
 
   async getDetail() {
     let character = await MysInfo.get(this.e, 'character')
-    let detail = await MysInfo.get(this.e, 'detail', { avatar_id: this.e.roleId })
+    let detail = await MysInfo.get(this.e, 'detail', {
+      avatar_id: this.e.roleId
+    })
 
     if (!character || character.retcode !== 0) return false
 
@@ -34,7 +36,7 @@ export default class RoleDetail extends base {
       skill = this.getSkill(detail.data, avatar)
     }
 
-    if (!await this.checkImg(avatar.name)) return false
+    if (!(await this.checkImg(avatar.name))) return false
 
     /** 截图数据 */
     let data = {
@@ -127,7 +129,18 @@ export default class RoleDetail extends base {
       if (lodash.random(0, 100) > 50) {
         bg = 3
       }
-    } else if (['芭芭拉', '凝光', '刻晴', '琴', '菲谢尔', '迪卢克', '丽莎', '神里绫华'].includes(avatars.name)) {
+    } else if (
+      [
+        '芭芭拉',
+        '凝光',
+        '刻晴',
+        '琴',
+        '菲谢尔',
+        '迪卢克',
+        '丽莎',
+        '神里绫华'
+      ].includes(avatars.name)
+    ) {
       if (avatars.costumes && avatars.costumes.length >= 1) {
         bg = 3
       }
@@ -151,7 +164,9 @@ export default class RoleDetail extends base {
   async noAvatar() {
     let msg = ''
     if (this.isBing) {
-      let randFace = lodash.sample([26, 111, 110, 173, 177, 36, 37, 5, 9, 267, 264, 262, 265])
+      let randFace = lodash.sample([
+        26, 111, 110, 173, 177, 36, 37, 5, 9, 267, 264, 262, 265
+      ])
       msg = [`\n尚未拥有${this.e.roleName}`, segment.face(randFace)]
     } else {
       msg = '\n请先在米游社展示该角色'
@@ -227,7 +242,8 @@ export default class RoleDetail extends base {
   }
 
   async getData() {
-    let url = 'https://bbs-api.mihoyo.com/post/wapi/getPostFullInCollection?&gids=2&collection_id=1057503'
+    let url =
+      'https://bbs-api.mihoyo.com/post/wapi/getPostFullInCollection?&gids=2&collection_id=1057503'
 
     try {
       let ret = await fetch(url, { method: 'get' })
@@ -242,7 +258,9 @@ export default class RoleDetail extends base {
 
   async downImg(name, arr) {
     let ret = []
-    arr.forEach((v, k) => ret.push(downFile(v, `${this.path}${name}${++k}.png`)))
+    arr.forEach((v, k) =>
+      ret.push(downFile(v, `${this.path}${name}${++k}.png`))
+    )
 
     try {
       ret = await Promise.all(ret)

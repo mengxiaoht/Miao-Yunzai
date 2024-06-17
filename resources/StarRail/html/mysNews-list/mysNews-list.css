@@ -6,8 +6,8 @@
   font-family: sans-serif;
 }
 @font-face {
-  font-family: "tttgbnumber";
-  src: url("../../font/tttgbnumber.ttf");
+  font-family: 'tttgbnumber';
+  src: url('../../font/tttgbnumber.ttf');
   font-weight: normal;
   font-style: normal;
 }
@@ -18,7 +18,7 @@
 }
 .head_box {
   border-radius: 15px 50px 50px 15px;
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
   padding: 35px 40px;
   position: relative;
   box-shadow: 0 5px 10px 0 rgb(0 0 0 / 15%);
@@ -116,14 +116,14 @@ body {
   display: table-cell;
   text-align: center;
   vertical-align: middle;
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
 }
 .newscard-time {
   font-size: 16px;
   color: #999;
   line-height: 1;
   margin-top: 14px;
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
 }
 .newscard-cover {
   margin-top: 10px;
@@ -146,7 +146,7 @@ body {
 }
 .logo {
   font-size: 14px;
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
   text-align: center;
   color: #7994a7;
 }

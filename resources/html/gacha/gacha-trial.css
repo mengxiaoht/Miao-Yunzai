@@ -1,12 +1,12 @@
 @font-face {
   font-family: 'tttgbnumber';
-  src: url("../../font/tttgbnumber.ttf");
+  src: url('../../font/tttgbnumber.ttf');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: "YS";
-  src: url("../../font/HYWenHei-55W.ttf");
+  font-family: 'YS';
+  src: url('../../font/HYWenHei-55W.ttf');
   font-weight: normal;
   font-style: normal;
 }
@@ -165,7 +165,9 @@ body {
   left: 18px;
   top: 246px;
   z-index: 120;
-  box-shadow: 0px 10px 20px #ffffffb3, 0px -10px 20px #ffffffb3;
+  box-shadow:
+    0px 10px 20px #ffffffb3,
+    0px -10px 20px #ffffffb3;
   border-radius: 10px;
 }
 .item-starlight {

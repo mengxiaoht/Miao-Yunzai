@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import { ConfigController as cfg } from 'yunzai/config'
 
-
 // tudo
 
 import { Common, Version } from '#miao'
@@ -64,7 +63,7 @@ export default class base {
         pluResPath: `${this._path}/plugins/genshin/resources/StarRail/`,
         srtempFile: 'StarRail/',
         headImg: char?.imgs?.banner,
-        game: 'sr',
+        game: 'sr'
       }
     }
     let char = Character.get('闲云', 'gs')
@@ -75,7 +74,7 @@ export default class base {
       pluResPath: `${this._path}/plugins/genshin/resources/`,
       headImg: char?.imgs?.banner,
       srtempFile: '',
-      game: 'gs',
+      game: 'gs'
     }
   }
 }

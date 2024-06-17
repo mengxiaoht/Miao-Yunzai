@@ -7,7 +7,6 @@ import { promisify } from 'node:util'
 import YAML from 'yaml'
 import { UserGameDB, sequelize } from 'yunzai/db'
 
-
 // tudo
 
 import { Data } from '#miao'
@@ -47,25 +46,31 @@ export default class User extends base {
       this.e.ck = this.ck
     }
     if (!this.e.ck) {
-      await this.e.reply(`请【私聊】发送米游社Cookie，获取教程：\n${set.cookieDoc}`)
+      await this.e.reply(
+        `请【私聊】发送米游社Cookie，获取教程：\n${set.cookieDoc}`
+      )
       return
     }
 
     let ckStr = this.e.ck.replace(/#|'|"/g, '')
     let param = {}
-    ckStr.split(';').forEach((v) => {
+    ckStr.split(';').forEach(v => {
       // 处理分割特殊cookie_token
       let tmp = lodash.trim(v).replace('=', '~').split('~')
       param[tmp[0]] = tmp[1]
     })
 
     if (!param.cookie_token && !param.cookie_token_v2) {
-      await this.e.reply('发送Cookie不完整\n请退出米游社【重新登录】，刷新完整Cookie')
+      await this.e.reply(
+        '发送Cookie不完整\n请退出米游社【重新登录】，刷新完整Cookie'
+      )
       return
     }
 
     // TODO：独立的mys数据，不走缓存ltuid
-    let mys = await MysUser.create(param.ltuid || param.ltuid_v2 || param.account_id_v2 || param.ltmid_v2)
+    let mys = await MysUser.create(
+      param.ltuid || param.ltuid_v2 || param.account_id_v2 || param.ltmid_v2
+    )
     if (!mys) {
       await this.e.reply('发送Cookie不完整或数据错误')
       return
@@ -74,7 +79,8 @@ export default class User extends base {
     data.ck = `ltoken=${param.ltoken};ltuid=${param.ltuid || param.login_uid};cookie_token=${param.cookie_token || param.cookie_token_v2}; account_id=${param.ltuid || param.login_uid};`
     let flagV2 = false
 
-    if (param.cookie_token_v2 && (param.account_mid_v2 || param.ltmid_v2)) { //
+    if (param.cookie_token_v2 && (param.account_mid_v2 || param.ltmid_v2)) {
+      //
       // account_mid_v2 为版本必须带的字段，不带的话会一直提示绑定cookie失败 请重新登录
       flagV2 = true
       data.ck = `ltuid=${param.ltuid || param.login_uid || param.ltuid_v2};account_mid_v2=${param.account_mid_v2};cookie_token_v2=${param.cookie_token_v2};ltoken_v2=${param.ltoken_v2};ltmid_v2=${param.ltmid_v2};`
@@ -83,7 +89,8 @@ export default class User extends base {
       data.ck += ` mi18nLang=${param.mi18nLang};`
     }
     /** 拼接ck */
-    data.ltuid = param.ltuid || param.ltuid_v2 || param.account_id_v2 || param.ltmid_v2
+    data.ltuid =
+      param.ltuid || param.ltuid_v2 || param.account_id_v2 || param.ltmid_v2
 
     /** 米游币签到字段 */
     data.login_ticket = param.login_ticket ?? ''
@@ -96,7 +103,9 @@ export default class User extends base {
       logger.mark(`绑定Cookie错误1：${this.checkMsg || 'Cookie错误'}`)
       // 清除mys数据
       mys._delCache()
-      return await this.e.reply(`绑定Cookie失败：${this.checkMsg || 'Cookie错误'}`)
+      return await this.e.reply(
+        `绑定Cookie失败：${this.checkMsg || 'Cookie错误'}`
+      )
     }
 
     // 判断data.ltuid是否是数字
@@ -109,7 +118,9 @@ export default class User extends base {
         this.ck = `${this.ck}ltuid=${this.ltuid};`
       } else {
         logger.mark(`绑定Cookie错误2：${userFullInfo.message || 'Cookie错误'}`)
-        return await this.e.reply(`绑定Cookie失败：${userFullInfo.message || 'Cookie错误'}`)
+        return await this.e.reply(
+          `绑定Cookie失败：${userFullInfo.message || 'Cookie错误'}`
+        )
       }
     }
 
@@ -137,19 +148,23 @@ export default class User extends base {
         '【#练度统计】角色列表数据',
         '【#面板】【#更新面板】面板信息'
       )
-      button.push([
-        { text: '#uid', callback: '#uid' },
-        { text: '#我的ck', callback: '#我的ck' },
-        { text: '#删除ck', callback: '#删除ck' }
-      ], [
-        { text: '#体力', callback: '#体力' },
-        { text: '#原石', callback: '#原石' },
-        { text: '#原石统计', callback: '#原石统计' }
-      ], [
-        { text: '#练度统计', callback: '#练度统计' },
-        { text: '#面板', callback: '#面板' },
-        { text: '#更新面板', callback: '#更新面板' }
-      ])
+      button.push(
+        [
+          { text: '#uid', callback: '#uid' },
+          { text: '#我的ck', callback: '#我的ck' },
+          { text: '#删除ck', callback: '#删除ck' }
+        ],
+        [
+          { text: '#体力', callback: '#体力' },
+          { text: '#原石', callback: '#原石' },
+          { text: '#原石统计', callback: '#原石统计' }
+        ],
+        [
+          { text: '#练度统计', callback: '#练度统计' },
+          { text: '#面板', callback: '#面板' },
+          { text: '#更新面板', callback: '#更新面板' }
+        ]
+      )
     }
     if (mys.hasGame('sr')) {
       msg.push(
@@ -162,20 +177,28 @@ export default class User extends base {
         '【*练度统计】角色列表数据',
         '【*面板】【*更新面板】面板信息'
       )
-      button.push([
-        { text: '*uid', callback: '*uid' },
-        { text: '*删除ck', callback: '*删除ck' },
-        { text: '*体力', callback: '*体力' }
-      ], [
-        { text: '*星琼', callback: '*星琼' },
-        { text: '*星琼统计', callback: '*星琼统计' },
-        { text: '*练度统计', callback: '*练度统计' }
-      ], [
-        { text: '*面板', callback: '*面板' },
-        { text: '*更新面板', callback: '*更新面板' }
-      ])
+      button.push(
+        [
+          { text: '*uid', callback: '*uid' },
+          { text: '*删除ck', callback: '*删除ck' },
+          { text: '*体力', callback: '*体力' }
+        ],
+        [
+          { text: '*星琼', callback: '*星琼' },
+          { text: '*星琼统计', callback: '*星琼统计' },
+          { text: '*练度统计', callback: '*练度统计' }
+        ],
+        [
+          { text: '*面板', callback: '*面板' },
+          { text: '*更新面板', callback: '*更新面板' }
+        ]
+      )
     }
-    msg = await common.makeForwardMsg(this.e, [[msg.join('\n'), segment.button(...button)]], '绑定成功：使用命令说明')
+    msg = await common.makeForwardMsg(
+      this.e,
+      [[msg.join('\n'), segment.button(...button)]],
+      '绑定成功：使用命令说明'
+    )
     await this.e.reply(msg)
   }
 
@@ -190,7 +213,7 @@ export default class User extends base {
     // 判断是原神还是星铁
     let user = await this.user()
     // 获取当前uid
-    let uidData = user.getUidData('', game = game, this.e)
+    let uidData = user.getUidData('', (game = game), this.e)
     if (!uidData || uidData.type !== 'ck' || !uidData.ltuid) {
       return `删除失败：当前的UID${uidData?.uid}无CK信息`
     }
@@ -218,16 +241,18 @@ export default class User extends base {
     let game = this.e
     let uidList = user.getUidList(game)
     if (index > uidList.length) {
-      return await this.e.reply(['uid序号输入错误', segment.button([
-        { text: '删除uid', input: '#删除uid' }
-      ])])
+      return await this.e.reply([
+        'uid序号输入错误',
+        segment.button([{ text: '删除uid', input: '#删除uid' }])
+      ])
     }
     index = Number(index) - 1
     let uidObj = uidList[index]
     if (uidObj.type === 'ck') {
-      return await this.e.reply(['CK对应UID无法直接删除，请通过【#删除ck】命令来删除', segment.button([
-        { text: '删除ck', callback: '#删除ck' }
-      ])])
+      return await this.e.reply([
+        'CK对应UID无法直接删除，请通过【#删除ck】命令来删除',
+        segment.button([{ text: '删除ck', callback: '#删除ck' }])
+      ])
     }
     await user.delRegUid(uidObj.uid, game)
     return await this.showUid()
@@ -238,22 +263,27 @@ export default class User extends base {
     let user = await this.user()
     let msg = []
     let typeMap = { ck: 'CK Uid', reg: '绑定 Uid' }
-    lodash.forEach({ gs: '原神 (#uid)', sr: '星穹铁道 (*uid)' }, (gameName, game) => {
-      let uidList = user.getUidList(game)
-      let currUid = user.getUid(game)
-      msg.push(`【${gameName}】`)
-      if (uidList.length === 0) {
-        msg.push(`暂无，通过${game === 'gs' ? '#' : '*'}绑定123456789来绑定UID`)
-        return true
-      }
-      lodash.forEach(uidList, (ds, idx) => {
-        let tmp = `${++idx}: ${ds.uid} (${typeMap[ds.type]})`
-        if (currUid * 1 === ds.uid * 1) {
-          tmp += ' ☑'
+    lodash.forEach(
+      { gs: '原神 (#uid)', sr: '星穹铁道 (*uid)' },
+      (gameName, game) => {
+        let uidList = user.getUidList(game)
+        let currUid = user.getUid(game)
+        msg.push(`【${gameName}】`)
+        if (uidList.length === 0) {
+          msg.push(
+            `暂无，通过${game === 'gs' ? '#' : '*'}绑定123456789来绑定UID`
+          )
+          return true
         }
-        msg.push(tmp)
-      })
-    })
+        lodash.forEach(uidList, (ds, idx) => {
+          let tmp = `${++idx}: ${ds.uid} (${typeMap[ds.type]})`
+          if (currUid * 1 === ds.uid * 1) {
+            tmp += ' ☑'
+          }
+          msg.push(tmp)
+        })
+      }
+    )
     msg.unshift('通过【#uid+序号】来切换uid，【#删除uid+序号】删除uid')
     await this.e.reply(msg.join('\n'))
   }
@@ -261,17 +291,20 @@ export default class User extends base {
   /** #uid */
   async showUid() {
     let user = await this.user()
-    let uids = [{
-      key: 'gs',
-      name: '原神'
-    }, {
-      key: 'sr',
-      name: '星穹铁道'
-    }]
-    lodash.forEach(uids, (ds) => {
+    let uids = [
+      {
+        key: 'gs',
+        name: '原神'
+      },
+      {
+        key: 'sr',
+        name: '星穹铁道'
+      }
+    ]
+    lodash.forEach(uids, ds => {
       ds.uidList = user.getUidList(ds.key)
       ds.uid = user.getUid(ds.key)
-      lodash.forEach(ds.uidList, (uidDs) => {
+      lodash.forEach(ds.uidList, uidDs => {
         let player = Player.create(uidDs.uid, ds.key)
         if (player) {
           uidDs.name = player.name
@@ -282,26 +315,39 @@ export default class User extends base {
         }
       })
     })
-    return this.e.reply([await this.e.runtime.render('genshin', 'html/user/uid-list', { uids }, { retType: 'base64' }), segment.button([
-      { text: '绑定UID', input: '#绑定uid' },
-      { text: '切换UID', input: '#uid' },
-      { text: '删除UID', input: '#删除uid' }
-    ], [
-      { text: '角色', callback: '#角色' },
-      { text: '探索', callback: '#探索' },
-      { text: '武器', callback: '#武器' },
-      { text: '深渊', callback: '#深渊' }
-    ], [
-      { text: '统计', callback: '#练度统计' },
-      { text: '面板', callback: '#面板' },
-      { text: '体力', callback: '#体力' },
-      { text: '原石', callback: '#原石' }
-    ], [
-      { text: '留影', callback: '#留影叙佳期' },
-      { text: '七圣', callback: '#七圣召唤查询牌组' },
-      { text: '抽卡', callback: '#抽卡记录' },
-      { text: '充值', callback: '#充值记录' }
-    ])])
+    return this.e.reply([
+      await this.e.runtime.render(
+        'genshin',
+        'html/user/uid-list',
+        { uids },
+        { retType: 'base64' }
+      ),
+      segment.button(
+        [
+          { text: '绑定UID', input: '#绑定uid' },
+          { text: '切换UID', input: '#uid' },
+          { text: '删除UID', input: '#删除uid' }
+        ],
+        [
+          { text: '角色', callback: '#角色' },
+          { text: '探索', callback: '#探索' },
+          { text: '武器', callback: '#武器' },
+          { text: '深渊', callback: '#深渊' }
+        ],
+        [
+          { text: '统计', callback: '#练度统计' },
+          { text: '面板', callback: '#面板' },
+          { text: '体力', callback: '#体力' },
+          { text: '原石', callback: '#原石' }
+        ],
+        [
+          { text: '留影', callback: '#留影叙佳期' },
+          { text: '七圣', callback: '#七圣召唤查询牌组' },
+          { text: '抽卡', callback: '#抽卡记录' },
+          { text: '充值', callback: '#充值记录' }
+        ]
+      )
+    ])
   }
 
   /** 切换uid */
@@ -310,9 +356,10 @@ export default class User extends base {
     let game = this.e
     let uidList = user.getUidList(game)
     if (index > uidList.length) {
-      return await this.e.reply(['uid序号输入错误', segment.button([
-        { text: '切换uid', input: '#uid' }
-      ])])
+      return await this.e.reply([
+        'uid序号输入错误',
+        segment.button([{ text: '切换uid', input: '#uid' }])
+      ])
     }
     index = Number(index) - 1
     user.setMainUid(index, game)
@@ -345,7 +392,7 @@ export default class User extends base {
       }
 
       let param = {}
-      ck.cookie.split(';').forEach((v) => {
+      ck.cookie.split(';').forEach(v => {
         let tmp = lodash.trim(v).split('=')
         param[tmp[0]] = tmp[1]
       })
@@ -384,7 +431,7 @@ export default class User extends base {
       fs.rmdirSync('./data/MysCookie/')
       return
     }
-    files.forEach((v) => promises.push(readFile(`${dir}${v}`, 'utf8')))
+    files.forEach(v => promises.push(readFile(`${dir}${v}`, 'utf8')))
     const res = await Promise.all(promises)
     let ret = {}
     for (let v of res) {
@@ -405,10 +452,13 @@ export default class User extends base {
 
   async loadOldUid() {
     // 从DB中导入
-    await sequelize.query('delete from UserGames where userId is null or data is null', {})
+    await sequelize.query(
+      'delete from UserGames where userId is null or data is null',
+      {}
+    )
     let games = await UserGameDB.findAll()
     let count = 0
-    await Data.forEach(games, async (game) => {
+    await Data.forEach(games, async game => {
       if (!game.userId) {
         game.destroy()
         return true
@@ -416,7 +466,7 @@ export default class User extends base {
       count++
       let user = await NoteUser.create(game.userId)
       if (game.userId && game.data) {
-        lodash.forEach(game.data, (ds) => {
+        lodash.forEach(game.data, ds => {
           let { uid } = ds
           user.addRegUid(uid, game.game, false)
         })
@@ -441,7 +491,10 @@ export default class User extends base {
       }
       redis.del(key)
     }
-    await sequelize.query('delete from Users where (ltuids is null or ltuids=\'\') and games is null', {})
+    await sequelize.query(
+      "delete from Users where (ltuids is null or ltuids='') and games is null",
+      {}
+    )
     console.log('load Uid Data Done...')
   }
 
@@ -463,7 +516,9 @@ export default class User extends base {
           device,
           ltuid,
           uids: {},
-          type: /America Server|Europe Server|Asia Server/.test(region) ? 'hoyolab' : 'mys'
+          type: /America Server|Europe Server|Asia Server/.test(region)
+            ? 'hoyolab'
+            : 'mys'
         }
         let tmp = ltuids[ltuid]
         let game = region === '星穹列车' ? 'sr' : 'gs'
@@ -491,8 +546,7 @@ export default class User extends base {
         try {
           let src = `./data/MysCookie/${qq}.yaml`
           let dest = `./temp/MysCookieBak/${qq}.yaml`
-          await fs.promises.unlink(dest).catch((_) => {
-          })
+          await fs.promises.unlink(dest).catch(_ => {})
           await fs.promises.copyFile(src, dest)
           await fs.promises.unlink(src)
         } catch (err) {
@@ -507,9 +561,10 @@ export default class User extends base {
   async myCk() {
     let user = await this.user()
     if (!user.hasCk) {
-      this.e.reply(['当前尚未绑定Cookie', segment.button([
-        { text: '帮助', input: '#Cookie帮助' }
-      ])])
+      this.e.reply([
+        '当前尚未绑定Cookie',
+        segment.button([{ text: '帮助', input: '#Cookie帮助' }])
+      ])
     }
     let mys = user.getMysUser(this.e)
     if (mys) {
@@ -521,7 +576,11 @@ export default class User extends base {
   async checkCkStatus() {
     let user = await this.user()
     if (!user.hasCk) {
-      await this.e.reply(`\n未绑定CK，当前绑定uid：${user.uid || '无'}`, false, { at: true })
+      await this.e.reply(
+        `\n未绑定CK，当前绑定uid：${user.uid || '无'}`,
+        false,
+        { at: true }
+      )
       return true
     }
     let uid = user.uid * 1
@@ -530,10 +589,12 @@ export default class User extends base {
     let checkRet = await user.checkCk()
     let cks = []
     lodash.forEach(checkRet, (ds, idx) => {
-      let tmp = [`\n#${idx + 1}: [CK:${ds.ltuid}] - 【${ds.status === 0 ? '正常' : '失效'}】`]
+      let tmp = [
+        `\n#${idx + 1}: [CK:${ds.ltuid}] - 【${ds.status === 0 ? '正常' : '失效'}】`
+      ]
       if (ds.uids && ds.uids.length > 0) {
         let dsUids = []
-        lodash.forEach(ds.uids, (u) => {
+        lodash.forEach(ds.uids, u => {
           dsUids.push(u * 1 === uid ? `☑${u}` : u)
         })
         tmp.push(`绑定UID: [ ${dsUids.join(', ')} ]`)
@@ -547,11 +608,18 @@ export default class User extends base {
       cks.push(`当前生效uid：${uid}\n通过【#uid】命令可查看并切换UID`)
     }
 
-    await this.e.reply([cks.join('\n----\n'), segment.button([
-      { text: '绑定UID', input: '#绑定uid' },
-      { text: '切换UID', input: '#uid' },
-      { text: '删除UID', input: '#删除uid' }
-    ])], false, { at: true })
+    await this.e.reply(
+      [
+        cks.join('\n----\n'),
+        segment.button([
+          { text: '绑定UID', input: '#绑定uid' },
+          { text: '切换UID', input: '#uid' },
+          { text: '删除UID', input: '#删除uid' }
+        ])
+      ],
+      false,
+      { at: true }
+    )
   }
 
   async userAdmin() {
@@ -580,7 +648,9 @@ export default class User extends base {
       if (/主/.test(msg)) {
         let mainId = await redis.get(`Yz:NoteUser:mainId:${id}`)
         if (!mainId) {
-          e.reply('当前用户没有主用户，在主用户中通过【#绑定用户】可进行绑定...')
+          e.reply(
+            '当前用户没有主用户，在主用户中通过【#绑定用户】可进行绑定...'
+          )
           return true
         }
         let subIds = await Data.getCacheJSON(`Yz:NoteUser:subIds:${mainId}`)
@@ -612,20 +682,34 @@ export default class User extends base {
       if (!idRet[2]) {
         // 子用户绑定
         if (currId === mainId) {
-          if (originalUserId && originalUserId !== mainId && mainUserId === mainId) {
+          if (
+            originalUserId &&
+            originalUserId !== mainId &&
+            mainUserId === mainId
+          ) {
             e.reply('当前账户已完成绑定...')
           } else {
             e.reply('请切换到需要绑定的子用户并发送绑定命令...')
           }
           return true
         }
-        let verify = (Math.floor(100000000 + Math.random() * 100000000)).toString()
-        await redis.set(`Yz:NoteUser:verify:${mainId}`, verify + '||' + currId, { EX: 300 })
-        e.reply([`此账号将作为子用户，绑定至主用户:${mainId}`,
-          '成功绑定后，此用户输入的命令，将视作主用户命令，使用主用户的CK与UID等信息',
-          '如需继续绑定，请在5分钟内，使用主账户发送以下命令：', '',
-        `#接受绑定子用户[${mainId}][${verify}]`
-        ].join('\n'))
+        let verify = Math.floor(
+          100000000 + Math.random() * 100000000
+        ).toString()
+        await redis.set(
+          `Yz:NoteUser:verify:${mainId}`,
+          verify + '||' + currId,
+          { EX: 300 }
+        )
+        e.reply(
+          [
+            `此账号将作为子用户，绑定至主用户:${mainId}`,
+            '成功绑定后，此用户输入的命令，将视作主用户命令，使用主用户的CK与UID等信息',
+            '如需继续绑定，请在5分钟内，使用主账户发送以下命令：',
+            '',
+            `#接受绑定子用户[${mainId}][${verify}]`
+          ].join('\n')
+        )
         return true
       } else {
         // 接受绑定
@@ -633,7 +717,7 @@ export default class User extends base {
           e.reply('请切换到主用户并发送接受绑定的命令...')
           return true
         }
-        let verify = await redis.get(`Yz:NoteUser:verify:${mainId}`) || ''
+        let verify = (await redis.get(`Yz:NoteUser:verify:${mainId}`)) || ''
         verify = verify.split('||')
         if (!verify || verify[0] !== idRet[2] || !verify[1]) {
           e.reply('校验失败，请发送【#绑定用户】重新开始绑定流程')
@@ -642,11 +726,15 @@ export default class User extends base {
         }
         let subId = verify[1]
         await redis.del(`Yz:NoteUser:verify:${mainId}`)
-        await redis.set(`Yz:NoteUser:mainId:${subId}`, mainId, { EX: 3600 * 24 * 365 })
+        await redis.set(`Yz:NoteUser:mainId:${subId}`, mainId, {
+          EX: 3600 * 24 * 365
+        })
         let subIds = await Data.getCacheJSON(`Yz:NoteUser:subIds:${mainId}`)
         subIds[subId] = 'true'
         await Data.setCacheJSON(`Yz:NoteUser:subIds:${mainId}`, subIds)
-        e.reply('绑定成功，绑定的子用户可使用主用户的UID/CK等信息\n请勿接受不是自己用户的绑定，如需解绑可通过【#解绑子用户】进行解绑')
+        e.reply(
+          '绑定成功，绑定的子用户可使用主用户的UID/CK等信息\n请勿接受不是自己用户的绑定，如需解绑可通过【#解绑子用户】进行解绑'
+        )
         return true
       }
     } else {
@@ -654,11 +742,17 @@ export default class User extends base {
         e.reply('当前账户已有绑定的主账户，请使用主账户发起绑定...')
         return true
       }
-      e.reply(['将此账号作为【主用户】，绑定其他子用户。', '',
-        '可在多个QQ或频道间打通用户信息，子用户会使用主用户的CK与UID等信息',
-        '注意：请勿接受不是自己用户的绑定！',
-        '请【切换至需要绑定的子用户】并发送以下命令，获得验证命令...', '',
-        `#绑定主用户[${id}]`].join('\n'))
+      e.reply(
+        [
+          '将此账号作为【主用户】，绑定其他子用户。',
+          '',
+          '可在多个QQ或频道间打通用户信息，子用户会使用主用户的CK与UID等信息',
+          '注意：请勿接受不是自己用户的绑定！',
+          '请【切换至需要绑定的子用户】并发送以下命令，获得验证命令...',
+          '',
+          `#绑定主用户[${id}]`
+        ].join('\n')
+      )
     }
   }
 }

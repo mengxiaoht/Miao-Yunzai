@@ -3,7 +3,7 @@ import GachaData from '../model/gachaData.js'
 import fs from 'node:fs'
 import lodash from 'lodash'
 export class gacha extends plugin {
-  constructor () {
+  constructor() {
     /**
      * 
       name: '十连',
@@ -25,7 +25,7 @@ export class gacha extends plugin {
   }
 
   /** #十连 */
-  async gacha () {
+  async gacha() {
     this.GachaData = await GachaData.init(this.e)
 
     if (this.checkLimit()) return
@@ -34,12 +34,15 @@ export class gacha extends plugin {
 
     /** 生成图片 */
     await this.renderImg('genshin', 'html/gacha/gacha-trial', data, {
-      recallMsg: data.nowFive >= 1 || data.nowFour >= 4 ? false : this.GachaData.set.delMsg
+      recallMsg:
+        data.nowFive >= 1 || data.nowFour >= 4
+          ? false
+          : this.GachaData.set.delMsg
     })
   }
 
   /** 检查限制 */
-  checkLimit () {
+  checkLimit() {
     /** 主人不限制 */
     if (this.e.isMaster) return false
 
@@ -78,7 +81,7 @@ export class gacha extends plugin {
   }
 
   /** #定轨 */
-  async weaponBing () {
+  async weaponBing() {
     let Gacha = await GachaData.init(this.e)
 
     let { NowPool, user, msg = '' } = Gacha
@@ -109,7 +112,7 @@ export class gacha extends plugin {
   }
 
   /** 初始化创建配置文件 */
-  async init () {
+  async init() {
     let file = './plugins/genshin/config/gacha.set.yaml'
 
     if (fs.existsSync(file)) return

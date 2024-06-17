@@ -1,5 +1,5 @@
 #数据源于 https://github.com/CRAZYShimakaze/zhenxun_extensive_plugin/blob/main/genshin_role_info/res/json_data/weapon.json
-Name: 
+Name:
   '2410593283': 无锋剑
   '2125206395': 银剑
   '479076483': 冷刃
@@ -574,4 +574,3 @@ Icon:
   沙中伟贤的对答: UI_EquipIcon_Pole_Caduceus
   (test)竿测试: UI_EquipIcon_FishingRod
   (test)穿模测试: UI_EquipIcon_Bow_Template
-  

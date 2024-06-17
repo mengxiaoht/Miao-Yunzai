@@ -1,22 +1,25 @@
-{{extend genshinLayout}}
-
-{{block 'css'}}
-<link rel="stylesheet" type="text/css" href="{{_res_path}}html/gacha/gacha-log.css"/>
-<link rel="stylesheet" type="text/css" href="{{_res_path}}html/gacha/log-count.css"/>
-{{/block}}
-
-{{block 'main'}}
+{{extend genshinLayout}} {{block 'css'}}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{_res_path}}html/gacha/gacha-log.css"
+/>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{_res_path}}html/gacha/log-count.css"
+/>
+{{/block}} {{block 'main'}}
 <div class="head_box">
   <div class="id_text">ID: {{uid}}</div>
   <h2 class="day_text">抽卡统计-{{typeName}}</h2>
   {{if game === 'gs'}}
-  <img class="genshin_logo" src="{{_res_path}}img/other/原神.png"/>
+  <img class="genshin_logo" src="{{_res_path}}img/other/原神.png" />
   {{else}}
-  <img class="starrail_logo" src="{{_res_path}}StarRail/img/other/logo.png"/>
+  <img class="starrail_logo" src="{{_res_path}}StarRail/img/other/logo.png" />
   {{/if}}
 </div>
-{{each pool val}}
-{{if val.roleNum > 0}}
+{{each pool val}} {{if val.roleNum > 0}}
 <div class="pool_box">
   <div class="title_box">
     <div class="name_box">
@@ -31,15 +34,17 @@
     {{each val.role v}}
     <div class="item">
       <div class="bg{{v.rank_type}}"></div>
-      <span class="num {{if v.count>=5 && v.rank_type ==5}}life5{{/if}}">{{v.count}}</span>
-      <span class="role_img" style="background-image:url({{_miao_path}}{{v.icon}})"></span>
+      <span class="num {{if v.count>=5 && v.rank_type ==5}}life5{{/if}}"
+        >{{v.count}}</span
+      >
+      <span
+        class="role_img"
+        style="background-image:url({{_miao_path}}{{v.icon}})"
+      ></span>
     </div>
     {{/each}}
   </div>
 </div>
-{{/if}}
-{{/each}}
-{{if isGroup }}
+{{/if}} {{/each}} {{if isGroup }}
 <div class="hasMore">*完整数据请私聊查看</div>
-{{/if}}
-{{/block}}
+{{/if}} {{/block}}

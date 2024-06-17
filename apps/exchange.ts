@@ -25,7 +25,9 @@ export class exchange extends plugin {
   }
 
   async getCode() {
-    let reg = this.e.msg.match(/^(#|\*)?(原神|星铁|崩铁|崩三|崩坏三|崩坏3)?(直播|前瞻)?兑换码$/)
+    let reg = this.e.msg.match(
+      /^(#|\*)?(原神|星铁|崩铁|崩三|崩坏三|崩坏3)?(直播|前瞻)?兑换码$/
+    )
     this.uid = '75276550'
     if (reg[1] == '*' || ['星铁', '崩铁'].includes(reg[2])) {
       this.uid = '80823548'
@@ -66,9 +68,10 @@ export class exchange extends plugin {
 
     for (let val of code.data.code_list) {
       if (val.code) {
-        codes.push([val.code, segment.button([
-          { text: '兑换', callback: `#兑换码使用${val.code}` },
-        ])])
+        codes.push([
+          val.code,
+          segment.button([{ text: '兑换', callback: `#兑换码使用${val.code}` }])
+        ])
       }
     }
 
@@ -81,7 +84,7 @@ export class exchange extends plugin {
     let url = {
       index: `https://api-takumi.mihoyo.com/event/miyolive/index`,
       code: `https://api-takumi-static.mihoyo.com/event/miyolive/refreshCode?version=${this.code_ver}&time=${this.now}`,
-      actId: `https://bbs-api.mihoyo.com/painter/api/user_instant/list?offset=0&size=20&uid=${this.uid}`,
+      actId: `https://bbs-api.mihoyo.com/painter/api/user_instant/list?offset=0&size=20&uid=${this.uid}`
     }
 
     let response
@@ -98,7 +101,9 @@ export class exchange extends plugin {
     }
 
     if (!response.ok) {
-      logger.error(`[兑换码接口错误][${type}] ${response.status} ${response.statusText}`)
+      logger.error(
+        `[兑换码接口错误][${type}] ${response.status} ${response.statusText}`
+      )
       return false
     }
     const res = await response.json()
@@ -135,7 +140,9 @@ export class exchange extends plugin {
         this.deadline = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} 12:00:00`
       }
       let structured_content = post.structured_content
-      let result = structured_content.match(/{\"link\":\"https:\/\/webstatic.mihoyo.com\/bbs\/event\/live\/index.html\?act_id=(.*?)\\/)
+      let result = structured_content.match(
+        /{\"link\":\"https:\/\/webstatic.mihoyo.com\/bbs\/event\/live\/index.html\?act_id=(.*?)\\/
+      )
       if (result) {
         return result[1]
       }

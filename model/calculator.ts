@@ -31,9 +31,13 @@ export default class Calculator extends base {
     }
 
     /** 获取角色数据 */
-    let character = await MysInfo.get(this.e, this.e.isSr ? 'avatarInfo' : 'character', {
-      headers: this.headers
-    })
+    let character = await MysInfo.get(
+      this.e,
+      this.e.isSr ? 'avatarInfo' : 'character',
+      {
+        headers: this.headers
+      }
+    )
     if (!character || character.retcode !== 0) return false
     character = character.data
 
@@ -41,7 +45,9 @@ export default class Calculator extends base {
     await this.getSet()
 
     /** 获取计算角色 */
-    this.dataCharacter = character[this.e.isSr ? 'avatar_list' : 'avatars'].find((item) => item.id == role.roleId)
+    this.dataCharacter = character[
+      this.e.isSr ? 'avatar_list' : 'avatars'
+    ].find(item => item.id == role.roleId)
 
     /** 获取计算参数 */
     let body = await this.getBody()
@@ -63,7 +69,9 @@ export default class Calculator extends base {
   }
 
   async getSet() {
-    let defSetSkill = this.e.isSr ? '80,80,6,10,10,10'.split(',') : '90,90,10,10,10'.split(',')
+    let defSetSkill = this.e.isSr
+      ? '80,80,6,10,10,10'.split(',')
+      : '90,90,10,10,10'.split(',')
 
     let set = this.e.msg.replace(/#|＃|星铁|养成|计算/g, '').trim()
 
@@ -105,7 +113,9 @@ export default class Calculator extends base {
     let skillList = []
     if (this.dataCharacter) {
       /** 角色存在获取技能数据 */
-      let data = this.e.isSr ? { avatar_id: this.role.roleId, tab_from: 'TabOwned' } : { avatar_id: this.role.roleId }
+      let data = this.e.isSr
+        ? { avatar_id: this.role.roleId, tab_from: 'TabOwned' }
+        : { avatar_id: this.role.roleId }
       let detail = await MysInfo.get(this.e, 'detail', {
         headers: this.headers,
         ...data
@@ -139,8 +149,14 @@ export default class Calculator extends base {
       this.dataCharacter = {
         level: 1,
         name: this.role.name,
-        icon: this.e.isSr ? this.avatar.icon_url : `${this.screenData.pluResPath}img/role/${this.role.name}.png`,
-        rarity: this.e.isSr ? this.avatar.rarity : four.includes(Number(this.role.roleId)) ? 4 : 5
+        icon: this.e.isSr
+          ? this.avatar.icon_url
+          : `${this.screenData.pluResPath}img/role/${this.role.name}.png`,
+        rarity: this.e.isSr
+          ? this.avatar.rarity
+          : four.includes(Number(this.role.roleId))
+            ? 4
+            : 5
       }
     }
 
@@ -166,7 +182,7 @@ export default class Calculator extends base {
         })
       })
     } else {
-      skillList = skillList.filter((item) => item.max_level != 1)
+      skillList = skillList.filter(item => item.max_level != 1)
 
       body = {
         avatar_id: Number(this.role.roleId),
@@ -218,7 +234,7 @@ export default class Calculator extends base {
       }
     }
 
-    skillList = skillList.filter((item) => item.max_level != 1)
+    skillList = skillList.filter(item => item.max_level != 1)
     this.skillList = skillList
     return this.e.isSr ? body : { items: [body] }
   }
@@ -230,7 +246,7 @@ export default class Calculator extends base {
     })
     if (!avatarSkill || avatarSkill.retcode !== 0) return false
     avatarSkill = avatarSkill.data
-    avatarSkill.list.forEach((item) => {
+    avatarSkill.list.forEach(item => {
       item.level_current = 1
     })
 
@@ -243,10 +259,12 @@ export default class Calculator extends base {
       headers: this.headers
     })
     if (!computes || computes.retcode !== 0) return false
-    computes = this.e.isSr ? computes.data : computes.data.overall_material_consume
+    computes = this.e.isSr
+      ? computes.data
+      : computes.data.overall_material_consume
     let computeList = {}
 
-    let formart = (num) => {
+    let formart = num => {
       return num > 10000 ? (num / 10000).toFixed(1) + ' w' : num
     }
     if (this.e.isSr) delete computes.coin_id

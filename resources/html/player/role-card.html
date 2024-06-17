@@ -1,15 +1,22 @@
-{{extend genshinLayout}}
-
-{{block 'css'}}
-<link rel="stylesheet" type="text/css" href="{{_res_path}}html/player/role-card.css"/>
-<link rel="preload" href="https://q1.qlogo.cn/g?b=qq&s=0&nk={{user_id}}" as="image">
-{{/block}}
-
-{{block 'main'}}
+{{extend genshinLayout}} {{block 'css'}}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{_res_path}}html/player/role-card.css"
+/>
+<link
+  rel="preload"
+  href="https://q1.qlogo.cn/g?b=qq&s=0&nk={{user_id}}"
+  as="image"
+/>
+{{/block}} {{block 'main'}}
 <div class="info-box">
   <div class="head-box">
     <div class="avatar">
-      <img src="https://q1.qlogo.cn/g?b=qq&s=0&nk={{user_id}}" onerror="whenError(this)"/>
+      <img
+        src="https://q1.qlogo.cn/g?b=qq&s=0&nk={{user_id}}"
+        onerror="whenError(this)"
+      />
     </div>
     <div class="name">
       <div>{{name}}</div>
@@ -18,7 +25,7 @@
       <div>UID：{{uid}}</div>
     </div>
     <div class="genshin">
-      <img class="genshin-img" src="{{_res_path}}img/other/原神.png"/>
+      <img class="genshin-img" src="{{_res_path}}img/other/原神.png" />
     </div>
   </div>
   <div class="tab">数据总览</div>
@@ -41,10 +48,12 @@
     <div class="item">
       <div class="item-bg">
         <div class="role-box {{val.element}}">
-          <img class="role" src="{{_miao_path}}{{val.img}}"/>
+          <img class="role" src="{{_miao_path}}{{val.img}}" />
         </div>
         {{ if val.actived_constellation_num>0}}
-        <div class="role-life life{{val.actived_constellation_num}}">{{val.actived_constellation_num}}命</div>
+        <div class="role-life life{{val.actived_constellation_num}}">
+          {{val.actived_constellation_num}}命
+        </div>
         {{/if}}
         <div class="role-lv">
           <div class="text">Lv {{val.level}}</div>

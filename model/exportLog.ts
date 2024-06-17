@@ -15,7 +15,9 @@ export default class ExportLog extends base {
     /** 绑定的uid */
     this.uidKey = `Yz:genshin:mys:qq-uid:${this.userId}`
 
-    this.path = this.e.isSr ? `./data/srJson/${this.e.user_id}/` : `./data/gachaJson/${this.e.user_id}/`
+    this.path = this.e.isSr
+      ? `./data/srJson/${this.e.user_id}/`
+      : `./data/gachaJson/${this.e.user_id}/`
 
     this.game = this.e.game
 
@@ -56,7 +58,10 @@ export default class ExportLog extends base {
 
   async exportJson() {
     if (!this.e.isSr) {
-      await downFile('https://api.uigf.org/dict/genshin/chs.json', './temp/uigf/genshin.json')
+      await downFile(
+        'https://api.uigf.org/dict/genshin/chs.json',
+        './temp/uigf/genshin.json'
+      )
     }
     await this.getUid()
 
@@ -80,7 +85,7 @@ export default class ExportLog extends base {
         export_time: moment().format('YYYY-MM-DD HH:mm:ss'),
         export_timestamp: moment().format('X'),
         export_app: yunzaiName,
-        export_app_version: cfg.package.version,
+        export_app_version: cfg.package.version
       },
       list
     }
@@ -100,14 +105,12 @@ export default class ExportLog extends base {
 
     this.e.reply(`导出成功：${this.uid}.json，共${list.length}条 \n请接收文件`)
 
-    if (this.e.group?.sendFile)
-      await this.e.group.sendFile(saveFile)
-    else if (this.e.friend?.sendFile)
-      await this.e.friend.sendFile(saveFile)
+    if (this.e.group?.sendFile) await this.e.group.sendFile(saveFile)
+    else if (this.e.friend?.sendFile) await this.e.friend.sendFile(saveFile)
     else this.e.reply('导出失败：暂不支持发送文件')
 
     /** 删除文件 */
-    fs.unlink(saveFile, () => { })
+    fs.unlink(saveFile, () => {})
   }
 
   async getUid() {
@@ -227,9 +230,11 @@ export default class ExportLog extends base {
     }
 
     /** 删除文件 */
-    fs.unlink(textPath, () => { })
+    fs.unlink(textPath, () => {})
 
-    await this.e.reply(`${this.e.file.name}，${this.e.isSr ? '星铁' : '原神'}记录导入成功\n${msg.join('\n')}`)
+    await this.e.reply(
+      `${this.e.file.name}，${this.e.isSr ? '星铁' : '原神'}记录导入成功\n${msg.join('\n')}`
+    )
   }
 
   dealJson(list) {
@@ -246,7 +251,10 @@ export default class ExportLog extends base {
     }
 
     /** 倒序 */
-    if (moment(list[0].time).format('x') < moment(list[list.length - 1].time).format('x')) {
+    if (
+      moment(list[0].time).format('x') <
+      moment(list[list.length - 1].time).format('x')
+    ) {
       list = list.reverse()
     }
 

@@ -1,5 +1,5 @@
 import { plugin } from 'yunzai/core'
-import {MysInfo} from 'yunzai/mys'
+import { MysInfo } from 'yunzai/mys'
 import fetch from 'node-fetch'
 export class takeBirthdayPhoto extends plugin {
   constructor() {
@@ -17,9 +17,7 @@ export class takeBirthdayPhoto extends plugin {
         }
       ]
     })
-    this.button = segment.button([
-      { text: "留影叙佳期", input: "#留影叙佳期" },
-    ])
+    this.button = segment.button([{ text: '留影叙佳期', input: '#留影叙佳期' }])
   }
 
   async birthdaystar(e) {
@@ -27,9 +25,13 @@ export class takeBirthdayPhoto extends plugin {
     if (!uid) return false
     let ck = await MysInfo.checkUidBing(uid, this.e)
     if (!ck) {
-      e.reply(['请先绑定ck再使用本功能哦~', segment.button([
-        { text: "Cookie帮助", callback: "#Cookie帮助" },
-      ])], true)
+      e.reply(
+        [
+          '请先绑定ck再使用本功能哦~',
+          segment.button([{ text: 'Cookie帮助', callback: '#Cookie帮助' }])
+        ],
+        true
+      )
       return true
     }
 
@@ -42,7 +44,11 @@ export class takeBirthdayPhoto extends plugin {
       return true
     }
 
-    const birthday_star_list = await this.getBirthdayStar(uid, e_hk4e_token, ck.ck)
+    const birthday_star_list = await this.getBirthdayStar(
+      uid,
+      e_hk4e_token,
+      ck.ck
+    )
     if (!birthday_star_list) {
       e.reply(['获取生日角色失败，请稍后再试~', this.button], true)
       return true
@@ -57,7 +63,12 @@ export class takeBirthdayPhoto extends plugin {
       for (const role of birthday_star_list) {
         await e.reply(`正在获取${role.name}的图片，请稍等~`, true)
         await e.reply(segment.image(role.take_picture))
-        const message = await this.getBirthdayStarImg(uid, e_hk4e_token, ck.ck, role.role_id)
+        const message = await this.getBirthdayStarImg(
+          uid,
+          e_hk4e_token,
+          ck.ck,
+          role.role_id
+        )
         if (message != 'success') {
           await e.reply([message, this.button])
           return true
@@ -66,7 +77,10 @@ export class takeBirthdayPhoto extends plugin {
         }
       }
     } catch (error) {
-      await e.reply([`获取角色留影叙佳期图片失败，可能是ck失效...`, this.button], true)
+      await e.reply(
+        [`获取角色留影叙佳期图片失败，可能是ck失效...`, this.button],
+        true
+      )
       logger.error(error)
     }
 
@@ -74,12 +88,14 @@ export class takeBirthdayPhoto extends plugin {
   }
 
   async getEHK4EToken(ck, uid) {
-    const url = this.region.includes('cn') ? 'https://api-takumi.mihoyo.com/common/badge/v1/login/account' : 'https://api-os-takumi.mihoyo.com/common/badge/v1/login/account'
+    const url = this.region.includes('cn')
+      ? 'https://api-takumi.mihoyo.com/common/badge/v1/login/account'
+      : 'https://api-os-takumi.mihoyo.com/common/badge/v1/login/account'
     const headers = {
-      Cookie: ck,
+      'Cookie': ck,
       'Content-Type': 'application/json;charset=UTF-8',
-      Referer: 'https://webstatic.mihoyo.com/',
-      Origin: 'https://webstatic.mihoyo.com'
+      'Referer': 'https://webstatic.mihoyo.com/',
+      'Origin': 'https://webstatic.mihoyo.com'
     }
     const body = JSON.stringify({
       uid: Number(uid),
@@ -88,7 +104,9 @@ export class takeBirthdayPhoto extends plugin {
       region: this.region
     })
     let res = await fetch(url, { method: 'POST', body, headers })
-    const e_hk4e_token = res.headers.get('set-cookie').match(/e_hk4e_token=(.*?);/)[1]
+    const e_hk4e_token = res.headers
+      .get('set-cookie')
+      .match(/e_hk4e_token=(.*?);/)[1]
     res = await res.json()
     if (res.retcode != 0) {
       return false

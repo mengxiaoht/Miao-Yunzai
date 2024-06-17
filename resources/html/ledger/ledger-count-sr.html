@@ -1,16 +1,16 @@
-{{extend genshinLayout}}
-
-{{block 'css'}}
-<link rel="stylesheet" type="text/css" href="{{_res_path}}html/ledger/ledger-count-sr.css"/>
-<link rel="preload" href="{{_res_path}}script/g2plot.min.js" as="script"/>
-{{/block}}
-
-{{block 'main'}}
+{{extend genshinLayout}} {{block 'css'}}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{_res_path}}html/ledger/ledger-count-sr.css"
+/>
+<link rel="preload" href="{{_res_path}}script/g2plot.min.js" as="script" />
+{{/block}} {{block 'main'}}
 
 <div class="head_box">
   <div class="id_text">ID: {{uid}}</div>
   <h2 class="day_text">{{yearText}}星琼统计</h2>
-  <img class="genshin_logo" src="{{_res_path}}StarRail/img/other/logo.png"/>
+  <img class="genshin_logo" src="{{_res_path}}StarRail/img/other/logo.png" />
 </div>
 <div class="data_box">
   <div class="tab_lable">数据总览</div>
@@ -93,7 +93,7 @@
     xAxis: {
       label: {
         autoHide: false,
-        formatter: (v) => {
+        formatter: v => {
           return v + '月'
         },
         style: {
@@ -158,18 +158,18 @@
       offsetX: -56,
       itemValue: {
         formatter: (text, item) => {
-          const items = countdata.filter((d) => d.action === item.value)[0]
+          const items = countdata.filter(d => d.action === item.value)[0]
           return items.num
         },
         style: {
           opacity: 0.65,
           fontFamily: 'tttgbnumber',
-          'fontSize': 16
+          fontSize: 16
         }
       },
       itemName: {
         style: {
-          'fontSize': 16
+          fontSize: 16
         }
       }
     }

@@ -1,6 +1,6 @@
 import base from './base.js'
 
-import {  MysInfo } from 'yunzai/mys'
+import { MysInfo } from 'yunzai/mys'
 
 export default class Deck extends base {
   constructor(e) {
@@ -41,7 +41,11 @@ export default class Deck extends base {
   async getcard(id) {
     let res = {}
     for (let api of ['basicInfo', 'avatar_cardList', 'action_cardList']) {
-      if ((id == 2 && api == 'avatar_cardList') || (id == 1 && api == 'action_cardList')) continue
+      if (
+        (id == 2 && api == 'avatar_cardList') ||
+        (id == 1 && api == 'action_cardList')
+      )
+        continue
       res[api] = (await MysInfo.get(this.e, api)).data
     }
     this.model = 'deckCard'
@@ -55,5 +59,4 @@ export default class Deck extends base {
     }
     return data
   }
-
 }

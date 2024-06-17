@@ -23,9 +23,9 @@ export class sevenSaints extends plugin {
     })
 
     this.button = segment.button([
-      { text: "牌组", callback: `#七圣召唤查询牌组` },
-      { text: "角色牌", callback: `#七圣召唤查询角色牌` },
-      { text: "行动牌", callback: `#七圣召唤查询行动牌` },
+      { text: '牌组', callback: `#七圣召唤查询牌组` },
+      { text: '角色牌', callback: `#七圣召唤查询角色牌` },
+      { text: '行动牌', callback: `#七圣召唤查询行动牌` }
     ])
   }
 

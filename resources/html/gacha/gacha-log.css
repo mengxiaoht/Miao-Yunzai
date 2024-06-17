@@ -1,12 +1,12 @@
 @font-face {
-  font-family: "tttgbnumber";
-  src: url("../../font/tttgbnumber.ttf");
+  font-family: 'tttgbnumber';
+  src: url('../../font/tttgbnumber.ttf');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: "HYWenHei-55W";
-  src: url("../../font/HYWenHei-55W.ttf");
+  font-family: 'HYWenHei-55W';
+  src: url('../../font/HYWenHei-55W.ttf');
   font-weight: normal;
   font-style: normal;
 }
@@ -19,7 +19,10 @@
 body {
   font-size: 18px;
   color: #1e1f20;
-  font-family: PingFangSC-Medium, PingFang SC, sans-serif;
+  font-family:
+    PingFangSC-Medium,
+    PingFang SC,
+    sans-serif;
   transform: scale(1.5);
   transform-origin: 0 0;
   width: 465px;
@@ -66,7 +69,7 @@ body {
 }
 .logo {
   font-size: 12px;
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
   text-align: center;
   color: #7994a7;
   position: relative;
@@ -88,7 +91,7 @@ body {
   background: #d4b98c;
   color: #fff;
   font-size: 14px;
-  font-family: "HYWenHei-55W";
+  font-family: 'HYWenHei-55W';
   padding: 3px 10px;
   border-radius: 15px 0px 15px 15px;
   z-index: 20;
@@ -178,7 +181,7 @@ body {
   padding: 1px 5px;
   border-radius: 3px;
   background: rgba(0, 0, 0, 0.5);
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
 }
 .card_list .item .name,
 .card_list .item .num_name {
@@ -193,7 +196,7 @@ body {
   line-height: 18px;
 }
 .card_list .item .num_name {
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
   font-size: 16px;
 }
 .base_info {
@@ -202,7 +205,7 @@ body {
   margin: 5px 10px;
 }
 .uid:before {
-  content: " ";
+  content: ' ';
   position: absolute;
   width: 5px;
   height: 24px;
@@ -215,10 +218,10 @@ body {
   background-color: #eb6a4b;
 }
 .label_302 {
-  background-color: #E69449;
+  background-color: #e69449;
 }
 .label_200 {
-  background-color: #757CC8;
+  background-color: #757cc8;
 }
 .label {
   color: #555;
@@ -277,7 +280,7 @@ body {
   justify-content: space-between;
   align-items: center;
   font-size: 15px;
-  font-family: "HYWenHei-55W";
+  font-family: 'HYWenHei-55W';
   color: #7d7d7d;
   padding-bottom: 5px;
 }
@@ -297,7 +300,7 @@ body {
   color: #12d88c;
 }
 .blue {
-  color: #4169E1;
+  color: #4169e1;
 }
 .purple {
   color: #7500ff;
@@ -313,7 +316,7 @@ body {
   border-radius: 3px;
   padding: 1px 3px;
   background-color: rgba(0, 0, 0, 0.8);
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
 }
 .hasMore {
   font-size: 12px;

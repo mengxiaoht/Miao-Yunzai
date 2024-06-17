@@ -92,7 +92,7 @@ body {
   padding: 1px 5px;
   border-radius: 3px;
   background: rgba(0, 0, 0, 0.5);
-  font-family: "tttgbnumber";
+  font-family: 'tttgbnumber';
 }
 .bg5 {
   background-image: url(../../img/other/bg5.png);
