@@ -24,17 +24,11 @@ export function require(path: string) {
 const now = () => `?t=${Date.now()}`
 
 /**
- * @param basePath import.meta.url
- * @returns
  * ***********
  * 创建动态模块
- * ***********
- * 动态模块每次访问都将重新加载,
- * 如果动态模块内包含动态模块,
- * 内部模块也会跟着重新加载,
- * ***********
+ * @param basePath import.meta.url
+ * @returns
  * 在env.NODE_ENV=='production'下禁用
- * @deprecated 实验性的，请勿烂用
  */
 export const createDynamic = (basePath: string) => {
   /**
@@ -52,36 +46,10 @@ export const createDynamic = (basePath: string) => {
 }
 
 /**
- * 动态组件类型
- */
-export type ModuleWithComponent<
-  ComponentName extends string,
-  PropsType = any
-> = Promise<{ [K in ComponentName]: React.ComponentType<PropsType> }>
-
-// export const createDynamicComponent = (basePath: string) => {
-//   /**
-//    * 与import作用相同
-//    * @param path 相对路径
-//    * @returns
-//    */
-//   return <T extends Record<string, any> = { default: any }>(
-//     path: string
-//   ): Promise<{ [K in keyof T]: React.ComponentType<T[K]> }> =>
-//     import(
-//       new URL(
-//         `${path}${process.env.NODE_ENV == 'production' ? '' : now()}`,
-//         basePath
-//       ).href
-//     )
-// }
-
-/**
- * @param basePath import.meta.url
- * @returns
  * ***********
  * 创建动态组件
- * ***********
+ * @param basePath import.meta.url
+ * @returns
  * 在env.NODE_ENV=='production'下禁用
  */
 export const createDynamicComponent = (basePath: string) => {
@@ -90,7 +58,7 @@ export const createDynamicComponent = (basePath: string) => {
    * @param path 相对路径
    * @returns
    */
-  return <T>(path: string): Promise<T> =>
+  return <T = any>(path: string): Promise<T> =>
     import(
       new URL(
         `${path}${process.env.NODE_ENV == 'production' ? '' : now()}`,
