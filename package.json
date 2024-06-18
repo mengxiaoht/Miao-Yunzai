@@ -18,6 +18,7 @@
     "pm2": "pm2",
     "image": "node image.js",
     "css": "tailwindcss -i ./src/input.css -o ./public/output.css",
+    "lint": "commitlint --config .commitlint.config.cjs -e -V",
     "format": "prettier --write .",
     "prepare": "husky"
   },
@@ -52,6 +53,8 @@
     "yaml": "^2.4.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-multi-entry": "^6.0.0",
     "@rollup/plugin-terser": "^0.4.4",
