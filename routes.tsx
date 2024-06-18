@@ -1,7 +1,7 @@
 import React from 'react'
 import { movies } from './data'
-import { createDynamic } from 'yunzai/utils'
-const dynamic = createDynamic(import.meta.url)
+import { createDynamicComponent } from 'yunzai/utils'
+const dynamic = createDynamicComponent(import.meta.url)
 const Hello = (await dynamic('./views/hello.tsx')).default
 const Music = (await dynamic('./views/music.tsx')).default
 const Config = [
