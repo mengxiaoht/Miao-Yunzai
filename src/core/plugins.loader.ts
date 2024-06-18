@@ -1,15 +1,15 @@
-import fs from 'node:fs/promises'
 import lodash from 'lodash'
 import cfg from '../config/config.js'
 import schedule from 'node-schedule'
 import { segment } from 'icqq'
 import chokidar from 'chokidar'
 import moment from 'moment'
-import path, { join } from 'node:path'
+import path, { basename, join } from 'node:path'
 import Runtime from './plugins/runtime.js'
 import Handler from './plugins/handler.js'
 import { EventType } from './plugins/types.js'
 import { existsSync } from 'node:fs'
+import { stat, readdir } from 'node:fs/promises'
 
 /**
  * 加载插件
@@ -85,7 +85,7 @@ class PluginsLoader {
    */
   #getPlugins = async () => {
     // 便利得到目录和文件
-    const files = await fs.readdir(this.dir, { withFileTypes: true })
+    const files = await readdir(this.dir, { withFileTypes: true })
     const ret = []
     for (const val of files) {
       // 是文件
@@ -95,7 +95,7 @@ class PluginsLoader {
         if (!existsSync(dir)) {
           dir = `${this.dir}/${val.name}/index.js`
         }
-        if (await fs.stat(dir)) {
+        if (await stat(dir)) {
           ret.push({
             name: val.name,
             path: dir
@@ -1207,7 +1207,7 @@ class PluginsLoader {
        * 新增文件
        */
       watcher.on('add', async PluPath => {
-        const appName = path.basename(PluPath)
+        const appName = basename(PluPath)
         /**
          */
         if (!/^(.js|.ts)$/.test(appName)) return

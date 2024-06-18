@@ -1,8 +1,9 @@
 import YAML from 'yaml'
 import chokidar from 'chokidar'
-import fs from 'node:fs'
+import fs, { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import lodash from 'lodash'
-import MysInfo from './mysInfo.js'
+// tudo 循环引用
+// import MysInfo from './mysInfo.js'
 import NoteUser from './NoteUser.js'
 import { Character, Weapon } from './miao.js'
 
@@ -39,6 +40,7 @@ class GsCfg {
   }
 
   /**
+   * tudo
    * 用户配置
    * @param app
    * @param name
@@ -68,7 +70,7 @@ class GsCfg {
     if (this[type][key]) return this[type][key]
 
     try {
-      this[type][key] = YAML.parse(fs.readFileSync(file, 'utf8'))
+      this[type][key] = YAML.parse(readFileSync(file, 'utf8'))
     } catch (error) {
       logger.error(`[${app}][${name}] 格式错误 ${error}`)
       return false
@@ -120,6 +122,7 @@ class GsCfg {
   }
 
   /**
+   * tudo
    * 读取所有用户绑定的ck
    * @param game
    * @returns
@@ -180,10 +183,15 @@ class GsCfg {
     return obj.abbr || obj.name || ''
   }
 
-  /** 公共配置ck文件修改hook */
+  /**
+   * 公共配置ck文件修改hook 爆栈原因
+   * //
+   */
   async change_myspubCk() {
-    await MysInfo.initCache()
-    await MysInfo.initPubCk()
+    logger.info('操作失败，该方法在尝试循环引用！')
+    logger.info('这是设计错误，请等待修复....')
+    // await MysInfo.initCache()
+    // await MysInfo.initPubCk()
   }
 
   /**
@@ -251,13 +259,13 @@ class GsCfg {
    * @param name
    */
   cpCfg(app, name) {
-    if (!fs.existsSync('./plugins/genshin/config')) {
-      fs.mkdirSync('./plugins/genshin/config')
+    if (!existsSync('./plugins/genshin/config')) {
+      mkdirSync('./plugins/genshin/config')
     }
 
     let set = `./plugins/genshin/config/${app}.${name}.yaml`
-    if (!fs.existsSync(set)) {
-      fs.copyFileSync(`./plugins/genshin/defSet/${app}/${name}.yaml`, set)
+    if (!existsSync(set)) {
+      copyFileSync(`./plugins/genshin/defSet/${app}/${name}.yaml`, set)
     }
   }
 

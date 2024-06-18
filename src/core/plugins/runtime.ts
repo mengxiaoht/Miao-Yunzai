@@ -1,4 +1,4 @@
-import lodash from 'lodash'
+import { filter, repeat } from 'lodash-es'
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import {
   gsCfg,
@@ -243,7 +243,7 @@ export default class Runtime {
    */
   async render(
     plugin_name: string,
-    path: string,
+    basePath: string,
     data: {
       [key: string]: any
       saveId?: any,
@@ -257,9 +257,9 @@ export default class Runtime {
     } = {}
   ) {
     // 处理传入的path
-    path = path.replace(/.html$/, '')
-    let paths = lodash.filter(path.split('/'), (p) => !!p)
-    path = paths.join('/')
+    basePath = basePath.replace(/.html$/, '')
+    let paths = filter(basePath.split('/'), (p) => !!p)
+    basePath = paths.join('/')
     // 创建目录
     const mkdir = (check) => {
       let currDir = `${process.cwd()}/temp`
@@ -271,10 +271,10 @@ export default class Runtime {
       }
       return currDir
     }
-    mkdir(`html/${plugin_name}/${path}`)
+    mkdir(`html/${plugin_name}/${basePath}`)
     // 自动计算pluResPath
-    const pluResPath = `../../../${lodash.repeat('../', paths.length)}plugins/${plugin_name}/resources/`
-    const miaoResPath = `../../../${lodash.repeat('../', paths.length)}plugins/miao-plugin/resources/`
+    const pluResPath = `../../../${repeat('../', paths.length)}plugins/${plugin_name}/resources/`
+    const miaoResPath = `../../../${repeat('../', paths.length)}plugins/miao-plugin/resources/`
     const layoutPath = process.cwd() + '/plugins/miao-plugin/resources/common/layout/'
     // 渲染data
     data = {
@@ -293,9 +293,9 @@ export default class Runtime {
 
       /** 默认参数 **/
       _plugin: plugin_name,
-      _htmlPath: path,
+      _htmlPath: basePath,
       pluResPath,
-      tplFile: `./plugins/${plugin_name}/resources/${path}.html`,
+      tplFile: `./plugins/${plugin_name}/resources/${basePath}.html`,
       saveId: data.saveId || data.save_id || paths[paths.length - 1],
       pageGotoParams: {
         waitUntil: 'networkidle2'
@@ -314,7 +314,7 @@ export default class Runtime {
       writeFileSync(file, JSON.stringify(data))
     }
     // 截图
-    const base64 = await puppeteer.screenshot(`${plugin_name}/${path}`, data)
+    const base64 = await puppeteer.screenshot(`${plugin_name}/${basePath}`, data)
     if (cfg.retType === 'base64') {
       return base64
     }

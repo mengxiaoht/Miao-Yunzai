@@ -1,5 +1,5 @@
 import { createRequire } from 'module'
-import path from 'path'
+import { resolve } from 'path'
 const require = createRequire(import.meta.url)
 /**
  * 常用扩展名
@@ -40,6 +40,6 @@ const CustomExtensions = [
  */
 for (const ext of CustomExtensions) {
   require.extensions[ext] = (module, filename) => {
-    module.exports = path.resolve(filename)
+    module.exports = resolve(filename)
   }
 }

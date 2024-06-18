@@ -1,5 +1,5 @@
 import { type Client } from 'icqq'
-import lodash from 'lodash'
+import { isArray } from 'lodash-es'
 import * as Events from './events.js'
 
 /**
@@ -31,7 +31,7 @@ class ListenerLoader {
        *
        */
       const on = listener.once ? 'once' : 'on'
-      if (lodash.isArray(listener.event)) {
+      if (isArray(listener.event)) {
         listener.event.forEach(type => {
           const e = listener[type] ? type : 'execute'
           this.client[on](listener.prefix + type, event => listener[e](event))

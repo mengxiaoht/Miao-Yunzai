@@ -1,7 +1,6 @@
 
 import { Common } from '../../mys/miao.js'
 import { EventType } from './types.js'
-
 import { type EventMap } from 'icqq'
 
 const State = {}

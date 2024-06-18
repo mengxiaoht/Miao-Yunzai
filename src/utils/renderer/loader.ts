@@ -1,4 +1,4 @@
-import fs from 'node:fs'
+import fs, { existsSync, readFileSync } from 'node:fs'
 import yaml from 'yaml'
 import lodash from 'lodash'
 import { ConfigController as cfg } from '../../config/index.js'
@@ -47,8 +47,8 @@ class RendererLoader {
           'config',
           'puppeteer.yaml'
         )
-        const rendererCfg = fs.existsSync(configFile)
-          ? yaml.parse(fs.readFileSync(configFile, 'utf8'))
+        const rendererCfg = existsSync(configFile)
+          ? yaml.parse(readFileSync(configFile, 'utf8'))
           : {}
         const renderer = rendererFn.default(rendererCfg)
         if (

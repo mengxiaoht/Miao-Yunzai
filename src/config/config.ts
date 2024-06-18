@@ -1,5 +1,5 @@
-import YAML from 'yaml'
-import chokidar from 'chokidar'
+import { watch } from 'chokidar'
+import { parse } from 'yaml'
 import { join } from 'node:path'
 import { readFileSync, } from 'node:fs'
 /**
@@ -166,7 +166,7 @@ class ConfigController {
     const file = `config/${type}/${name}.yaml`
     const key = `${type}.${name}`
     if (this.config[key]) return this.config[key]
-    this.config[key] = YAML.parse(
+    this.config[key] = parse(
       readFileSync(file, 'utf8')
     )
     this.watch(file, name, type)
@@ -183,7 +183,7 @@ class ConfigController {
   watch(file: string, name: string, type = 'default_config') {
     const key = `${type}.${name}`
     if (this.watcher[key]) return
-    const watcher = chokidar.watch(file)
+    const watcher = watch(file)
     watcher.on('change', () => {
       delete this.config[key]
       if (typeof Bot == 'undefined') return

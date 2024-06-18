@@ -9,7 +9,10 @@ import lodash from 'lodash'
 import fetch from 'node-fetch'
 import DailyCache from './DailyCache.js'
 import BaseModel from './BaseModel.js'
-import NoteUser from './NoteUser.js'
+
+// 循环引用
+// import NoteUser from './NoteUser.js'
+
 import MysApi from './mysApi.js'
 import MysUtil from './MysUtil.js'
 import { MysUserDB } from '../db/index.js'
@@ -665,19 +668,22 @@ export default class MysUser extends BaseModel {
    * @param game
    */
   async delWithUser(game = 'gs') {
+    logger.info('错误行为，尝试进行循环引用！')
+    logger.info('这是设计错误，请等待修复....')
+
     // 查找用户
-    let cache = this.getCache(game)
-    let qqArr = await cache.kGet(tables.qq, this.ltuid, true)
-    if (qqArr && qqArr.length > 0) {
-      for (let qq of qqArr) {
-        let user = await NoteUser.create(qq)
-        if (user) {
-          // 调用user删除ck
-          await user.delCk(this.ltuid, false)
-        }
-      }
-    }
-    await this.del()
+    // let cache = this.getCache(game)
+    // let qqArr = await cache.kGet(tables.qq, this.ltuid, true)
+    // if (qqArr && qqArr.length > 0) {
+    //   for (let qq of qqArr) {
+    //     let user = await NoteUser.create(qq)
+    //     if (user) {
+    //       // 调用user删除ck
+    //       await user.delCk(this.ltuid, false)
+    //     }
+    //   }
+    // }
+    // await this.del()
   }
 
   /**

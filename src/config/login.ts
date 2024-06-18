@@ -1,4 +1,4 @@
-import fs from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
 import inquirer from 'inquirer'
 import chalk from 'chalk'
 import {
@@ -104,19 +104,19 @@ export async function createLogin() {
    */
   const file = `./${CONFIG_INIT_PATH}`
   const fileDef = `./${CONFIG_DEFAULT_PATH}`
-  let qq = fs.readFileSync(`${fileDef}qq.yaml`, 'utf8')
+  let qq = readFileSync(`${fileDef}qq.yaml`, 'utf8')
   qq = qq.replace(/qq:/g, 'qq: ' + ret.QQ)
   qq = qq.replace(/pwd:/g, `pwd:  '${ret.pwd}'`)
   qq = qq.replace(/platform: [1-6]/g, 'platform: ' + Number(ret.platform))
-  fs.writeFileSync(`${file}qq.yaml`, qq, 'utf8')
-  let bot = fs.readFileSync(`${fileDef}bot.yaml`, 'utf8')
+  writeFileSync(`${file}qq.yaml`, qq, 'utf8')
+  let bot = readFileSync(`${fileDef}bot.yaml`, 'utf8')
   /**
    *
    */
   if (ret.masterQQ) {
-    let other = fs.readFileSync(`${fileDef}other.yaml`, 'utf8')
+    let other = readFileSync(`${fileDef}other.yaml`, 'utf8')
     other = other.replace(/masterQQ:/g, `masterQQ:\n  - ${ret.masterQQ}`)
-    fs.writeFileSync(`${file}other.yaml`, other, 'utf8')
+    writeFileSync(`${file}other.yaml`, other, 'utf8')
   }
   /**
    *
@@ -124,7 +124,7 @@ export async function createLogin() {
   if (ret.signAPI) {
     bot = bot.replace(/sign_api_addr:/g, `sign_api_addr: ${ret.signAPI}`)
   }
-  fs.writeFileSync(`${file}bot.yaml`, bot, 'utf8')
+  writeFileSync(`${file}bot.yaml`, bot, 'utf8')
   logger.info(
     `\nQQ配置完成，正在登录\n后续修改账号可以运行命令： ${chalk.green('npm run login')}\n`
   )

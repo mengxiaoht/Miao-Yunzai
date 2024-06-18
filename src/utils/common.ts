@@ -1,10 +1,9 @@
 import { pipeline } from 'stream'
 import { promisify } from 'util'
 import fetch from 'node-fetch'
-import fs from 'node:fs'
-import path from 'node:path'
 import { exec } from 'child_process'
-import { join } from 'path'
+import { dirname, join } from 'path'
+import { createWriteStream, existsSync, mkdirSync, readFileSync } from 'fs'
 
 /**
  * 休眠函数
@@ -22,11 +21,11 @@ export function sleep(ms: number) {
  */
 export async function downFile(fileUrl: string, savePath: string, param = {}) {
   try {
-    mkdirs(path.dirname(savePath))
+    mkdirs(dirname(savePath))
     logger.debug(`[下载文件] ${fileUrl}`)
     const response = await fetch(fileUrl, param)
     const streamPipeline = promisify(pipeline)
-    await streamPipeline(response.body, fs.createWriteStream(savePath))
+    await streamPipeline(response.body, createWriteStream(savePath))
     return true
   } catch (err) {
     logger.error(`下载文件错误：${err}`)
@@ -36,15 +35,15 @@ export async function downFile(fileUrl: string, savePath: string, param = {}) {
 
 /**
  *
- * @param dirname
+ * @param name
  * @returns
  */
-export function mkdirs(dirname: string) {
-  if (fs.existsSync(dirname)) {
+export function mkdirs(name: string) {
+  if (existsSync(name)) {
     return true
   } else {
-    if (mkdirs(path.dirname(dirname))) {
-      fs.mkdirSync(dirname)
+    if (mkdirs(dirname(name))) {
+      mkdirSync(name)
       return true
     }
   }
@@ -75,7 +74,7 @@ export function execAsync(cmd: string): Promise<{
  */
 export function readJSON(dir: string) {
   try {
-    const cfg = fs.readFileSync(join(process.cwd(), dir), 'utf-8')
+    const cfg = readFileSync(join(process.cwd(), dir), 'utf-8')
     return JSON.parse(cfg)
   } catch {
     return false

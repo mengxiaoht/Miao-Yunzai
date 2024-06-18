@@ -1,5 +1,7 @@
 import lodash from 'lodash'
 import MysApi from './mysApi.js'
+
+// tudo 循环引用
 import GsCfg from './gsCfg.js'
 import NoteUser from './NoteUser.js'
 import MysUser from './MysUser.js'
@@ -302,6 +304,7 @@ export default class MysInfo {
   static async initPubCk() {
     // 初始化公共CK
     let pubCount = 0
+    // tudo
     let pubCks = GsCfg.getConfig('mys', 'pubCk') || []
     for (let ck of pubCks) {
       let pubUser = await MysUser.create(ck)
@@ -369,6 +372,7 @@ export default class MysInfo {
    * @returns
    */
   static async getBingCkUid() {
+    // tudo
     let res = await GsCfg.getBingCk()
     return { ...res.ck }
   }

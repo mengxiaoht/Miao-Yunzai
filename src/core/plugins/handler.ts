@@ -1,5 +1,5 @@
-import util from 'node:util'
-import lodash from 'lodash'
+import { types } from 'node:util'
+import { orderBy } from 'lodash-es'
 
 /**
  * 
@@ -15,7 +15,7 @@ const Handler = {
    * @param cfg 
    * @returns 
    */
-  add (cfg) {
+  add(cfg) {
     let { ns, fn, self, property = 50 } = cfg
     let key = cfg.key || cfg.event
     if (!key || !fn) {
@@ -31,7 +31,7 @@ const Handler = {
       self,
       key
     })
-    events[key] = lodash.orderBy(events[key], ['priority'], ['asc'])
+    events[key] = orderBy(events[key], ['priority'], ['asc'])
   },
   /**
    * 
@@ -39,7 +39,7 @@ const Handler = {
    * @param key 
    * @returns 
    */
-  del (ns, key = '') {
+  del(ns, key = '') {
     if (!key) {
       for (let key in events) {
         Handler.del(ns, key)
@@ -53,7 +53,7 @@ const Handler = {
       let handler = events[key][idx]
       if (handler.ns === ns) {
         events[key].splice(idx, 1)
-        events[key] = lodash.orderBy(events[key], ['priority'], ['asc'])
+        events[key] = orderBy(events[key], ['priority'], ['asc'])
       }
     }
   },
@@ -63,7 +63,7 @@ const Handler = {
    * @param e 
    * @param args 
    */
-  async callAll (_, __, ___) {
+  async callAll(_, __, ___) {
     // 暂时屏蔽调用
     // return Handler.call(key, e, args, true)
   },
@@ -75,7 +75,7 @@ const Handler = {
    * @param allHandler 
    * @returns 
    */
-  async call (key, e, args, allHandler = false) {
+  async call(key, e, args, allHandler = false) {
     let ret
     for (let obj of events[key]) {
       let fn = obj.fn
@@ -87,7 +87,7 @@ const Handler = {
         done = false
       }
       ret = fn.call(obj.self, e, args, reject)
-      if (util.types.isPromise(ret)) {
+      if (types.isPromise(ret)) {
         ret = await ret
       }
       if (done && !allHandler) {
@@ -102,7 +102,7 @@ const Handler = {
    * @param key 
    * @returns 
    */
-  has (key) {
+  has(key) {
     return !!events[key]
   }
 }

@@ -1,7 +1,7 @@
 import template from 'art-template'
 import chokidar from 'chokidar'
-import path from 'node:path'
-import fs, { writeFileSync } from 'node:fs'
+import { dirname } from 'node:path'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 
 /**
  *
@@ -34,12 +34,12 @@ export default class Renderer {
    * @param dirname
    * @returns
    */
-  createDir(dirname: string) {
-    if (fs.existsSync(dirname)) {
+  createDir(name: string) {
+    if (existsSync(name)) {
       return true
     } else {
-      if (this.createDir(path.dirname(dirname))) {
-        fs.mkdirSync(dirname)
+      if (this.createDir(dirname(name))) {
+        mkdirSync(name)
         return true
       }
     }
@@ -57,7 +57,7 @@ export default class Renderer {
     if (!this.html[tplFile]) {
       this.createDir(`./temp/html/${name}`)
       try {
-        this.html[tplFile] = fs.readFileSync(tplFile, 'utf8')
+        this.html[tplFile] = readFileSync(tplFile, 'utf8')
       } catch (error) {
         logger.error(`加载html错误：${tplFile}`)
         return false
