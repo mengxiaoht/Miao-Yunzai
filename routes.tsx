@@ -1,9 +1,9 @@
 import React from 'react'
 import { movies } from './data'
 import { createDynamic } from 'yunzai/utils'
-const require = createDynamic(import.meta.url)
-const Hello = (await require('./views/hello.tsx')).default
-const Music = (await require('./views/music.tsx')).default
+const dynamic = createDynamic(import.meta.url)
+const Hello = (await dynamic('./views/hello.tsx')).default
+const Music = (await dynamic('./views/music.tsx')).default
 const Config = [
   {
     url: '/hello',
