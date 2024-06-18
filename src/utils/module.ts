@@ -47,7 +47,7 @@ export const createDynamic = (basePath: string) => {
   return (path: string) =>
     import(
       new URL(
-        `${path}${process.env.NODE_ENV == 'NODE_ENV' ? '' : now()}`,
+        `${path}${process.env.NODE_ENV == 'production' ? '' : now()}`,
         basePath
       ).href
     )
