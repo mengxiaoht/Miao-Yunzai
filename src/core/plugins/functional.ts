@@ -26,7 +26,6 @@ export class Messages {
     reg: RegExp
     fnc: string
   }[] = []
-
   #init = PluginSuperDefine
 
   /**
@@ -62,14 +61,21 @@ export class Messages {
     const App = this
     class Children extends Plugin {
       constructor() {
-        super({
+        // init
+        super()
+        // 丢给this
+        const init = {
           ...App.#init,
           rule: App.#rule
-        })
+        }
+        for (const key in init) {
+          this[key] = init[key]
+        }
         for (const key of App.#rule) {
           // 确认存在该函数
           if (App[key.fnc] instanceof Function) {
-            this[key.fnc] = App[key.fnc].bind(App)
+            // 改变this指向 确保未来废除 fun(e) 后可用
+            this[key.fnc] = () => App[key.fnc].call(this, this.e);
           }
         }
       }
@@ -82,14 +88,7 @@ export class Messages {
  * 事件
  */
 export class Events {
-  /**
-   *
-   */
   #count = 0
-
-  /**
-   *
-   */
   #data: {
     [key: string]: typeof Plugin
   } = {}
