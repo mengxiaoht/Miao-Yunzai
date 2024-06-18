@@ -17,6 +17,18 @@ export type PropsType = {
 const require = createRequire(import.meta.url)
 const url: string = require('../resources/example.png')
 
+
+export function Post({ url }: { url: string }) {
+  return (
+    <section className="flex flex-col">
+      <div className="divide-y divide-slate-100  m-8 shadow-2xl">
+        <img className="h-40 w-40" src={url}></img>
+      </div>
+    </section>
+  )
+}
+
+
 /**
  *
  * @param param0
