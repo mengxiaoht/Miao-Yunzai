@@ -70,12 +70,6 @@ export class Client extends IcqqClient {
 }
 
 /**
- * 不推荐使用，可能放弃
- * @deprecated
- */
-export const Redis = global.redis
-
-/**
  * 机器人客户端
  */
 export const Bot = global.Bot
