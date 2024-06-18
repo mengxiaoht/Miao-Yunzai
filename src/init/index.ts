@@ -1,3 +1,4 @@
+import './env.js'
 import './require.js'
 import './config.js'
 import './logger.js'

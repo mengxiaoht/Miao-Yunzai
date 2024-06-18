@@ -3,7 +3,7 @@ module.exports = {
   apps: [
     {
       name: 'Miao-Yunzai',
-      script: './index.js',
+      script: './app.js',
       args: argv,
       // 超时时间内进程仍未终止，则 PM2 将强制终止该进程
       kill_timeout: 5000,
@@ -20,7 +20,9 @@ module.exports = {
       // 不监听文件变化
       watch: false,
       env: {
+        // 生产环境
         NODE_ENV: 'production'
+        // 此环境变量，都称之为开发环境
       }
     }
   ]

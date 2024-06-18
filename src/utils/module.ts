@@ -27,7 +27,6 @@ const now = () => `?t=${Date.now()}`
 
 /**
  * @param basePath import.meta.url
- * @param T 默认开启动态，可自定设置系统量关闭
  * @returns
  * ***********
  * 创建动态模块
@@ -36,17 +35,20 @@ const now = () => `?t=${Date.now()}`
  * 如果动态模块内包含动态模块,
  * 内部模块也会跟着重新加载,
  * ***********
- * 请确保你的模块是可预测
- * ***********
- * 请确保当前模块是可被执行的
+ * 在env.NODE_ENV=='production'下禁用
+ * @deprecated 实验性的，请勿烂用
  */
-export const createDynamic = (basePath: string, T = true) => {
+export const createDynamic = (basePath: string) => {
   /**
    * 与import作用相同
    * @param path 相对路径
-   * @param TT 默认开启动态，可自定设置系统量关闭
    * @returns
    */
-  return (path: string, TT = true) =>
-    import(new URL(`${path}${TT && T ? now() : ''}`, basePath).href)
+  return (path: string) =>
+    import(
+      new URL(
+        `${path}${process.env.NODE_ENV == 'NODE_ENV' ? '' : now()}`,
+        basePath
+      ).href
+    )
 }

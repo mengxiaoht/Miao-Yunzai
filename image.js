@@ -1,6 +1,4 @@
 import { spawn } from 'child_process'
-const argv = [...process.argv].splice(2)
-const argvs = argv.join(' ').replace(/(\S+\.js|\S+\.ts)/g, '')
 const child1 = spawn(
   'tailwindcss -i ./src/input.css -o ./public/output.css --watch',
   [],
@@ -9,6 +7,8 @@ const child1 = spawn(
     stdio: 'inherit'
   }
 )
+const argv = [...process.argv].splice(2)
+const argvs = argv.join(' ').replace(/(\S+\.js|\S+\.ts)/g, '')
 const child2 = spawn(
   'node --no-warnings=ExperimentalWarning --loader ts-node/esm src/server.ts',
   argvs.split(' '),
