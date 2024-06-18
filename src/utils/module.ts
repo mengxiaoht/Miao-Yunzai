@@ -59,6 +59,23 @@ export type ModuleWithComponent<
   PropsType = any
 > = Promise<{ [K in ComponentName]: React.ComponentType<PropsType> }>
 
+// export const createDynamicComponent = (basePath: string) => {
+//   /**
+//    * 与import作用相同
+//    * @param path 相对路径
+//    * @returns
+//    */
+//   return <T extends Record<string, any> = { default: any }>(
+//     path: string
+//   ): Promise<{ [K in keyof T]: React.ComponentType<T[K]> }> =>
+//     import(
+//       new URL(
+//         `${path}${process.env.NODE_ENV == 'production' ? '' : now()}`,
+//         basePath
+//       ).href
+//     )
+// }
+
 /**
  * @param basePath import.meta.url
  * @returns
@@ -73,7 +90,7 @@ export const createDynamicComponent = (basePath: string) => {
    * @param path 相对路径
    * @returns
    */
-  return <D extends string, T = any>(path: string): ModuleWithComponent<D, T> =>
+  return <T>(path: string): Promise<T> =>
     import(
       new URL(
         `${path}${process.env.NODE_ENV == 'production' ? '' : now()}`,
