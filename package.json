@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "app": "node app.js",
-    "login": "node index.js login",
+    "login": "node app.js login",
     "build": "rollup --config rollup.config.js",
     "start": "pm2 startOrRestart pm2.config.cjs",
     "stop": "pm2 stop pm2.config.cjs",
