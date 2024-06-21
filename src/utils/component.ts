@@ -3,6 +3,7 @@ import { renderToString } from 'react-dom/server'
 import { mkdirSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import { getLink } from './link.tsx'
+import { replacePaths } from './replace.ts'
 /**
  *
  */
@@ -69,9 +70,16 @@ export class Component {
     ) {
       return html
     }
-    writeFileSync(address, html)
+    writeFileSync(address, this.replacePaths(html))
     return address
   }
+
+  /**
+   * 路径格式转换
+   * @param htmlContent
+   * @returns
+   */
+  replacePaths = replacePaths
 
   /**
    * 将 React 元素渲染为其初始 HTML。这
