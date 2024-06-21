@@ -25,7 +25,7 @@ export class Image extends Picture {
     })
     return this.Pup.render(Address)
   }
-}
 
+}
 // 初始化 图片生成对象
 export const imgae = new Image()

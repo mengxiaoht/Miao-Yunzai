@@ -15,19 +15,7 @@ export type PropsType = {
 }
 
 const require = createRequire(import.meta.url)
-const url: string = require('../resources/example.png')
-
-
-export function Post({ url }: { url: string }) {
-  return (
-    <section className="flex flex-col">
-      <div className="divide-y divide-slate-100  m-8 shadow-2xl">
-        <img className="h-40 w-40" src={url}></img>
-      </div>
-    </section>
-  )
-}
-
+const url: string = require('../resources/exp.png')
 
 /**
  *
@@ -37,8 +25,10 @@ export function Post({ url }: { url: string }) {
 export default function App({ data, movies }: PropsType) {
   return (
     <section className="flex flex-col">
-      <div className="divide-y divide-slate-100  m-8 shadow-2xl">
-        <img className="h-40 w-40" src={url}></img>
+      <div className="divide-y divide-slate-100  m-8 shadow-2xl" style={{
+        background: `url(${url})`,
+        backgroundSize:'100% auto'
+      }}>
         <Nav>
           <NavItem href="./music">New {data.name}</NavItem>
         </Nav>

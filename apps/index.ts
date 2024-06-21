@@ -1,7 +1,7 @@
 /**
  * ***********
  * 不想开启的功能，自行注释
- * *****
+ * ***********
  */
 export * from './add.js'
 export * from './event/disFriPoke.js'
@@ -17,26 +17,23 @@ export * from './example2.js'
 export * from './event/newcomer.js'
 export * from './event/outNotice.js'
 
-import { Messages, Segment } from 'yunzai/core'
-import { imgae } from '../image.tsx'
-import { movies } from '../data.ts'
-const message = new Messages()
-message.response(/^你好/, async e => {
-  const UID = e.user_id
-  // render 是异步的，因此此处也是异步的
-  const img = await imgae.createHello(UID, {
-    data: { name: 'word' },
-    movies
-  })
-  // 判断是否成功
-  if (typeof img !== 'boolean') {
-    // 图片
-    e.reply(Segment.image(img))
-  } else {
-    e.reply('你好')
-  }
-})
+// import { Messages, Segment } from 'yunzai/core'
+// import { imgae } from '../image.js'
+// import { movies } from '../data.js'
 
-const word = message.ok
+// const message = new Messages()
 
-export { word }
+// message.response(/^你好/, async e => {
+//     const img = await imgae.createHello(e.user_id, {
+//         data: {
+//             'name': '测试'
+//         },
+//         'movies': movies
+//     })
+//     if (img) e.reply(Segment.image(img))
+// })
+
+
+// const Test = message.ok
+
+// export { Test }
