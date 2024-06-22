@@ -213,8 +213,13 @@ export class update extends Plugin {
     }
   }
 
+  /**
+   * 重启
+   */
   restart() {
-    new Restart(this.e).restart()
+    const con = new Restart()
+    con.e = this.e
+    con.restart()
   }
 
   async getLog(plugin = '') {
