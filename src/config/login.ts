@@ -8,6 +8,11 @@ import {
 } from './system.js'
 import cfg from './config.js'
 
+/**
+ * 
+ * @param ms 
+ * @returns 
+ */
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }

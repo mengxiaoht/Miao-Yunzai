@@ -11,7 +11,7 @@ import puppeteer from '../../utils/puppeteer/puppeteer.js'
 import * as common from '../../utils/common.js'
 import cfg from '../../config/config.js'
 import Handler from './handler.js'
-import { Version } from '../../mys/miao.js'
+import { BOT_NAME } from '../../config/system.js'
 
 /**
  * @deprecated 已废弃
@@ -260,6 +260,7 @@ export default class Runtime {
     basePath = basePath.replace(/.html$/, '')
     let paths = filter(basePath.split('/'), (p) => !!p)
     basePath = paths.join('/')
+    
     // 创建目录
     const mkdir = (check) => {
       let currDir = `${process.cwd()}/temp`
@@ -271,21 +272,24 @@ export default class Runtime {
       }
       return currDir
     }
+
+    const PName = 'miao-plugin'
+
     mkdir(`html/${plugin_name}/${basePath}`)
     // 自动计算pluResPath
     const pluResPath = `../../../${repeat('../', paths.length)}plugins/${plugin_name}/resources/`
-    const miaoResPath = `../../../${repeat('../', paths.length)}plugins/miao-plugin/resources/`
-    const layoutPath = process.cwd() + '/plugins/miao-plugin/resources/common/layout/'
+    const miaoResPath = `../../../${repeat('../', paths.length)}plugins/${PName}/resources/`
+    const layoutPath =  `${process.cwd()}/plugins/${PName}/resources/common/layout/`
     // 渲染data
     data = {
       sys: {
         scale: 1
       },
       /** miao 相关参数 **/
-      copyright: `Created By Miao-Yunzai<span class="version">${Version.yunzai}</span> `,
+      copyright: `Created By ${BOT_NAME}<span class="version">${cfg.package.version}</span> `,
       _res_path: pluResPath,
       _miao_path: miaoResPath,
-      _tpl_path: process.cwd() + '/plugins/miao-plugin/resources/common/tpl/',
+      _tpl_path:  `${process.cwd()}/plugins/${PName}/resources/common/tpl/`,
       defaultLayout: layoutPath + 'default.html',
       elemLayout: layoutPath + 'elem.html',
 

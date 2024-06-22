@@ -1,10 +1,12 @@
 import YAML from 'yaml'
 import chokidar from 'chokidar'
-import fs, { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import lodash from 'lodash'
 // tudo 循环引用
 // import MysInfo from './mysInfo.js'
 import NoteUser from './NoteUser.js'
+
+// 外部引入
 import { Character, Weapon } from './miao.js'
 
 /**
