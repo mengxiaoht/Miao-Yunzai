@@ -24,6 +24,8 @@ if (existsSync(dir)) {
  * ***********
  */
 class GsCfg {
+  nameID = new Map()
+  sr_nameID = new Map()
   isSr = false
   /** 默认设置 */
   defSetPath = './plugins/genshin/defSet/'
@@ -35,6 +37,9 @@ class GsCfg {
   watcher = { config: {}, defSet: {} }
   ignore = ['mys.pubCk', 'gacha.set', 'bot.help', 'role.name']
 
+  /**
+   *
+   */
   get element() {
     return {
       ...this.getdefSet('element', 'role'),
@@ -77,18 +82,14 @@ class GsCfg {
   getYaml(app, name, type) {
     let file = this.getFilePath(app, name, type)
     let key = `${app}.${name}`
-
     if (this[type][key]) return this[type][key]
-
     try {
       this[type][key] = YAML.parse(readFileSync(file, 'utf8'))
     } catch (error) {
       logger.error(`[${app}][${name}] 格式错误 ${error}`)
       return false
     }
-
     this.watch(file, app, name, type)
-
     return this[type][key]
   }
 
@@ -117,9 +118,7 @@ class GsCfg {
    */
   watch(file, app, name, type = 'defSet') {
     let key = `${app}.${name}`
-
     if (this.watcher[type][key]) return
-
     const watcher = chokidar.watch(file)
     watcher.on('change', () => {
       delete this[type][key]
@@ -128,7 +127,6 @@ class GsCfg {
         this[`change_${app}${name}`]()
       }
     })
-
     this.watcher[type][key] = watcher
   }
 
@@ -142,7 +140,6 @@ class GsCfg {
     let ck = {}
     let ckQQ = {}
     let noteCk = {}
-
     await NoteUser.forEach(async function (user) {
       let qq = user.qq + ''
       let tmp = {}
@@ -196,7 +193,6 @@ class GsCfg {
 
   /**
    * 公共配置ck文件修改hook 爆栈原因
-   * //
    */
   async change_myspubCk() {
     logger.info('操作失败，该方法在尝试循环引用！')
@@ -244,17 +240,12 @@ class GsCfg {
     if (filterMsg) {
       alias = alias.replace(new RegExp(filterMsg, 'g'), '').trim()
     }
-
     this.isSr = isSr
-
     let char = Character.get(alias, isSr ? 'sr' : 'gs')
     if (!char) {
       return false
     }
-
-    /** 获取uid */
     let uid = this.getMsgUid(msg) || ''
-
     return {
       roleId: char.id,
       uid,
@@ -273,16 +264,11 @@ class GsCfg {
     if (!existsSync('./plugins/genshin/config')) {
       mkdirSync('./plugins/genshin/config')
     }
-
     let set = `./plugins/genshin/config/${app}.${name}.yaml`
     if (!existsSync(set)) {
       copyFileSync(`./plugins/genshin/defSet/${app}/${name}.yaml`, set)
     }
   }
-
-  nameID = new Map()
-
-  sr_nameID = new Map()
 
   /**
    * 仅供内部调用
@@ -347,13 +333,15 @@ class GsCfg {
     if (filterMsg) {
       alias = alias.replace(new RegExp(filterMsg, 'g'), '').trim()
     }
-
-    /** 判断是否命中别名 */
+    /**
+     * 判断是否命中别名
+     */
     let roleId = this._roleNameToID(alias)
     if (!roleId) return false
-    /** 获取uid */
+    /**
+     * 获取uid
+     */
     let uid = this.getMsgUid(msg) || ''
-
     return {
       roleId,
       uid,
