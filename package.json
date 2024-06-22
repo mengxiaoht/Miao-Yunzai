@@ -110,9 +110,5 @@
     "./image/types": {
       "import": "./src/image/types.js"
     }
-  },
-  "imports": {
-    "#miao": "./plugins/miao-plugin/components/index.js",
-    "#miao.models": "./plugins/miao-plugin/models/index.js"
   }
 }

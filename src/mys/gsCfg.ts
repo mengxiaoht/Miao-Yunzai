@@ -5,10 +5,18 @@ import lodash from 'lodash'
 // tudo 循环引用
 // import MysInfo from './mysInfo.js'
 import NoteUser from './NoteUser.js'
+import { join } from 'node:path'
 
-// 外部引入
-// Character.get
-import { Character, Weapon } from './miao.js'
+/**
+ * 动态加载喵喵模块
+ */
+const dir = join(process.cwd(), './plugins/miao-plugin/models/index.js')
+let { Character, Weapon }: any = {}
+if (existsSync(dir)) {
+  const { Character: C, Weapon: W } = await import(`file://${dir}`)
+  Character = C
+  Weapon = W
+}
 
 /**
  * ***********

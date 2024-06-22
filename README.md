@@ -22,16 +22,6 @@ git clone --depth=1 -b dev https://gitee.com/yoimiya-kokomi/Miao-Yunzai.git
 cd Miao-Yunzai
 ```
 
-- 安装插件
-
-```sh
-# 原神插件
-git clone --depth=1 -b genshin https://gitee.com/yoimiya-kokomi/Miao-Yunzai.git ./plugins/genshin/
-
-# 喵喵插件
-git clone --depth=1 https://gitee.com/yoimiya-kokomi/miao-plugin.git ./plugins/miao-plugin/
-```
-
 - 安装依赖
 
 ```sh

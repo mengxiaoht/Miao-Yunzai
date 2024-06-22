@@ -8,7 +8,7 @@ const SymbolTimeout = Symbol('Timeout')
 const SymbolResolve = Symbol('Resolve')
 
 /**
- * 
+ * 插件类基础参数
  */
 type PluginSuperType = {
   /**
@@ -89,6 +89,23 @@ export class Plugin {
    * 事件
    */
   e: EventType
+  
+  /**
+   * @deprecated 已废弃
+   */
+  group_id: number
+  /**
+   * @deprecated 已废弃
+   */
+  groupId: number
+  /**
+   * @deprecated 已废弃
+   */
+  user_id: number
+  /**
+   * @deprecated 已废弃
+   */
+  userId: number
 
   /**
    * @param event 执行事件，默认message
@@ -146,23 +163,6 @@ export class Plugin {
     if (!this.e?.reply || !msg) return false
     return this.e.reply(msg, quote, data)
   }
-
-  /**
-   * @deprecated 已废弃
-   */
-  group_id: number
-  /**
-   * @deprecated 已废弃
-   */
-  groupId: number
-  /**
-   * @deprecated 已废弃
-   */
-  user_id: number
-  /**
-   * @deprecated 已废弃
-   */
-  userId: number
 
   /**
    *
@@ -229,6 +229,7 @@ export class Plugin {
 
   /**
    *
+   * @deprecated 已废弃
    * @param args
    * @returns
    */
@@ -241,6 +242,7 @@ export class Plugin {
 
   /**
    *
+   * @deprecated 已废弃
    * @param context
    */
   resolveContext(context) {

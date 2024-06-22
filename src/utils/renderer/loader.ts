@@ -1,4 +1,4 @@
-import fs, { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import yaml from 'yaml'
 import lodash from 'lodash'
 import { ConfigController as cfg } from '../../config/index.js'
@@ -34,9 +34,9 @@ class RendererLoader {
    *
    */
   async load() {
-    const subFolders = fs
-      .readdirSync(this.dir, { withFileTypes: true })
-      .filter(dirent => dirent.isDirectory())
+    const subFolders = readdirSync(this.dir, { withFileTypes: true }).filter(
+      dirent => dirent.isDirectory()
+    )
     for (const subFolder of subFolders) {
       const name = subFolder.name
       try {
