@@ -18,7 +18,20 @@ module.exports = {
     'type-enum': [
       2,
       'always',
-      ['feat', 'fix', 'docs', 'chore', 'style', 'refactor', 'test', 'revert']
+      [
+        'feat',
+        'feature',
+        'update',
+        'fix',
+        'fixbug',
+        'docs',
+        'chore',
+        'style',
+        'optimize',
+        'refactor',
+        'test',
+        'revert'
+      ]
     ],
     // 提交范围（scope）必须使用小写字母
     'scope-case': [2, 'always', 'lower-case'],
