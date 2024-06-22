@@ -315,13 +315,13 @@ export default class User extends base {
         }
       })
     })
+    const img = segment.image(await this.e.runtime.render(
+      'genshin',
+      'html/user/uid-list',
+      { uids }
+    ))
     return this.e.reply([
-      await this.e.runtime.render(
-        'genshin',
-        'html/user/uid-list',
-        { uids },
-        { retType: 'base64' }
-      ),
+      img,
       segment.button(
         [
           { text: '绑定UID', input: '#绑定uid' },
