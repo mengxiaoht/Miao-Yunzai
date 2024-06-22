@@ -4,8 +4,18 @@ import lodash from 'lodash'
 import moment from 'moment'
 
 // tudo
-
-import { Character, Weapon } from '#miao.models'
+import { join } from 'node:path'
+import { existsSync } from 'node:fs'
+const dir = join(process.cwd(), './plugins/miao-plugin/models/index.js')
+let { Character, Weapon }: any = {}
+/**
+ * 动态加载喵喵模块
+ */
+if (existsSync(dir)) {
+  const { Character: C, Weapon: W } = await import(`file://${dir}`)
+  Character = C
+  Weapon = W
+}
 
 export default class GachaData extends base {
   /**

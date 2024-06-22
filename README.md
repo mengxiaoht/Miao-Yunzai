@@ -1,4 +1,11 @@
-### Miao-Yunzai v3
+### Miao-Yunzai
+
+该插件需要安装喵喵插件后使用
+
+```sh
+# 喵喵插件
+git clone --depth=1 https://gitee.com/yoimiya-kokomi/miao-plugin.git ./plugins/miao-plugin/
+```
 
 | 米游社查询指令                           | 说明                               |
 | :--------------------------------------- | ---------------------------------- |

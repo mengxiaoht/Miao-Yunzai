@@ -4,6 +4,7 @@ import lodash from 'lodash'
 import moment from 'moment'
 import fs from 'node:fs'
 import { sleep } from 'yunzai/utils'
+import { GSCfg as GsCfg }from 'yunzai/mys'
 export default class Ledger extends base {
   constructor(e) {
     super(e)

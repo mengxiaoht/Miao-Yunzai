@@ -1,10 +1,24 @@
 import _ from 'lodash'
 import { ConfigController as cfg } from 'yunzai/config'
+import { join } from 'node:path'
+import { existsSync } from 'node:fs'
 
 // tudo
-
-import { Common, Version } from '#miao'
-import { Character } from '#miao.models'
+const dirmodels = join(process.cwd(), './plugins/miao-plugin/models/index.js')
+const dircomponents = join(process.cwd(), './plugins/miao-plugin/components/index.js')
+let { Character, Weapon }: any = {}
+let { Common, Version ,Data}: any = {}
+if (existsSync(dircomponents)) {
+  const { Common: C, Version: V,Data:D} = await import(`file://${dircomponents}`)
+  Common = C
+  Version = V
+  Data =D
+}
+if (existsSync(dirmodels)) {
+  const { Character: C, Weapon: W } = await import(`file://${dirmodels}`)
+  Character = C
+  Weapon = W
+}
 
 export default class base {
   constructor(e = {}) {
