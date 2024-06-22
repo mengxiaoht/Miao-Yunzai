@@ -1,5 +1,5 @@
 
-import { Common } from '../../mys/miao.js'
+import { render } from './render.js'
 import { EventType } from './types.js'
 import { type EventMap } from 'icqq'
 
@@ -257,7 +257,7 @@ export class Plugin {
    * @returns
    */
   async renderImg(plugin, tpl, data, cfg = {}) {
-    return Common.render(plugin, tpl, data, { ...cfg, e: this.e })
+    return render(plugin, tpl, data, { ...cfg, e: this.e })
   }
 }
 
@@ -269,4 +269,4 @@ export const plugin = Plugin
 /**
  * global.plugin
  */
-global.plugin = plugin
+global.plugin = Plugin

@@ -2,6 +2,7 @@ import lodash from 'lodash'
 import MysApi from './mysApi.js'
 
 // tudo 循环引用
+// getConfig getBingCk
 import GsCfg from './gsCfg.js'
 import NoteUser from './NoteUser.js'
 import MysUser from './MysUser.js'

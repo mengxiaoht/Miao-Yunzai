@@ -7,6 +7,7 @@ import lodash from 'lodash'
 import NoteUser from './NoteUser.js'
 
 // 外部引入
+// Character.get
 import { Character, Weapon } from './miao.js'
 
 /**
