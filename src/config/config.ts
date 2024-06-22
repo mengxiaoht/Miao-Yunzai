@@ -101,7 +101,9 @@ class ConfigController {
       this._package = JSON.parse(data)
       return this._package
     } catch {
-      return {}
+      return {
+        version:'4.0.0-rc.0'
+      }
     }
   }
 

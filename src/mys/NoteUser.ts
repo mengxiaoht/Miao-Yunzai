@@ -5,7 +5,7 @@ import MysUser from './MysUser.js'
 import MysUtil from './MysUtil.js'
 import { UserDB } from '../db/index.js'
 // Data.forEach
-import { Data } from './miao.js'
+import * as Data from '../utils/Data.js'
 /**
  * *******************
  * Bot实际User用户类

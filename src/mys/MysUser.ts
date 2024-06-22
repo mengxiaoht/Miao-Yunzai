@@ -18,7 +18,7 @@ import MysUtil from './MysUtil.js'
 import { MysUserDB } from '../db/index.js'
 
 // Data.forEach
-import { Data } from './miao.js'
+import * as Data from '../utils/Data.js'
 
 const tables = {
   // ltuid-uid 查询表

@@ -286,7 +286,7 @@ export default class Runtime {
         scale: 1
       },
       /** miao 相关参数 **/
-      copyright: `Created By ${BOT_NAME}<span class="version">${cfg.package.version}</span> `,
+      copyright: `Created By ${BOT_NAME}<span class="version">${cfg.package?.version}</span> `,
       _res_path: pluResPath,
       _miao_path: miaoResPath,
       _tpl_path:  `${process.cwd()}/plugins/${PName}/resources/common/tpl/`,

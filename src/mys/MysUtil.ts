@@ -1,5 +1,5 @@
 // Data.forEach
-import { Data } from './miao.js'
+import * as Data from '../utils/Data.js'
 
 /**
  *

@@ -1,7 +1,9 @@
 import { Sequelize, DataTypes, Model } from 'sequelize'
-import { Data } from '../mys/miao.js'
 
-Data.createDir('/data/db', 'root')
+// Data.createDir
+import { createDir } from '../utils/Data.js'
+
+createDir('/data/db', 'root')
 
 // TODO DB自定义
 const sequelize = new Sequelize({
