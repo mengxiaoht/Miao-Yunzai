@@ -3,17 +3,8 @@ import { MysInfo } from 'yunzai/mys'
 import { gsCfg } from 'yunzai/mys'
 import lodash from 'lodash'
 
-// tudo
-// tudo
-import { join } from 'node:path'
-import { existsSync } from 'node:fs'
-const dir = join(process.cwd(), './plugins/miao-plugin/models/index.js')
-let { Character, Weapon }: any = {}
-if (existsSync(dir)) {
-  const { Character: C, Weapon: W } = await import(`file://${dir}`)
-  Character = C
-  Weapon = W
-}
+import { Common, Version, Data } from '../../miao-plugin/components/index.js'
+import { Character, Weapon } from '../../miao-plugin/models/index.js'
 
 export default class WeaponModel extends base {
   constructor(e) {

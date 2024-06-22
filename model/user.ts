@@ -1,30 +1,15 @@
 import base from './base.js'
 import lodash from 'lodash'
-import fs, { existsSync } from 'node:fs'
+import fs from 'node:fs'
 import * as common from 'yunzai/core'
 import { gsCfg, MysUser, NoteUser } from 'yunzai/mys'
 import { promisify } from 'node:util'
 import YAML from 'yaml'
 import { UserGameDB, sequelize } from 'yunzai/db'
-import { join } from 'node:path'
 
-// tudo
 
-const dirmodels = join(process.cwd(), './plugins/miao-plugin/models/index.js')
-const dircomponents = join(process.cwd(), './plugins/miao-plugin/components/index.js')
-let { Character, Weapon }: any = {}
-let { Common, Version ,Data}: any = {}
-if (existsSync(dircomponents)) {
-  const { Common: C, Version: V,Data:D} = await import(`file://${dircomponents}`)
-  Common = C
-  Version = V
-  Data =D
-}
-if (existsSync(dirmodels)) {
-  const { Character: C, Weapon: W } = await import(`file://${dirmodels}`)
-  Character = C
-  Weapon = W
-}
+import { Common, Version, Data } from '../../miao-plugin/components/index.js'
+import { Character, Weapon } from '../../miao-plugin/models/index.js'
 
 export default class User extends base {
   constructor(e) {

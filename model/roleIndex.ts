@@ -4,20 +4,10 @@ import lodash from 'lodash'
 import moment from 'moment'
 import fs from 'node:fs'
 
-// tudo
-// tudo
-import { join } from 'node:path'
-import { existsSync } from 'node:fs'
-const dir = join(process.cwd(), './plugins/miao-plugin/models/index.js')
-let { Character, Weapon }: any = {}
-/**
- * 动态加载喵喵模块
- */
-if (existsSync(dir)) {
-  const { Character: C, Weapon: W } = await import(`file://${dir}`)
-  Character = C
-  Weapon = W
-}
+
+import { Common, Version, Data } from '../../miao-plugin/components/index.js'
+import { Character, Weapon } from '../../miao-plugin/models/index.js'
+
 
 let dsz = '待实装'
 let imgFile = {}

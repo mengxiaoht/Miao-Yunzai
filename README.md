@@ -1,11 +1,20 @@
-### Miao-Yunzai
+## genshin
 
-该插件需要安装喵喵插件后使用
+该插件完全依赖于喵喵插件
+
+请先安装喵喵插件后再安装
 
 ```sh
 # 喵喵插件
 git clone --depth=1 https://gitee.com/yoimiya-kokomi/miao-plugin.git ./plugins/miao-plugin/
 ```
+
+```sh
+# 原神插件
+git clone --depth=1 -b genshin https://gitee.com/yoimiya-kokomi/Miao-Yunzai.git ./plugins/genshin/
+```
+
+### 帮助
 
 | 米游社查询指令                           | 说明                               |
 | :--------------------------------------- | ---------------------------------- |

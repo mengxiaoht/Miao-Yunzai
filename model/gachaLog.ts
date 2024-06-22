@@ -5,20 +5,8 @@ import fs from 'node:fs'
 import { downFile, sleep } from 'yunzai/utils'
 import { gsCfg } from 'yunzai/mys'
 
-// tudo
-// tudo
-import { join } from 'node:path'
-import { existsSync } from 'node:fs'
-const dir = join(process.cwd(), './plugins/miao-plugin/models/index.js')
-let { Character, Weapon }: any = {}
-/**
- * 动态加载喵喵模块
- */
-if (existsSync(dir)) {
-  const { Character: C, Weapon: W } = await import(`file://${dir}`)
-  Character = C
-  Weapon = W
-}
+import { Common, Version, Data } from '../../miao-plugin/components/index.js'
+import { Character, Weapon } from '../../miao-plugin/models/index.js'
 
 export default class GachaLog extends base {
   constructor(e) {
