@@ -5,18 +5,9 @@ import base from './base.js'
 import { MysInfo } from 'yunzai/mys'
 
 // tudo
-import { join } from 'node:path'
-import { existsSync } from 'node:fs'
-const dir = join(process.cwd(), './plugins/miao-plugin/models/index.js')
-let { Character, Weapon }: any = {}
-/**
- * 动态加载喵喵模块
- */
-if (existsSync(dir)) {
-  const { Character: C, Weapon: W } = await import(`file://${dir}`)
-  Character = C
-  Weapon = W
-}
+
+import { Common, Version, Data } from './miao.js'
+import { Character, Weapon, Player } from './miao.js'
 
 export default class Note extends base {
   constructor(e) {

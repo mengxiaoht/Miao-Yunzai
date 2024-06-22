@@ -8,8 +8,9 @@ import YAML from 'yaml'
 import { UserGameDB, sequelize } from 'yunzai/db'
 
 
-import { Common, Version, Data } from '../../miao-plugin/components/index.js'
-import { Character, Weapon } from '../../miao-plugin/models/index.js'
+import { Common, Version, Data } from './miao.js'
+import { Character, Weapon, Player } from './miao.js'
+
 
 export default class User extends base {
   constructor(e) {
@@ -545,7 +546,7 @@ export default class User extends base {
         try {
           let src = `./data/MysCookie/${qq}.yaml`
           let dest = `./temp/MysCookieBak/${qq}.yaml`
-          await fs.promises.unlink(dest).catch(_ => {})
+          await fs.promises.unlink(dest).catch(_ => { })
           await fs.promises.copyFile(src, dest)
           await fs.promises.unlink(src)
         } catch (err) {

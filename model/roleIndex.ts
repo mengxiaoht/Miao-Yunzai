@@ -5,9 +5,9 @@ import moment from 'moment'
 import fs from 'node:fs'
 
 
-import { Common, Version, Data } from '../../miao-plugin/components/index.js'
-import { Character, Weapon } from '../../miao-plugin/models/index.js'
 
+import { Common, Version, Data } from './miao.js'
+import { Character, Weapon, Player } from './miao.js'
 
 let dsz = '待实装'
 let imgFile = {}

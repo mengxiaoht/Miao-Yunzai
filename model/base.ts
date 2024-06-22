@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { ConfigController as cfg } from 'yunzai/config'
 
-import { Common, Version, Data } from '../../miao-plugin/components/index.js'
-import { Character, Weapon } from '../../miao-plugin/models/index.js'
+import { Common, Version, Data } from './miao.js'
+import { Character, Weapon, Player } from './miao.js'
 
 export default class base {
   constructor(e = {}) {

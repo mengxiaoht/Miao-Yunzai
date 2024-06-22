@@ -3,9 +3,8 @@ import lodash from 'lodash'
 import base from './base.js'
 import { MysInfo } from 'yunzai/mys'
 
-import { Common, Version, Data } from '../../miao-plugin/components/index.js'
-import { Character, Weapon } from '../../miao-plugin/models/index.js'
-
+import { Common, Version, Data } from './miao.js'
+import { Character, Weapon, Player } from './miao.js'
 
 export default class Abyss extends base {
   constructor(e) {
