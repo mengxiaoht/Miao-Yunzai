@@ -3,10 +3,6 @@ import moment from 'moment'
 import { Plugin } from 'yunzai/core'
 
 /**
- * tudo
- */
-
-/**
  *
  */
 export class status extends Plugin {

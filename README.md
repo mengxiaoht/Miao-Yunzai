@@ -18,11 +18,3 @@ git clone --depth=1 -b system https://github.com/yoimiya-kokomi/Miao-Yunzai.git 
 | 更新 | #更新 #全部更新     | 嘎嘎 |
 | 状态 | #状态               | 嘎嘎 |
 | 运行 | #重启 #关机         | 嘎嘎 |
-| 娱乐 | #复读               | 嘎嘎 |
-| 表情 | #添加xxx            | 嘎嘎 |
-
-## 图片开发
-
-```sh
-npm run image
-```

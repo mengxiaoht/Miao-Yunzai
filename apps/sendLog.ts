@@ -5,10 +5,6 @@ import lodash from 'lodash'
 import moment from 'moment'
 
 /**
- * tudo
- */
-
-/**
  *
  */
 export class sendLog extends Plugin {
