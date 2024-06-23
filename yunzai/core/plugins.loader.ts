@@ -732,6 +732,13 @@ class PluginsLoader {
         }
         let msgRes
         try {
+          // 不是频道模式，去掉所有button。
+          if (!e.isGuild) {
+            if (Array.isArray(msg)) {
+              msg = msg.filter(item => item.type != 'button')
+            }
+          }
+          console.log('msg', msg)
           msgRes = await e.replyNew(msg, quote)
         } catch (err) {
           if (typeof msg != 'string') {
