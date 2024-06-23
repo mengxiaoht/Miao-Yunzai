@@ -23,8 +23,8 @@ export class EventOffline extends EventListener {
    */
   async execute(e) {
     logger.mark('掉线了')
-    let config = cfg.getConfig('notice')
-    let title = `${BOT_NAME}(${Bot.nickname})已离线，请关注`
+    const config = cfg.getConfig('notice')
+    const title = `${BOT_NAME}(${Bot.nickname})已离线，请关注`
     if (config.iyuu) {
       await fetch(
         `https://iyuu.cn/${config.iyuu}.send?text=${title}&desp=${e.message}`
@@ -36,7 +36,7 @@ export class EventOffline extends EventListener {
       )
     }
     if (config.feishu_webhook) {
-      let offline_content = {
+      const offline_content = {
         msg_type: 'post',
         content: {
           post: {

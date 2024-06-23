@@ -4,7 +4,7 @@ import { ScreenshotFileOptions } from './types.js'
 import { BaseConfig } from './config.js'
 
 /**
- *
+ * 全局Puppeteer初始化配置控制器
  */
 export const PuppeteerLunchConfig = new BaseConfig<PuppeteerLaunchOptions>({
   // 禁用超时
@@ -25,7 +25,7 @@ export const PuppeteerLunchConfig = new BaseConfig<PuppeteerLaunchOptions>({
 })
 
 /**
- *
+ * 无头浏览器
  */
 export class Puppeteer {
   // 截图次数记录

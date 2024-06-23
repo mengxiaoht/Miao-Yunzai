@@ -52,6 +52,12 @@ const COLUMNS = {
 }
 
 class UserDB extends BaseModel {
+  /**
+   *
+   * @param id
+   * @param type
+   * @returns
+   */
   static async find(id, type = 'qq') {
     // user_id
     id = type === 'qq' ? '' + id : type + id
@@ -66,6 +72,10 @@ class UserDB extends BaseModel {
     return user
   }
 
+  /**
+   *
+   * @param user
+   */
   async saveDB(user) {
     let db = this
     let ltuids = []
@@ -93,7 +103,11 @@ class UserDB extends BaseModel {
   }
 }
 
+//
 BaseModel.initDB(UserDB, COLUMNS)
+
+//
 await UserDB.sync()
 
+//
 export default UserDB

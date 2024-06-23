@@ -4,7 +4,7 @@ import typescript from '@rollup/plugin-typescript'
  */
 export default [
   {
-    input: 'src/main.ts',
+    input: 'yunzai/index.ts',
     output: {
       // file: 'index.js',
       dir: 'dist',

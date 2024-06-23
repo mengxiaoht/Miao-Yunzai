@@ -46,9 +46,9 @@ export class EventLogin extends EventListener {
 
     /** 获取扫码结果 */
     let time = 0
-    let interval = setInterval(async () => {
+    const interval = setInterval(async () => {
       time++
-      let res = await this.client.queryQrcodeResult()
+      const res = await this.client.queryQrcodeResult()
       if (res.retcode === 0) {
         inSlider = true
         console.log('\n')
@@ -132,7 +132,7 @@ export class EventLogin extends EventListener {
     }
 
     if (!ticket) {
-      let res = await inquirer.prompt({
+      const res = await inquirer.prompt({
         type: 'input',
         message: '请输入ticket:',
         name: 'ticket',
@@ -155,7 +155,7 @@ export class EventLogin extends EventListener {
    * @returns
    */
   async getTicket(url) {
-    let req = `https://hlhs-nb.cn/captcha/slider?key=${Bot.uin}`
+    const req = `https://hlhs-nb.cn/captcha/slider?key=${Bot.uin}`
     await fetch(req, {
       method: 'POST',
       body: JSON.stringify({ url })
@@ -184,7 +184,7 @@ export class EventLogin extends EventListener {
    * @returns
    */
   async requestCode(url) {
-    let txhelper = {
+    const txhelper = {
       req: null,
       res: null,
       code: null,

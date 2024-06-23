@@ -1,6 +1,6 @@
 /**
- *
- * @param htmlContent
+ * 置换html内的路径符
+ * @param htmlContent 字符串
  * @returns
  */
 export function replacePaths(htmlContent: string) {

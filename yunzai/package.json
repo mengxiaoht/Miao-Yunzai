@@ -29,9 +29,6 @@
     },
     "./image": {
       "import": "./image/index.js"
-    },
-    "./image/types": {
-      "import": "./image/types.js"
     }
   }
 }

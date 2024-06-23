@@ -38,6 +38,12 @@ const COLUMNS = {
 }
 
 class MysUserDB extends BaseModel {
+  /**
+   *
+   * @param ltuid
+   * @param create
+   * @returns
+   */
   static async find(ltuid = '', create = false) {
     // DB查询
     let mys = await MysUserDB.findByPk(ltuid)
@@ -54,6 +60,11 @@ class MysUserDB extends BaseModel {
   device = null
   uids = null
 
+  /**
+   *
+   * @param mys
+   * @returns
+   */
   async saveDB(mys) {
     if (!mys.ck || !mys.device || !mys.db) {
       return false
@@ -67,7 +78,11 @@ class MysUserDB extends BaseModel {
   }
 }
 
+//
 BaseModel.initDB(MysUserDB, COLUMNS)
+
+//
 await MysUserDB.sync()
 
+//
 export default MysUserDB
