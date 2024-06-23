@@ -111,9 +111,9 @@ export class Restart extends Plugin {
       }
     } else {
       try {
-        let cm = `${npm} start`
+        let cm = `${npm} run start`
         if (process.argv[1].includes('pm2')) {
-          cm = `${npm} run restart`
+          cm = `${npm} run start`
         }
 
         exec(cm, { windowsHide: true }, (error, stdout, _) => {
@@ -123,8 +123,8 @@ export class Restart extends Plugin {
             logger.error(`重启失败\n${error.stack}`)
           } else if (stdout) {
             logger.mark('重启成功，运行已由前台转为后台')
-            logger.mark(`查看日志请用命令：${npm} run log`)
-            logger.mark(`停止后台运行命令：${npm} stop`)
+            logger.mark(`查看日志请用命令：${npm} run logs`)
+            logger.mark(`停止后台运行命令：${npm} run stop`)
             process.exit()
           }
         })
@@ -140,8 +140,8 @@ export class Restart extends Plugin {
 
   async checkPnpm() {
     let npm = 'npm'
-    let ret = await this.execSync('pnpm -v')
-    if (ret.stdout) npm = 'pnpm'
+    let ret = await this.execSync('npm -v')
+    if (ret.stdout) npm = 'npm'
     return npm
   }
 
@@ -183,7 +183,7 @@ export class Restart extends Plugin {
     await this.e.reply('关机成功，已停止运行')
 
     let npm = await this.checkPnpm()
-    exec(`${npm} stop`, { windowsHide: true }, error => {
+    exec(`${npm} run stop`, { windowsHide: true }, error => {
       if (error) {
         this.e.reply(`操作失败！\n${error.stack}`)
         logger.error(`关机失败\n${error.stack}`)
