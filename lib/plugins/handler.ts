@@ -1,4 +1,4 @@
-import handler from "../../src/core/plugins/handler.js";
+import { handler } from "yunzai/core";
 /**
  * @deprecated 已废弃
  */

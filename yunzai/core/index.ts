@@ -5,4 +5,8 @@ export * from './plugins/common.js'
 export * from './icqq.js'
 export * from './bot.js'
 import Runtime from './plugins/runtime.js'
+import handler from './plugins/handler.js'
+import loader from './plugins.loader.js'
+export { loader }
+export { handler }
 export { Runtime }

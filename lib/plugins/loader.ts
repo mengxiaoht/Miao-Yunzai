@@ -1,5 +1,5 @@
-import pluginsLoader from "../../src/core/plugins.loader";
+import { loader } from "yunzai/core";
 /**
  * @deprecated 已废弃
  */
-export default pluginsLoader
+export default loader
