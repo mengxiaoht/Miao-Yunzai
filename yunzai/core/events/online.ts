@@ -46,7 +46,7 @@ export class EventOnline extends EventListener {
 
     if (await redis.get(key)) return
 
-    let msg = `欢迎使用【${BOT_NAME} v${cfg.package.version}】\n【#帮助】查看指令说明\n【#状态】查看运行状态\n【#日志】查看运行日志\n【#更新】拉取 Github 更新\n【#全部更新】更新全部插件\n【#更新日志】查看更新日志\n【#重启】重新启动\n【#配置ck】配置公共查询 Cookie`
+    let msg = `欢迎使用【${BOT_NAME} v${cfg.package.version}`
 
     redis.set(key, '1', { EX: cfg.bot.online_msg_exp })
 

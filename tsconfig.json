@@ -29,26 +29,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "forceConsistentCasingInFileNames": true,
-
-    //
-    "paths": {
-      // 内部核心模块导出
-      "yunzai/config": ["./src/config/index.js"],
-      "yunzai/db": ["./src/db/index.js"],
-      "yunzai/mys": ["./src/mys/index.js"],
-      "yunzai/utils": ["./src/utils/index.js"],
-      "yunzai/init": ["./src/init/index.js"],
-      "yunzai/core": ["./src/core/index.js"],
-      // 图片开发
-      "yunzai/image/types": ["./src/image/types.js"],
-      "yunzai/image": ["./src/image/index.js"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
   "ts-node": {
     "esm": true,
     "transpileOnly": true,
     "experimentalSpecifierResolution": "node"
   },
-  "include": ["src", "plugins", "lib", "renderers"]
+  "include": ["src", "yunzai", "plugins", "lib", "renderers"]
 }

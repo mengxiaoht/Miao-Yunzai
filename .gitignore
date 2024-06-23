@@ -139,7 +139,6 @@ resources/
 
 # Docker file
 redis
-yunzai
 /.idea/
 /data/
 /temp/
