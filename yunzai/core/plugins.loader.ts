@@ -693,6 +693,11 @@ class PluginsLoader {
       e.replyNew = e.reply
 
       /**
+       * 去除
+       */
+      delete e.reply
+
+      /**
        * @param msg 发送的消息
        * @param quote 是否引用回复
        * @param data.recallMsg 群聊是否撤回消息，0-120秒，0不撤回
@@ -722,11 +727,9 @@ class PluginsLoader {
             }
             text = lodash.truncate(text, { length: 10 })
           }
-
           if (Array.isArray(msg)) msg.unshift(segment.at(at, text), '\n')
           else msg = [segment.at(at, text), '\n', msg]
         }
-
         let msgRes
         try {
           msgRes = await e.replyNew(msg, quote)
@@ -734,13 +737,19 @@ class PluginsLoader {
           if (typeof msg != 'string') {
             if (msg.type == 'image' && Buffer.isBuffer(msg?.file)) msg.file = {}
             msg = lodash.truncate(JSON.stringify(msg), { length: 300 })
+            try {
+              msgRes = await e.replyNew(msg, quote)
+            } catch (error) {
+              logger.error(`重发消息错误:${msg}`)
+            }
           }
           logger.error(`发送消息错误:${msg}`)
           logger.error(err)
-          if (cfg.bot.sendmsg_error)
+          if (cfg.bot.sendmsg_error) {
             Bot[Bot.uin]
               .pickUser(cfg.masterQQ[0])
               .sendMsg(`发送消息错误:${msg}`)
+          }
         }
 
         // 频道一下是不是频道
