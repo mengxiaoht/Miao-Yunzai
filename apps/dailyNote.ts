@@ -3,6 +3,7 @@ import Note from '../model/note.js'
 import { gsCfg } from 'yunzai/mys'
 gsCfg.cpCfg('mys', 'set')
 export class dailyNote extends plugin {
+  set = null
   constructor() {
     /**
       name: '体力查询',

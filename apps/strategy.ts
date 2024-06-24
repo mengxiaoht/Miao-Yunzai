@@ -71,6 +71,8 @@ export class strategy extends plugin {
     })
     this.set = gsCfg.getConfig('mys', 'set')
   }
+  
+  set = null
 
   /** 初始化创建配置文件 */
   async init() {

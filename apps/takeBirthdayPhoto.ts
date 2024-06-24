@@ -20,6 +20,8 @@ export class takeBirthdayPhoto extends plugin {
     this.button = segment.button([{ text: '留影叙佳期', input: '#留影叙佳期' }])
   }
 
+  button = null
+
   async birthdaystar(e) {
     let uid = await MysInfo.getUid(this.e)
     if (!uid) return false
