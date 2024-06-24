@@ -6,15 +6,14 @@ import { exec, execSync } from 'child_process'
 import { Restart } from './restart.js'
 import { sleep } from 'yunzai/utils'
 let uping = false
+
+/**
+ * 
+ */
 export class update extends Plugin {
   typeName = BOT_NAME
   messages = []
   constructor() {
-    /**
-     * 
-      name: '更新',
-      dsc: '#更新 #强制更新',
-     */
     super()
     this.priority = 4000
     this.rule = [
@@ -182,31 +181,25 @@ export class update extends Plugin {
 
   async updateAll() {
     const dirs = readdirSync('./plugins/')
-
     const MSG = message => {
       // 收集
       this.messages.push(message)
     }
-
     const testReg = /^#静默全部(强制)?更新$/.test(this.e.msg)
     if (testReg) {
       await this.e.reply(`开始执行静默全部更新,请稍等...`)
     }
-
     await this.runUpdate()
-
     for (const plu of dirs) {
       const Plu = this.getPlugin(plu)
       if (Plu === false) continue
       await sleep(1500)
       await this.runUpdate(Plu)
     }
-
     if (testReg) {
       const msg = await makeForwardMsg(this.e, this.messages)
       MSG(msg)
     }
-
     if (this.isUp) {
       // await this.e.reply('即将执行重启，以应用更新')
       setTimeout(() => this.restart(), 2000)
@@ -222,6 +215,11 @@ export class update extends Plugin {
     con.restart()
   }
 
+  /**
+   * 
+   * @param plugin 
+   * @returns 
+   */
   async getLog(plugin = '') {
     let cm = 'git log -100 --pretty="%h||[%cd] %s" --date=format:"%F %T"'
     if (plugin) cm = `cd "plugins/${plugin}" && ${cm}`
@@ -268,7 +266,7 @@ export class update extends Plugin {
     return makeForwardMsg(
       this.e,
       [log, end],
-      `${plugin || 'Miao-Yunzai'} 更新日志，共${line}条`
+      `${plugin || BOT_NAME} 更新日志，共${line}条`
     )
   }
 

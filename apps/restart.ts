@@ -1,9 +1,11 @@
 import fetch from 'node-fetch'
-import { readFileSync } from 'fs'
-import YAML from 'yaml'
 import net from 'net'
 import { exec } from 'child_process'
 import { Plugin } from 'yunzai/core'
+import { join } from 'path'
+import { createRequire } from 'module'
+import { existsSync } from 'fs'
+const require = createRequire(import.meta.url)
 
 /**
  *
@@ -75,30 +77,42 @@ export class Restart extends Plugin {
     // 如果 return 'return' 则跳过解析
   }
 
+
+  /**
+   * 
+   * @returns 
+   */
   async restart() {
-    let restart_port
-    try {
-      restart_port = YAML.parse(
-        readFileSync(`./config/config/bot.yaml`, `utf-8`)
-      )
-      restart_port = restart_port.restart_port || 27881
-    } catch {}
+    // 开始询问是否有正在运行的同实例进程
+    const dir = join(process.cwd(), 'pm2.config.cjs')
+    if (!existsSync(dir)) {
+      // 不存在配置，错误
+      this.e.reply('pm2 配置丢失')
+      return 
+    }
+    const cfg = require(dir)
+    const restart_port = cfg?.restart_port || 27881
     await this.e.reply('开始执行重启，请稍等...')
     logger.mark(`${this.e.logFnc} 开始执行重启，请稍等...`)
-
-    let data = JSON.stringify({
+    /**
+     * 
+     */
+    const data = JSON.stringify({
       uin: this.e?.self_id || this.e.bot.uin,
       isGroup: !!this.e.isGroup,
       id: this.e.isGroup ? this.e.group_id : this.e.user_id,
       time: new Date().getTime()
     })
-
-    let npm = await this.checkPnpm()
+    const npm = await this.checkPnpm()
     await redis.set(REDIS_RESTART_KEY, data, { EX: 120 })
-    if (await isPortTaken(restart_port || 27881)) {
+
+    /**
+     * 
+     */
+    if (await isPortTaken(restart_port)) {
       try {
         const result = await fetch(
-          `http://localhost:${restart_port || 27881}/restart`
+          `http://localhost:${restart_port}/restart`
         ).then(res => res.text())
         if (result !== `OK`) {
           redis.del(REDIS_RESTART_KEY)
@@ -110,13 +124,11 @@ export class Restart extends Plugin {
         this.e.reply(`操作失败！\n${error}`)
       }
     } else {
+      /**
+       * 
+       */
       try {
-        let cm = `${npm} run start`
-        if (process.argv[1].includes('pm2')) {
-          cm = `${npm} run start`
-        }
-
-        exec(cm, { windowsHide: true }, (error, stdout, _) => {
+        exec( `${npm} run start`, { windowsHide: true }, (error, stdout, _) => {
           if (error) {
             redis.del(REDIS_RESTART_KEY)
             this.e.reply(`操作失败！\n${error.stack}`)
@@ -130,21 +142,27 @@ export class Restart extends Plugin {
         })
       } catch (error) {
         redis.del(REDIS_RESTART_KEY)
-        let e = error.stack ?? error
-        this.e.reply(`操作失败！\n${e}`)
+        this.e.reply(`操作失败！\n${error.stack ?? error}`)
       }
     }
 
     return true
   }
 
+
+  /**
+   * 
+   * @returns 
+   */
   async checkPnpm() {
-    let npm = 'npm'
-    let ret = await this.execSync('npm -v')
-    if (ret.stdout) npm = 'npm'
-    return npm
+    return 'npm'
   }
 
+  /**
+   * 
+   * @param cmd 
+   * @returns 
+   */
   async execSync(cmd) {
     return new Promise(resolve => {
       exec(cmd, { windowsHide: true }, (error, stdout, stderr) => {
@@ -153,36 +171,39 @@ export class Restart extends Plugin {
     })
   }
 
+  /**
+   * 
+   * @returns 
+   */
   async stop() {
-    let restart_port
-    try {
-      restart_port = YAML.parse(
-        readFileSync(`./config/config/bot.yaml`, `utf-8`)
-      )
-      restart_port = restart_port.restart_port || 27881
-    } catch {}
-    if (await isPortTaken(restart_port || 27881)) {
+    // 开始询问是否有正在运行的同实例进程
+    const dir = join(process.cwd(), 'pm2.config.cjs')
+    if (!existsSync(dir)) {
+      // 不存在配置，错误
+      this.e.reply('pm2 配置丢失')
+      return 
+    }
+    const cfg = require(dir)
+    const restart_port = cfg?.restart_port || 27881
+    if (await isPortTaken(restart_port)) {
       try {
         logger.mark('关机成功，已停止运行')
         await this.e.reply(`关机成功，已停止运行`)
-        await fetch(`http://localhost:${restart_port || 27881}/exit`)
+        await fetch(`http://localhost:${restart_port}/exit`)
         return
       } catch (error) {
         this.e.reply(`操作失败！\n${error}`)
         logger.error(`关机失败\n${error}`)
       }
     }
-
     if (!process.argv[1].includes('pm2')) {
       logger.mark('关机成功，已停止运行')
       await this.e.reply('关机成功，已停止运行')
       process.exit()
     }
-
     logger.mark('关机成功，已停止运行')
     await this.e.reply('关机成功，已停止运行')
-
-    let npm = await this.checkPnpm()
+    const npm = await this.checkPnpm()
     exec(`${npm} run stop`, { windowsHide: true }, error => {
       if (error) {
         this.e.reply(`操作失败！\n${error.stack}`)
