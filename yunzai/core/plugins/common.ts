@@ -1,15 +1,18 @@
+import { Sendable } from "icqq"
+import { EventType } from "./types"
+
 /**
  * 发送私聊消息，仅给好友发送
  * @param userId qq号
  * @param msg 消息
  * @param uin 指定bot发送，默认为Bot
  */
-export async function relpyPrivate(userId: number | string, msg, uin = Bot.uin) {
+export async function relpyPrivate(userId: number | string, msg: Sendable, uin = global.Bot.uin) {
   userId = Number(userId)
   const friend = Bot.fl.get(userId)
   if (friend) {
     logger.mark(`发送好友消息[${friend.nickname}](${userId})`)
-    return await Bot[uin]
+    return await global.Bot[uin]
       .pickUser(userId)
       .sendMsg(msg)
       .catch(err => {
@@ -26,8 +29,8 @@ export async function relpyPrivate(userId: number | string, msg, uin = Bot.uin) 
  * @param msgsscr 转发信息是否伪装
  */
 export async function makeForwardMsg(
-  e: any,
-  msg: any[] | string = [],
+  e: EventType,
+  msg: Sendable = [],
   dec: string = '',
   msgsscr = false
 ) {
@@ -53,7 +56,7 @@ export async function makeForwardMsg(
   let forwardMsg:
     | {
       user_id: number
-      nickname: string
+      nickname: string | number
       message: any
     }[]
     | {
@@ -116,5 +119,8 @@ export async function makeForwardMsg(
     console.error(err)
   }
 
-  return forwardMsg
+  /**
+   * 
+   */
+  return forwardMsg as Sendable
 }

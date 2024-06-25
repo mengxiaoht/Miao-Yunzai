@@ -8,18 +8,13 @@ import { readFileSync, } from 'node:fs'
  * ********
  */
 class ConfigController {
-  /**
-   * 
-   */
-  config = {}
-
-  /**
-   * 监听文件
-   */
-  watcher = { config: {}, defSet: {} }
+  #config = {}
+  #watcher = { config: {}, defSet: {} }
+  #package = null
 
   /**
    * 机器人qq号
+   * @deprecated 已废弃
    */
   get qq() {
     return Number(this.getConfig('qq').qq)
@@ -27,9 +22,10 @@ class ConfigController {
 
   /**
    * 密码
+   * @deprecated 已废弃
    */
   get pwd() {
-    return this.getConfig('qq').pwd
+    return String(this.getConfig('qq').pwd)
   }
 
   /**
@@ -40,12 +36,10 @@ class ConfigController {
     const defbot = this.getdefSet('bot')
     const Config = { ...defbot, ...bot }
     Config.platform = this.getConfig('qq').platform
-    /**
-     * 设置data目录，防止pm2运行时目录不对
-     */
+    // /data/icqq/qq
     Config.data_dir = join(process.cwd(), `/data/icqq/${this.qq}`)
-    if (!Config.ffmpeg_path) delete Config.ffmpeg_path
-    if (!Config.ffprobe_path) delete Config.ffprobe_path
+    if (!Config?.ffmpeg_path) delete Config.ffmpeg_path
+    if (!Config?.ffprobe_path) delete Config.ffprobe_path
     return Config
   }
 
@@ -72,6 +66,7 @@ class ConfigController {
 
   /**
    * 
+   * @deprecated 已废弃
    */
   get notice() {
     return this.getConfig('notice');
@@ -89,20 +84,19 @@ class ConfigController {
     }
   }
 
-  _package = null
 
   /**
    * package.json 
    */
   get package() {
-    if (this._package) return this._package
+    if (this.#package) return this.#package
     try {
-      const data = readFileSync('package.json', 'utf8')
-      this._package = JSON.parse(data)
-      return this._package
+      const data = readFileSync(join(process.cwd(), 'package.json'), 'utf8')
+      this.#package = JSON.parse(data)
+      return this.#package
     } catch {
       return {
-        version:'4.0.0-rc.0'
+        version: '4.0.0'
       }
     }
   }
@@ -161,18 +155,20 @@ class ConfigController {
 
   /**
    * 获取配置yaml
-   * @param type 默认跑配置-defSet，用户配置-config
+   * @param type  
    * @param name 名称
    */
-  getYaml(type: string, name: string) {
+  getYaml(type: 'config' | 'default_config', name: string) {
     const file = `config/${type}/${name}.yaml`
     const key = `${type}.${name}`
-    if (this.config[key]) return this.config[key]
-    this.config[key] = parse(
-      readFileSync(file, 'utf8')
-    )
+    // 存在则读取
+    if (this.#config[key]) return this.#config[key]
+    // 不存在的
+    const data = readFileSync(file, 'utf8')
+    this.#config[key] = parse(data)
+    // 监听
     this.watch(file, name, type)
-    return this.config[key]
+    return this.#config[key]
   }
 
   /**
@@ -184,41 +180,26 @@ class ConfigController {
    */
   watch(file: string, name: string, type = 'default_config') {
     const key = `${type}.${name}`
-    if (this.watcher[key]) return
+    // 监听key
+    if (this.#watcher[key]) return
     const watcher = watch(file)
     watcher.on('change', () => {
-      delete this.config[key]
-      if (typeof Bot == 'undefined') return
-      logger.mark(`[修改配置文件][${type}][${name}]`)
-      if (this[`change_${name}`]) {
-        this[`change_${name}`]()
+      // 清理缓存
+      delete this.#config[key]
+      // bot没启动
+      if (typeof global.Bot == 'undefined') return
+      // 修改了qq配置
+      if(type == 'qq'){
+        if (process.argv.includes('login') || !this.qq) return
+        logger.info('修改机器人QQ或密码，请手动重启')
       }
+      //
+      logger.mark(`[修改配置文件][${type}][${name}]`)
     })
-    this.watcher[key] = watcher
-  }
-
-  /**
-   * 
-   * @returns 
-   */
-  change_qq() {
-    if (process.argv.includes('login') || !this.qq) return
-    logger.info('修改机器人QQ或密码，请手动重启')
-  }
-
-  /**
-   * 修改日志等级
-   * @deprecated 已废弃
-   */
-  async change_bot() {
-    //
+    this.#watcher[key] = watcher
   }
 
 }
 
-/**
- * **********
- * 
- * ***
- */
+
 export default new ConfigController()

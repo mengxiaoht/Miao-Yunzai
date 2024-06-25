@@ -1,18 +1,7 @@
-/**
- * MysUser 米游社用户类
- * 主键ltuid
- *
- * 一个MysUser对应一个有效CK
- * 一个MysUser可能有多个MysUid关联记录
- */
 import lodash from 'lodash'
 import fetch from 'node-fetch'
 import DailyCache from './DailyCache.js'
 import BaseModel from './BaseModel.js'
-
-// 循环引用
-// import NoteUser from './NoteUser.js'
-
 import MysApi from './mysApi.js'
 import MysUtil from './MysUtil.js'
 import { MysUserDB } from '../db/index.js'
@@ -668,8 +657,9 @@ export default class MysUser extends BaseModel {
   /**
    * 删除MysUser用户记录，会反向删除User中的记录及绑定关系
    * @param game
+   * @deprecated 已废弃
    */
-  async delWithUser(game = 'gs') {
+  async delWithUser(_ = 'gs') {
     logger.info('错误行为，尝试进行循环引用！')
     logger.info('这是设计错误，请等待修复....')
 

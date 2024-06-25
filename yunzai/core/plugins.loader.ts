@@ -703,13 +703,20 @@ class PluginsLoader {
        * @param data.recallMsg 群聊是否撤回消息，0-120秒，0不撤回
        * @param data.at 是否at用户
        */
-      e.reply = async (msg: any = '', quote = false, data: any = {}) => {
+      e.reply = async (
+        msg: any = '',
+        quote = false,
+        data?: {
+          recallMsg?: number
+          at?: any
+        }
+      ) => {
         if (!msg) return false
 
         /** 禁言中 */
         if (e.isGroup && e?.group?.mute_left > 0) return false
 
-        let { recallMsg = 0, at = '' } = data
+        let { recallMsg = 0, at = '' } = data ?? {}
 
         if (at && e.isGroup) {
           let text = ''

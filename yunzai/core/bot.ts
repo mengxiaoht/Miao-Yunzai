@@ -17,7 +17,8 @@ import PluginsLoader from './plugins.loader.js'
 /**
  * 扩展
  */
-import { Client as IcqqClient } from 'icqq'
+import { Client as IcqqClient, type Config } from 'icqq'
+
 /**
  *
  */
@@ -26,10 +27,7 @@ export class Client extends IcqqClient {
    *
    * @param conf
    */
-  constructor(conf) {
-    /**
-     *
-     */
+  constructor(conf: Config) {
     super(conf)
   }
 
@@ -53,7 +51,7 @@ export class Client extends IcqqClient {
    * @param bot
    * @returns
    */
-  static async skip_login(bot) {
+  static async skip_login(bot: typeof Client.prototype) {
     bot.uin = 88888
     bot[bot.uin] = bot
     global.Bot = bot

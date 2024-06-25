@@ -2,20 +2,20 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs'
 import { CONFIG_DEFAULT_PATH, CONFIG_INIT_PATH } from '../config/system.js'
 import { join } from 'node:path'
 
-const path = CONFIG_INIT_PATH
-
-const pathDef = CONFIG_DEFAULT_PATH
-
 // 得到文件
-const files = readdirSync(pathDef).filter(file => file.endsWith('.yaml'))
+const files = readdirSync(CONFIG_DEFAULT_PATH).filter(file =>
+  file.endsWith('.yaml')
+)
+
 //
-mkdirSync(join(process.cwd(), path), {
+mkdirSync(join(process.cwd(), CONFIG_INIT_PATH), {
   recursive: true
 })
+
 //
 for (const file of files) {
-  if (!existsSync(`${path}${file}`)) {
-    copyFileSync(`${pathDef}${file}`, `${path}${file}`)
+  if (!existsSync(`${CONFIG_INIT_PATH}${file}`)) {
+    copyFileSync(`${CONFIG_DEFAULT_PATH}${file}`, `${CONFIG_INIT_PATH}${file}`)
   }
 }
 

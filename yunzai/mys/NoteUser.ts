@@ -10,18 +10,15 @@ import * as Data from '../utils/Data.js'
  * *******************
  * Bot实际User用户类
  * 主键QQ
- *
+ * *******************
  *  User可以注册UID，通过 getRegUid / setRegUid
  *  一个User可以绑定多个MysUser CK，绑定MysUser
  * *******************
  */
 export default class NoteUser extends BaseModel {
   db = null
-
   qq = null
-
   mysUsers: any = {}
-
   _map = null
   /**
    *
@@ -58,7 +55,7 @@ export default class NoteUser extends BaseModel {
     console.warn(
       'NoteUser.ckUids 默认返回原神UID，可更改为 user.getCkUidList(game)'
     )
-    let uids = this.getCkUidList('gs')
+    const uids = this.getCkUidList('gs')
     return lodash.map(uids, ds => ds.uid)
   }
 

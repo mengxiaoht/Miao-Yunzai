@@ -77,8 +77,8 @@ class UserDB extends BaseModel {
    * @param user
    */
   async saveDB(user) {
-    let db = this
-    let ltuids = []
+    const db: any = this
+    const ltuids = []
     lodash.forEach(user.mysUsers, mys => {
       if (mys.ck && mys.ltuid) {
         ltuids.push(mys.ltuid)

@@ -2,8 +2,6 @@ import YAML from 'yaml'
 import chokidar from 'chokidar'
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import lodash from 'lodash'
-// tudo 循环引用
-// import MysInfo from './mysInfo.js'
 import NoteUser from './NoteUser.js'
 import { join } from 'node:path'
 
@@ -177,7 +175,7 @@ class GsCfg {
    * @returns
    */
   roleNameToID(keyword, isSr) {
-    let char = Character.get(keyword, isSr ? 'sr' : 'gs')
+    const char = Character.get(keyword, isSr ? 'sr' : 'gs')
     return char?.id || false
   }
 
@@ -187,15 +185,16 @@ class GsCfg {
    * @param isWeapon 是否武器
    */
   shortName(name, isWeapon = false) {
-    let obj = (isWeapon ? Weapon : Character).get(name)
+    const obj = (isWeapon ? Weapon : Character).get(name)
     return obj.abbr || obj.name || ''
   }
 
   /**
    * 公共配置ck文件修改hook 爆栈原因
+   * @deprecated 已废弃
    */
   async change_myspubCk() {
-    logger.info('操作失败，该方法在尝试循环引用！')
+    logger.info('错误行为，尝试进行循环引用！')
     logger.info('这是设计错误，请等待修复....')
     // await MysInfo.initCache()
     // await MysInfo.initPubCk()
@@ -207,8 +206,8 @@ class GsCfg {
    * @returns
    */
   getGachaSet(groupId = '') {
-    let config = this.getYaml('gacha', 'set', 'config')
-    let def = config.default
+    const config = this.getYaml('gacha', 'set', 'config')
+    const def = config.default
     if (config[groupId]) {
       return { ...def, ...config[groupId] }
     }
@@ -221,7 +220,7 @@ class GsCfg {
    * @returns
    */
   getMsgUid(msg) {
-    let ret = /([1-9]|18)[0-9]{8}/g.exec(msg)
+    const ret = /([1-9]|18)[0-9]{8}/g.exec(msg)
     if (!ret) return false
     return ret[0]
   }
