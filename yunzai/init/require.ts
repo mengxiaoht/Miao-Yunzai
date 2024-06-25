@@ -6,6 +6,7 @@ const require = createRequire(import.meta.url)
  */
 const CustomExtensions = [
   '.css',
+  //
   '.apng',
   '.png',
   '.jpg',
@@ -18,6 +19,7 @@ const CustomExtensions = [
   '.ico',
   '.webp',
   '.avif',
+  //
   '.mp4',
   '.webm',
   '.ogg',
@@ -33,7 +35,9 @@ const CustomExtensions = [
   '.woff2',
   '.eot',
   '.ttf',
-  '.otf'
+  '.otf',
+  //
+  '.md'
 ]
 /**
  * 扩展引入

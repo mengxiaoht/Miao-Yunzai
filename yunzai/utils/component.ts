@@ -1,9 +1,8 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import { mkdirSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { basename, join } from 'path'
 import { getLink } from './link.tsx'
-import { replacePaths } from './replace.ts'
 /**
  *
  */
@@ -22,13 +21,50 @@ export type ComponentCreateOpsionType = {
    */
   file_create?: boolean
   /**
-   * 插入头部的内容
+   * head组件
+   */
+  head_component?: React.ReactNode
+  /**
+   * body组件
+   */
+  body_component?: React.ReactNode
+  /**
+   * 插入内容到head
    */
   html_head?: string
   /**
-   * 底部插入的内容
+   * 插入内容到body
    */
   html_body?: string
+  /**
+   * 当且仅当设置别名配置时生效
+   * 对别名资源进行解析并植入到html中
+   * 目前仅处理css文件
+   */
+  html_files?: string[]
+  /**
+   * 设置别名
+   */
+  file_paths?: {
+    [key: string]: string
+  }
+  /**
+   * server 模式
+   */
+  server?: boolean
+}
+
+export function PathsCss(htmlContent) {
+  const regex = /(src|href|url)\s*=\s*["']([^"']*\\[^"']*)["']/g
+  htmlContent = htmlContent.replace(regex, (_, p1, p2) => {
+    const correctedPath = p2.replace(/\\/g, '/')
+    return `${p1}="${correctedPath}"`
+  })
+  const cssUrlRegex = /url\(["']?([^"'\)\\]*\\[^"'\)]*)["']?\)/g
+  return htmlContent.replace(cssUrlRegex, (_, p1) => {
+    const correctedPath = p1.replace(/\\/g, '/')
+    return `url(${correctedPath})`
+  })
 }
 
 /**
@@ -44,9 +80,122 @@ export class Component {
    */
   constructor() {
     this.#dir = join(process.cwd(), 'html')
-    mkdirSync(this.#dir, {
+    mkdirSync(join(this.#dir, 'css'), {
       recursive: true
     })
+  }
+
+  /**
+   *
+   * @param options
+   * @returns
+   */
+  #rewriteFiles(options: ComponentCreateOpsionType) {
+    /**
+     *
+     * @param _
+     * @param p1
+     * @returns
+     */
+    const callback = (_: string, p1: string) => {
+      // 在 p1 前面加上 "@"
+      const resourcePath = `@${p1}`
+      let p2 = p1
+      for (const key in options.file_paths) {
+        const E = new RegExp(key, 'g')
+        p2 = resourcePath.replace(E, options.file_paths[key])
+        if (options?.server === true) p2 = this.replaceServerPaths(p2)
+      }
+      return `url(${p2})`
+    }
+
+    /**
+     * 解析
+     */
+    for (const url of options.html_files) {
+      // 解析样式文件
+      if (/(.css|.less|.sass)$/) {
+        try {
+          // 得到解析后的字符
+          const data = readFileSync(url, 'utf-8').replace(
+            /url\("@([^"]*)"\)/g,
+            callback
+          )
+          // url
+          const name = basename(url)
+          //
+          const dir = join(this.#dir, 'css', name)
+          // 写入文件。
+          writeFileSync(dir, this.replacePaths(data), 'utf-8')
+          // 携带
+          options.html_head = `<link rel="stylesheet" href="${dir}" />${options?.html_head ?? ''}`
+        } catch (err) {
+          logger.warn(err)
+        }
+      }
+    }
+    return options
+  }
+
+  /**
+   * 编译html
+   * @param options
+   * @returns
+   */
+  #compile(options: ComponentCreateOpsionType) {
+    const dir = join(this.#dir, options?.join_dir ?? '')
+    mkdirSync(dir, { recursive: true })
+
+    /**
+     * html_files
+     */
+    if (
+      options?.file_paths &&
+      options?.html_files &&
+      Array.isArray(options.html_files)
+    ) {
+      options = this.#rewriteFiles(options)
+    }
+
+    /**
+     * body_component
+     */
+    if (options.body_component) {
+      const str = renderToString(options.body_component)
+      options.html_body = `${str}${options.html_body}`
+    }
+    /**
+     * head_component
+     */
+    if (options.head_component) {
+      const str = renderToString(options.head_component)
+      options.html_head = `${str}${options.html_head}`
+    }
+    /**
+     * html
+     */
+    const DOCTYPE = '<!DOCTYPE html>'
+    const head = `<head>${this.#Link}${options?.html_head ?? ''}</head>`
+    const body = `<body>${options?.html_body ?? ''}</body>`
+    const html = `${DOCTYPE}<html>${head}${body}</html>`
+    /**
+     * create false
+     */
+    if (
+      typeof options?.file_create == 'boolean' &&
+      options?.file_create == false
+    ) {
+      if (options.server === true) {
+        return this.replaceServerPaths(html)
+      }
+      return html
+    }
+    /**
+     * create true
+     */
+    const address = join(dir, options?.html_name ?? 'hello.html')
+    writeFileSync(address, this.replacePaths(html))
+    return address
   }
 
   /**
@@ -57,21 +206,10 @@ export class Component {
    */
   create(element: React.ReactNode, options: ComponentCreateOpsionType) {
     const str = renderToString(element)
-    const dir = join(this.#dir, options?.join_dir ?? '')
-    mkdirSync(dir, { recursive: true })
-    const address = join(dir, options?.html_name ?? 'hello.html')
-    const DOCTYPE = '<!DOCTYPE html>'
-    const head = `<head>${this.#Link}${options?.html_head ?? ''}</head>`
-    const body = `<body>${str}${options?.html_body ?? ''}</body>`
-    const html = `${DOCTYPE}<html>${head}${body}</html>`
-    if (
-      typeof options?.file_create == 'boolean' &&
-      options?.file_create == false
-    ) {
-      return html
-    }
-    writeFileSync(address, this.replacePaths(html))
-    return address
+    return this.#compile({
+      ...options,
+      html_body: `${str ?? ''}${options?.html_body ?? ''}`
+    })
   }
 
   /**
@@ -79,7 +217,34 @@ export class Component {
    * @param htmlContent
    * @returns
    */
-  replacePaths = replacePaths
+  replacePaths(htmlContent: string) {
+    // 正则表达式匹配 src、href 和 url 中的路径
+    const regex = /(src|href|url)\s*=\s*["']([^"']*\\[^"']*)["']/g
+    htmlContent = htmlContent.replace(regex, (_, p1, p2) => {
+      const correctedPath = p2.replace(/\\/g, '/')
+      return `${p1}="${correctedPath}"`
+    })
+    const cssUrlRegex = /url\(["']?([^"'\)\\]*\\[^"'\)]*)["']?\)/g
+    return htmlContent.replace(cssUrlRegex, (_, p1) => {
+      const correctedPath = p1.replace(/\\/g, '/')
+      return `url(${correctedPath})`
+    })
+  }
+
+  /**
+   * 辅助函数：替换路径
+   * @param htmlContent
+   * @returns
+   */
+  replaceServerPaths = (htmlContent: string) => {
+    // 置换成 /file请求
+    return this.replacePaths(
+      htmlContent.replace(
+        new RegExp(process.cwd().replace(/\\/g, '\\\\'), 'g'),
+        '/file'
+      )
+    )
+  }
 
   /**
    * 将 React 元素渲染为其初始 HTML。这

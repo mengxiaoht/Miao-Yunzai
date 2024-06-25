@@ -5,21 +5,10 @@ import Router from 'koa-router'
 import { Dirent, readdirSync } from 'fs'
 import { join } from 'path'
 import mount from 'koa-mount'
-import { Component, replacePaths as replace } from '../utils/index.js'
-
+import { Component } from '../utils/index.js'
 export * from './types.js'
 
 const PATH = process.cwd().replace(/\\/g, '\\\\')
-
-/**
- * 辅助函数：替换路径
- * @param htmlContent
- * @returns
- */
-const replacePaths = (htmlContent: string) => {
-  // 置换成 /file请求
-  return replace(htmlContent.replace(new RegExp(PATH, 'g'), '/file'))
-}
 
 /**
  *
@@ -108,10 +97,11 @@ export async function createServer(Port = 8080) {
       const options = item?.options ?? {}
       const HTML = Com.create(item.element, {
         ...options,
-        file_create: false
+        file_create: false,
+        server: true
       })
       // 置换为file请求
-      ctx.body = replacePaths(HTML)
+      ctx.body = HTML
     })
   }
 

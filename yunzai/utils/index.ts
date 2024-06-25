@@ -5,7 +5,6 @@ export * from './common.js'
 export * from './component.js'
 export * from './module.js'
 export * from './picture.js'
-export * from './replace.js'
 /**
  * 旧版本兼容性方法
  */
