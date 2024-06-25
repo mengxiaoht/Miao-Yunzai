@@ -17,10 +17,7 @@ export default function ListItem({ movie }: { movie: MovieType }) {
     <article className="flex items-start space-x-6 p-6">
       <img
         src={movie.image}
-        alt=""
-        width="60"
-        height="88"
-        className="flex-none rounded-md bg-slate-100"
+        className="flex-none rounded-md bg-slate-100 w-20 h-full"
       />
       <div className="min-w-0 relative flex-auto">
         <h2 className="font-semibold text-slate-900 truncate pr-20">
