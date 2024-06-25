@@ -126,3 +126,9 @@ declare module '*.otf' {
   const src: string
   export default src
 }
+
+// file
+declare module '*.md' {
+  const src: string
+  export default src
+}

@@ -79,8 +79,11 @@ export class Component {
    *
    */
   constructor() {
-    this.#dir = join(process.cwd(), 'html')
+    this.#dir = join(process.cwd(), '.html')
     mkdirSync(join(this.#dir, 'css'), {
+      recursive: true
+    })
+    mkdirSync(join(this.#dir, 'img'), {
       recursive: true
     })
   }
@@ -97,16 +100,20 @@ export class Component {
      * @param p1
      * @returns
      */
-    const callback = (_: string, p1: string) => {
+    const callback = (_: string, p1: string, p2: string) => {
       // 在 p1 前面加上 "@"
-      const resourcePath = `@${p1}`
-      let p2 = p1
+      let p0 = p1 || p2
+      const resourcePath = `@${p0}`
       for (const key in options.file_paths) {
         const E = new RegExp(key, 'g')
-        p2 = resourcePath.replace(E, options.file_paths[key])
-        if (options?.server === true) p2 = this.replaceServerPaths(p2)
+        p0 = resourcePath.replace(E, options.file_paths[key])
+        if (options?.server === true) {
+          p0 = this.replaceServerPaths(p0)
+        } else {
+          p0 = this.replacePaths(p0)
+        }
       }
-      return `url(${p2})`
+      return `url(${p0})`
     }
 
     /**
@@ -118,7 +125,7 @@ export class Component {
         try {
           // 得到解析后的字符
           const data = readFileSync(url, 'utf-8').replace(
-            /url\("@([^"]*)"\)/g,
+            /url\("@([^"]*)"\)|url\('@([^']*)'\)/g,
             callback
           )
           // url
@@ -143,9 +150,6 @@ export class Component {
    * @returns
    */
   #compile(options: ComponentCreateOpsionType) {
-    const dir = join(this.#dir, options?.join_dir ?? '')
-    mkdirSync(dir, { recursive: true })
-
     /**
      * html_files
      */
@@ -185,16 +189,21 @@ export class Component {
       typeof options?.file_create == 'boolean' &&
       options?.file_create == false
     ) {
-      if (options.server === true) {
-        return this.replaceServerPaths(html)
-      }
-      return html
+      if (options.server === true) return this.replaceServerPaths(html)
+      return this.replacePaths(html)
     }
     /**
      * create true
      */
+    const dir = join(this.#dir, options?.join_dir ?? '')
+    mkdirSync(dir, { recursive: true })
     const address = join(dir, options?.html_name ?? 'hello.html')
-    writeFileSync(address, this.replacePaths(html))
+    writeFileSync(
+      address,
+      options.server === true
+        ? this.replaceServerPaths(html)
+        : this.replacePaths(html)
+    )
     return address
   }
 
