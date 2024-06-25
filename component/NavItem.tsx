@@ -1,5 +1,8 @@
-import React from 'react'
-export default function NavItem({ href, children }) {
+import React, { type ReactNode } from 'react'
+export default function NavItem({ href, children }: {
+  href: string,
+  children: ReactNode
+}) {
   return (
     <li>
       <a
