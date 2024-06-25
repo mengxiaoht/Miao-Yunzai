@@ -15,10 +15,5 @@ setTimeout(async () => {
   /**
    * run
    */
-  await Client.run().then(async () => {
-    /**
-     * Loader
-     */
-    await Client.PluginsLoader()
-  })
+  await Client.run()
 }, 0)

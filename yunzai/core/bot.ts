@@ -11,10 +11,6 @@ import cfg from '../config/config.js'
  */
 import ListenerLoader from './events.loader.js'
 /**
- *
- */
-import PluginsLoader from './plugins.loader.js'
-/**
  * 扩展
  */
 import { Client as IcqqClient, type Config } from 'icqq'
@@ -39,12 +35,13 @@ export class Client extends IcqqClient {
     const bot = new Client(cfg.bot)
     await ListenerLoader.load(bot)
     if (cfg.bot.skip_login) {
-      return await this.skip_login(bot)
+      await this.skip_login(bot)
+      return
     }
     await bot.login(cfg.qq, cfg.pwd)
     bot[bot.uin] = bot
     global.Bot = bot
-    return bot
+    return
   }
   /**
    * 跳过登录ICQQ
@@ -55,19 +52,12 @@ export class Client extends IcqqClient {
     bot.uin = 88888
     bot[bot.uin] = bot
     global.Bot = bot
-    return bot
-  }
-  /**
-   * 加载插件
-   * @param bot
-   * @returns
-   */
-  static async PluginsLoader() {
-    await PluginsLoader.load()
+    return
   }
 }
 
-/**
- * 机器人客户端
- */
-export const Bot = global.Bot
+export const Bot: typeof global.Bot = new Proxy({} as any, {
+  get(_, property) {
+    return global.Bot[property]
+  }
+})
