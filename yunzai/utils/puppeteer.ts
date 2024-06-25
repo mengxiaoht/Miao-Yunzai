@@ -124,7 +124,7 @@ export class Puppeteer {
         logger.error(err)
       })
       if (!page) return false
-      await page.goto(htmlPath, {
+      await page.goto(`file://${htmlPath}`, {
         timeout: Options?.timeout ?? 120000
       })
       const body = await page.$(Options?.tab ?? 'body')

@@ -1,5 +1,6 @@
 import { type GroupMessage } from 'icqq'
 import Runtime from './runtime'
+import { Client } from 'icqq'
 
 
 /**
@@ -138,7 +139,7 @@ export interface EventType extends GroupMessage {
   /**
    * @deprecated 已废弃
    */
-  bot: any;
+  bot: typeof Client.prototype;
   /** 
    * 
    * @deprecated 已废弃

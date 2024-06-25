@@ -772,7 +772,7 @@ class PluginsLoader {
             )
           }
         }
-
+        // ?
         this.count(e, msg)
         return msgRes
       }
@@ -781,18 +781,22 @@ class PluginsLoader {
        */
     } else {
       /**
-       *
        */
       e.reply = async (msg = '', _ = false, __ = {}) => {
+        // 不存在消息
         if (!msg) return false
+        // ?
         this.count(e, msg)
+        // 群在qunid
         if (e.group_id) {
           return await e.group.sendMsg(msg).catch(err => {
             logger.warn(err)
           })
         } else {
-          let friend = e.bot.fl.get(e.user_id)
+          // 好友列表
+          const friend = e.bot.fl.get(e.user_id)
           if (!friend) return
+          // 发送消息
           return await e.bot
             .pickUser(e.user_id)
             .sendMsg(msg)
